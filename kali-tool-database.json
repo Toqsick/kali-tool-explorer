@@ -1,0 +1,1501 @@
+{
+  "blue_categories": [
+    {
+      "id": "info-gathering",
+      "name": "Information Gathering",
+      "icon": "📡",
+      "tools": [
+        {
+          "id": "nmap",
+          "name": "nmap",
+          "desc": "Der Netzwerk-Scanner Nr. 1. Port-Scan, Service-Erkennung, OS-Fingerprinting.",
+          "cmd": "nmap -sV -sC -A target.com",
+          "tags": [
+            "Network",
+            "Scanner",
+            "Recon"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "masscan",
+          "name": "masscan",
+          "desc": "Massiver Port-Scanner — scannt das gesamte Internet in Minuten.",
+          "cmd": "masscan -p1-65535 10.0.0.0/8 --rate=10000",
+          "tags": [
+            "Network",
+            "Scanner",
+            "Fast"
+          ],
+          "pop": "classic"
+        },
+        {
+          "id": "recon-ng",
+          "name": "recon-ng",
+          "desc": "OSINT-Framework mit modularem Aufbau. Recon-Workflows automatisieren.",
+          "cmd": "recon-ng -w target_corp",
+          "tags": [
+            "OSINT",
+            "Framework",
+            "Recon"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "maltego",
+          "name": "maltego",
+          "desc": "Graphische OSINT-Plattform für Link-Analyse und Footprinting.",
+          "cmd": "maltego",
+          "tags": [
+            "OSINT",
+            "Graph",
+            "Visual"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "spiderfoot",
+          "name": "spiderfoot",
+          "desc": "Automatisches OSINT-Tool — sammelt 200+ Datenquellen über ein Ziel.",
+          "cmd": "spiderfoot -s target.com",
+          "tags": [
+            "OSINT",
+            "Automation"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "amass",
+          "name": "amass",
+          "desc": "Subdomain-Enumeration und externer Asset-Discovery.",
+          "cmd": "amass enum -d target.com",
+          "tags": [
+            "Recon",
+            "Subdomain",
+            "OSINT"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "theHarvester",
+          "name": "theHarvester",
+          "desc": "Sammelt E-Mails, Subdomains, Hosts aus öffentlichen Quellen.",
+          "cmd": "theHarvester -d target.com -b all",
+          "tags": [
+            "OSINT",
+            "Email",
+            "Recon"
+          ],
+          "pop": "classic"
+        },
+        {
+          "id": "wireshark",
+          "name": "wireshark",
+          "desc": "Der Standard-Netzwerk-Protokoll-Analyzer. Live-Capture + Deep-Dive in Pakete.",
+          "cmd": "wireshark -i eth0 -k",
+          "tags": [
+            "Network",
+            "Sniffer",
+            "GUI"
+          ],
+          "pop": "daily"
+        }
+      ]
+    },
+    {
+      "id": "vulnerability-analysis",
+      "name": "Vulnerability Analysis",
+      "icon": "🛡️",
+      "tools": [
+        {
+          "id": "nikto",
+          "name": "nikto",
+          "desc": "Webserver-Schwachstellen-Scanner. Prüft 6700+ bekannte Risiken.",
+          "cmd": "nikto -h https://target.com",
+          "tags": [
+            "Web",
+            "Scanner",
+            "CGI"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "gvm",
+          "name": "gvm (Greenbone)",
+          "desc": "Open-Source Vulnerability Management — ehemals OpenVAS. Industrie-Standard-Scanner.",
+          "cmd": "gvm-start && gvm-cli -h",
+          "tags": [
+            "Vuln-Scan",
+            "Compliance",
+            "Gold"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "nmap-vulners",
+          "name": "nmap-vulners",
+          "desc": "NSE-Script für nmap — matcht Services gegen CVE-Datenbank.",
+          "cmd": "nmap --script vulners -sV target.com",
+          "tags": [
+            "NSE",
+            "CVE",
+            "Scanner"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "legion",
+          "name": "legion",
+          "desc": "GUI-Vulnerability-Scanner mit Auto-Pentest-Modulen.",
+          "cmd": "legion",
+          "tags": [
+            "GUI",
+            "Vuln-Scan"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "unix-privesc-check",
+          "name": "unix-privesc-check",
+          "desc": "Prüft Linux/BSD auf lokale Privilege-Escalation-Pfade.",
+          "cmd": "unix-privesc-check standard",
+          "tags": [
+            "Privesc",
+            "Linux",
+            "Audit"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "lynis",
+          "name": "lynis",
+          "desc": "System-Audit-Tool für Härtung und Compliance auf Unix.",
+          "cmd": "lynis audit system",
+          "tags": [
+            "Audit",
+            "Hardening",
+            "Linux"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "davtest",
+          "name": "davtest",
+          "desc": "Testet WebDAV-Endpoints auf PUT/MOVE-Fähigkeiten.",
+          "cmd": "davtest -url http://target/dav",
+          "tags": [
+            "WebDAV",
+            "Recon"
+          ],
+          "pop": "classic"
+        }
+      ]
+    },
+    {
+      "id": "web-app-analysis",
+      "name": "Web Application Analysis",
+      "icon": "🌐",
+      "tools": [
+        {
+          "id": "burpsuite",
+          "name": "Burp Suite",
+          "desc": "Die Web-Hacking-Suite. Proxy + Repeater + Intruder + Scanner.",
+          "cmd": "burpsuite",
+          "tags": [
+            "Web",
+            "Proxy",
+            "Gold"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "sqlmap",
+          "name": "sqlmap",
+          "desc": "Automatisierte SQL-Injection-Erkennung und -Exploitation.",
+          "cmd": "sqlmap -u 'http://target/?id=1' --dbs",
+          "tags": [
+            "SQLi",
+            "Web",
+            "Exploit"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "zap",
+          "name": "OWASP ZAP",
+          "desc": "OWASP-Zed-Attack-Proxy. Open-Source-Alternative zu Burp.",
+          "cmd": "zaproxy",
+          "tags": [
+            "Web",
+            "Proxy",
+            "Scanner"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "wpscan",
+          "name": "wpscan",
+          "desc": "WordPress-Sicherheits-Scanner. Plugin/Theme/User-Enumeration.",
+          "cmd": "wpscan --url https://target.com --enumerate u,p,t",
+          "tags": [
+            "CMS",
+            "WordPress"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "dirb",
+          "name": "dirb",
+          "desc": "Bruteforce-Web-Content-Scanner. Findet versteckte Pfade.",
+          "cmd": "dirb https://target.com /usr/share/wordlists/dirb/common.txt",
+          "tags": [
+            "Web",
+            "Discovery"
+          ],
+          "pop": "classic"
+        },
+        {
+          "id": "gobuster",
+          "name": "gobuster",
+          "desc": "Schneller Directory/Subdomain-Buster (Go-Implementierung).",
+          "cmd": "gobuster dir -u https://target.com -w wordlist.txt",
+          "tags": [
+            "Web",
+            "Fuzz",
+            "Fast"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "ffuf",
+          "name": "ffuf",
+          "desc": "Ultraschneller Web-Fuzzer. Multithreaded, viele Protokolle.",
+          "cmd": "ffuf -u https://target.com/FUZZ -w wordlist.txt",
+          "tags": [
+            "Fuzz",
+            "Web",
+            "Fast"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "nuclei",
+          "name": "nuclei",
+          "desc": "Template-basierter Vulnerability-Scanner. 6000+ Templates für CVEs.",
+          "cmd": "nuclei -u https://target.com -t cves/",
+          "tags": [
+            "Scanner",
+            "CVE",
+            "Templates"
+          ],
+          "pop": "gold"
+        }
+      ]
+    },
+    {
+      "id": "database-assessment",
+      "name": "Database Assessment",
+      "icon": "🗄️",
+      "tools": [
+        {
+          "id": "sqlmap",
+          "name": "sqlmap",
+          "desc": "SQLi-König — Datenbank-Extraktion und Schema-Dump.",
+          "cmd": "sqlmap -u 'http://target/?id=1' --dump-all",
+          "tags": [
+            "SQLi",
+            "DB",
+            "Exploit"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "sqlninja",
+          "name": "sqlninja",
+          "desc": "Spezialisiert auf MS-SQL-Server-Exploitation über SQLi.",
+          "cmd": "sqlninja -m target",
+          "tags": [
+            "MSSQL",
+            "SQLi"
+          ],
+          "pop": "classic"
+        },
+        {
+          "id": "oscanner",
+          "name": "oscanner",
+          "desc": "Oracle-Datenbank-Schwachstellen-Scanner.",
+          "cmd": "oscanner -s 10.10.10.5 -P 1521",
+          "tags": [
+            "Oracle",
+            "Scanner"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "sidguess",
+          "name": "sidguess",
+          "desc": "Bruteforce-Oracle-SIDs und -Service-Names.",
+          "cmd": "sidguess -s 10.10.10.5 -p 1521",
+          "tags": [
+            "Oracle",
+            "Recon"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "tnscmd10g",
+          "name": "tnscmd10g",
+          "desc": "Oracle-TNS-Listener-Befehle senden.",
+          "cmd": "tnscmd10g status -h 10.10.10.5",
+          "tags": [
+            "Oracle",
+            "Recon"
+          ],
+          "pop": "classic"
+        },
+        {
+          "id": "impacket-mssqlclient",
+          "name": "impacket-mssqlclient",
+          "desc": "MSSQL-Client mit NTLM-Relay- und Command-Execution.",
+          "cmd": "mssqlclient.py domain/user:pass@10.10.10.5",
+          "tags": [
+            "MSSQL",
+            "Impacket"
+          ],
+          "pop": "standard"
+        }
+      ]
+    },
+    {
+      "id": "password-attacks",
+      "name": "Password Attacks",
+      "icon": "🔑",
+      "tools": [
+        {
+          "id": "hashcat",
+          "name": "hashcat",
+          "desc": "GPU-gestützter Passwort-Cracker. Brute-Force + Dictionary + Rules.",
+          "cmd": "hashcat -m 0 hash.txt rockyou.txt",
+          "tags": [
+            "Cracking",
+            "GPU",
+            "Gold"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "john",
+          "name": "John the Ripper",
+          "desc": "Klassischer Passwort-Cracker. Viele Hash-Formate.",
+          "cmd": "john --wordlist=rockyou.txt hashes.txt",
+          "tags": [
+            "Cracking",
+            "Hash",
+            "Classic"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "hydra",
+          "name": "hydra",
+          "desc": "Parallelisierter Login-Knacker für SSH/FTP/HTTP/MySQL/SMB.",
+          "cmd": "hydra -l admin -P rockyou.txt ssh://10.10.10.5",
+          "tags": [
+            "Bruteforce",
+            "Online"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "medusa",
+          "name": "medusa",
+          "desc": "Schneller paralleler Login-Bruteforcer (Hydra-Alternative).",
+          "cmd": "medusa -h 10.10.10.5 -u admin -P rockyou.txt -M ssh",
+          "tags": [
+            "Bruteforce",
+            "Online"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "crunch",
+          "name": "crunch",
+          "desc": "Generiert Passwort-Wortlisten nach benutzerdefinierten Mustern.",
+          "cmd": "crunch 8 10 -o wordlist.txt",
+          "tags": [
+            "Wordlist",
+            "Generator"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "cewl",
+          "name": "cewl",
+          "desc": "Custom Word List generator — scrapt Websites für zielgerichtete Wortlisten.",
+          "cmd": "cewl -d 3 -w custom.txt https://target.com",
+          "tags": [
+            "Wordlist",
+            "OSINT"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "patator",
+          "name": "patator",
+          "desc": "Modularer Brute-Forcer mit smarter Retry-Logik.",
+          "cmd": "patator ssh_login host=10.10.10.5 user=admin password=FILE0",
+          "tags": [
+            "Bruteforce",
+            "Modular"
+          ],
+          "pop": "standard"
+        }
+      ]
+    },
+    {
+      "id": "wireless-attacks",
+      "name": "Wireless Attacks",
+      "icon": "📶",
+      "tools": [
+        {
+          "id": "aircrack-ng",
+          "name": "aircrack-ng",
+          "desc": "Die WiFi-Hacking-Suite: airmon-ng, airodump-ng, aireplay-ng, aircrack-ng.",
+          "cmd": "aircrack-ng -w rockyou.txt -b AA:BB:CC:DD:EE:FF cap.pcap",
+          "tags": [
+            "WiFi",
+            "Cracking",
+            "Gold"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "wifite",
+          "name": "wifite",
+          "desc": "Automatisierter WiFi-Audit-Runner. Ein-Knopf-WPA-Crack.",
+          "cmd": "wifite --kill --wpa",
+          "tags": [
+            "WiFi",
+            "Automation"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "reaver",
+          "name": "reaver",
+          "desc": "WPS-PIN-Brute-Force-Angriff gegen Router.",
+          "cmd": "reaver -i wlan0 -b AA:BB:CC:DD:EE:FF -vv",
+          "tags": [
+            "WPS",
+            "Bruteforce"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "kismet",
+          "name": "kismet",
+          "desc": "Wireless-Network-Detector + Sniffer + IDS.",
+          "cmd": "kismet",
+          "tags": [
+            "WiFi",
+            "Sniffer",
+            "Detection"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "fern-wifi-cracker",
+          "name": "fern-wifi-cracker",
+          "desc": "GUI-WPA-Cracker für Einsteiger.",
+          "cmd": "fern-wifi-cracker",
+          "tags": [
+            "WiFi",
+            "GUI"
+          ],
+          "pop": "classic"
+        },
+        {
+          "id": "bully",
+          "name": "bully",
+          "desc": "WPS-Brute-Force (reaver-Alternative, schneller und stabiler).",
+          "cmd": "bully wlan0 -b AA:BB:CC:DD:EE:FF",
+          "tags": [
+            "WPS",
+            "Bruteforce"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "cowpatty",
+          "name": "cowpatty",
+          "desc": "WPA-PSK-Cracker mit PMK-Tabellen.",
+          "cmd": "cowpatty -r cap.pcap -s SSID -f wordlist.txt",
+          "tags": [
+            "WiFi",
+            "WPA"
+          ],
+          "pop": "classic"
+        }
+      ]
+    },
+    {
+      "id": "reverse-engineering",
+      "name": "Reverse Engineering",
+      "icon": "🔬",
+      "tools": [
+        {
+          "id": "ghidra",
+          "name": "Ghidra",
+          "desc": "NSA-Disassembler/Decompiler. Mächtige RE-Plattform.",
+          "cmd": "ghidra",
+          "tags": [
+            "Disasm",
+            "Decompiler",
+            "Gold"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "radare2",
+          "name": "radare2",
+          "desc": "CLI-Disassembler-Framework mit riesigem Toolset.",
+          "cmd": "r2 -A binary.elf",
+          "tags": [
+            "Disasm",
+            "CLI",
+            "Framework"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "gdb",
+          "name": "gdb",
+          "desc": "GNU-Debugger — Standard für Runtime-Analyse.",
+          "cmd": "gdb ./binary -ex 'break main' -ex run",
+          "tags": [
+            "Debugger",
+            "Analysis"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "objdump",
+          "name": "objdump",
+          "desc": "Binutils-Disassembler — schnelles Static-Disassembly.",
+          "cmd": "objdump -d -M intel binary",
+          "tags": [
+            "Disasm",
+            "Static"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "strings",
+          "name": "strings",
+          "desc": "Extrahiert lesbare Strings aus Binaries.",
+          "cmd": "strings -a -n 8 binary",
+          "tags": [
+            "Strings",
+            "Static"
+          ],
+          "pop": "classic"
+        },
+        {
+          "id": "ltrace",
+          "name": "ltrace",
+          "desc": "Trace-Bibliotheks-Aufrufe zur Laufzeit.",
+          "cmd": "ltrace ./binary",
+          "tags": [
+            "Trace",
+            "Dynamic"
+          ],
+          "pop": "classic"
+        },
+        {
+          "id": "strace",
+          "name": "strace",
+          "desc": "Trace-System-Calls zur Laufzeit.",
+          "cmd": "strace -f -e trace=network ./binary",
+          "tags": [
+            "Trace",
+            "Dynamic"
+          ],
+          "pop": "classic"
+        },
+        {
+          "id": "rizin",
+          "name": "rizin",
+          "desc": "Modernes radare2-Fork. Schneller, ergonomischer.",
+          "cmd": "rizin binary",
+          "tags": [
+            "Disasm",
+            "RE"
+          ],
+          "pop": "standard"
+        }
+      ]
+    },
+    {
+      "id": "exploitation",
+      "name": "Exploitation Tools",
+      "icon": "💥",
+      "tools": [
+        {
+          "id": "metasploit",
+          "name": "Metasploit Framework",
+          "desc": "Das Exploit-Framework. 2000+ Exploits, Payloads, Module.",
+          "cmd": "msfconsole -q -x 'use exploit/multi/handler'",
+          "tags": [
+            "Exploit",
+            "Framework",
+            "Gold"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "searchsploit",
+          "name": "searchsploit",
+          "desc": "Offline-Suche im Exploit-DB. Schnell, lokal.",
+          "cmd": "searchsploit apache 2.4",
+          "tags": [
+            "Exploit-DB",
+            "Search"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "exploitdb",
+          "name": "Exploit-DB",
+          "desc": "Datenbank verifizierter Exploits und Proof-of-Concepts.",
+          "cmd": "searchsploit -t vsftpd",
+          "tags": [
+            "Exploit-DB",
+            "Database"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "set",
+          "name": "SET (Social-Engineer Toolkit)",
+          "desc": "Phishing + Social-Engineering-Framework.",
+          "cmd": "setoolkit",
+          "tags": [
+            "Phishing",
+            "Social-Eng"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "commix",
+          "name": "commix",
+          "desc": "Automatisierte Command-Injection-Erkennung und -Exploitation.",
+          "cmd": "commix --url 'http://target/?cmd=INJECT'",
+          "tags": [
+            "Cmd-Inj",
+            "Web"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "shellter",
+          "name": "shellter",
+          "desc": "Dynamischer PE-Infector — bypassed AV bei Custom-Payloads.",
+          "cmd": "shellter",
+          "tags": [
+            "AV-Evasion",
+            "Payload"
+          ],
+          "pop": "classic"
+        }
+      ]
+    },
+    {
+      "id": "sniffing-spoofing",
+      "name": "Sniffing & Spoofing",
+      "icon": "🎭",
+      "tools": [
+        {
+          "id": "wireshark",
+          "name": "wireshark",
+          "desc": "Industrie-Standard-Packet-Analyzer. GUI + Filter + Dissectors.",
+          "cmd": "wireshark -i eth0 -f 'tcp port 80'",
+          "tags": [
+            "Sniffer",
+            "GUI",
+            "Gold"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "responder",
+          "name": "responder",
+          "desc": "LLMNR/NBT-NS/MDNS-Poisoner. Fängt NTLM-Hashes im LAN.",
+          "cmd": "responder -I eth0 -wrf",
+          "tags": [
+            "LLMNR",
+            "NTLM",
+            "LAN"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "mitmproxy",
+          "name": "mitmproxy",
+          "desc": "Interaktiver HTTPS-MitM-Proxy mit Python-Scripting.",
+          "cmd": "mitmproxy -p 8080",
+          "tags": [
+            "MitM",
+            "HTTPS",
+            "Web"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "ettercap",
+          "name": "ettercap",
+          "desc": "Klassischer MitM-Suite für ARP-Poisoning + Filtering.",
+          "cmd": "ettercap -T -q -M arp:remote /192.168.1.1// /192.168.1.10//",
+          "tags": [
+            "MitM",
+            "ARP"
+          ],
+          "pop": "classic"
+        },
+        {
+          "id": "bettercap",
+          "name": "bettercap",
+          "desc": "Modernes MitM-Framework. WiFi + BLE + ARP + HTTP(S).",
+          "cmd": "bettercap -eval 'net.probe on; net.sniff on'",
+          "tags": [
+            "MitM",
+            "Framework"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "arpspoof",
+          "name": "arpspoof",
+          "desc": "ARP-Cache-Poisoning — Klassiker für LAN-MitM.",
+          "cmd": "arpspoof -i eth0 -t 192.168.1.10 192.168.1.1",
+          "tags": [
+            "ARP",
+            "MitM"
+          ],
+          "pop": "classic"
+        },
+        {
+          "id": "scapy",
+          "name": "scapy",
+          "desc": "Python-Paket-Crafter. Bauen + Senden + Sniffen.",
+          "cmd": "scapy",
+          "tags": [
+            "Scapy",
+            "Packet-Craft"
+          ],
+          "pop": "standard"
+        }
+      ]
+    },
+    {
+      "id": "post-exploitation",
+      "name": "Post Exploitation",
+      "icon": "🏴",
+      "tools": [
+        {
+          "id": "mimikatz",
+          "name": "mimikatz",
+          "desc": "Windows-Credential-King. Dump LSASS-Hashes, Passwörter, Kerberos-Tickets.",
+          "cmd": "mimikatz.exe 'privilege::debug' 'sekurlsa::logonpasswords'",
+          "tags": [
+            "Windows",
+            "Creds",
+            "Gold"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "powershell-empire",
+          "name": "PowerShell-Empire",
+          "desc": "Post-Ex-Framework mit PowerShell-Agents.",
+          "cmd": "empire",
+          "tags": [
+            "PowerShell",
+            "C2"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "evil-winrm",
+          "name": "evil-winrm",
+          "desc": "WinRM-Shell für Windows-Hosts. Pass-the-Hash eingebaut.",
+          "cmd": "evil-winrm -i 10.10.10.5 -u admin -H hash",
+          "tags": [
+            "WinRM",
+            "Windows"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "crackmapexec",
+          "name": "crackmapexec / NetExec",
+          "desc": "Swiss-Army für AD-Pentest. Enumeration, Credential-Spray, Lateral-Movement.",
+          "cmd": "crackmapexec smb 10.10.10.0/24 -u admin -p 'Pass123!'",
+          "tags": [
+            "AD",
+            "SMB",
+            "Lateral"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "impacket-scripts",
+          "name": "impacket-scripts",
+          "desc": "Python-Tools für Windows-Protokolle: psexec, wmiexec, secretsdump.",
+          "cmd": "impacket-psexec domain/user:pass@10.10.10.5",
+          "tags": [
+            "Windows",
+            "AD",
+            "PTH"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "chisel",
+          "name": "chisel",
+          "desc": "TCP/UDP-Tunnel über HTTP. Schnelles Pivoting.",
+          "cmd": "chisel server -p 8000 --reverse",
+          "tags": [
+            "Pivoting",
+            "Tunnel"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "ligolo-ng",
+          "name": "ligolo-ng",
+          "desc": "TUN-basierter Tunnel — einfacher als chisel für Pivoting.",
+          "cmd": "ligolo-proxy -selfcert",
+          "tags": [
+            "Pivoting",
+            "Tunnel"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "bloodhound",
+          "name": "BloodHound",
+          "desc": "Visualisiert AD-Attack-Paths. SharpHound sammelt Daten.",
+          "cmd": "bloodhound-python -u user -p pass -d domain.local -ns 10.10.10.5",
+          "tags": [
+            "AD",
+            "Graph",
+            "Visual"
+          ],
+          "pop": "gold"
+        }
+      ]
+    },
+    {
+      "id": "forensik-reference",
+      "name": "Forensik (Referenz: 24 Tools im Forensik-Explorer)",
+      "icon": "🧪",
+      "tools": [
+        {
+          "id": "forensik-reference",
+          "name": "→ Siehe Forensik-Explorer",
+          "desc": "24 Tools in 8 Sub-Kategorien im forensik-explorer.html: SleuthKit, Volatility, Autopsy, YARA, bulk_extractor, foremost, photorec, guymager u.v.m.",
+          "cmd": "open forensik-explorer.html",
+          "tags": [
+            "Reference",
+            "Forensik"
+          ],
+          "pop": "gold"
+        }
+      ]
+    },
+    {
+      "id": "reporting",
+      "name": "Reporting Tools",
+      "icon": "📝",
+      "tools": [
+        {
+          "id": "cutycapt",
+          "name": "cutycapt",
+          "desc": "Screenshot-Tool für Webseiten (für Pentest-Berichte).",
+          "cmd": "cutycapt --url=https://target.com --out=shot.png",
+          "tags": [
+            "Screenshot",
+            "Web"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "recordmydesktop",
+          "name": "recordmydesktop",
+          "desc": "Desktop-Recorder für Demonstrationen.",
+          "cmd": "recordmydesktop",
+          "tags": [
+            "Recording",
+            "Demo"
+          ],
+          "pop": "classic"
+        },
+        {
+          "id": "cherrytree",
+          "name": "CherryTree",
+          "desc": "Hierarchischer Notiz-Editor mit Syntax-Highlighting und Medien.",
+          "cmd": "cherrytree",
+          "tags": [
+            "Notes",
+            "Hierarchy"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "dradis",
+          "name": "Dradis",
+          "desc": "Reporting-Framework für Pentest-Teams. Kollaborativ.",
+          "cmd": "dradis-start",
+          "tags": [
+            "Reporting",
+            "Collab"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "maltego",
+          "name": "maltego",
+          "desc": "Visualisiert Recon- und Threat-Intelligence-Daten.",
+          "cmd": "maltego",
+          "tags": [
+            "OSINT",
+            "Visual",
+            "Gold"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "pipal",
+          "name": "pipal",
+          "desc": "Passwort-Wortlisten-Analysator — Statistiken + Wortverteilung.",
+          "cmd": "pipal wordlist.txt",
+          "tags": [
+            "Wordlist",
+            "Stats"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "obsidian",
+          "name": "obsidian",
+          "desc": "Markdown-basierter Notiz-Editor für Knowledge-Graph-Pentest-Berichte.",
+          "cmd": "obsidian",
+          "tags": [
+            "Notes",
+            "Graph"
+          ],
+          "pop": "standard"
+        }
+      ]
+    }
+  ],
+  "purple_categories": [
+    {
+      "id": "govern",
+      "name": "Govern (NIST CSF)",
+      "icon": "⚖️",
+      "tools": [
+        {
+          "id": "gvm",
+          "name": "gvm (Greenbone)",
+          "desc": "Vulnerability-Management + Compliance-Reports (CIS, PCI).",
+          "cmd": "gvm-start && https://localhost:9392",
+          "tags": [
+            "Compliance",
+            "Vuln",
+            "Gold"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "openvas",
+          "name": "OpenVAS",
+          "desc": "Open-Source-Vulnerability-Scanner (Kern von GVM).",
+          "cmd": "openvas-start",
+          "tags": [
+            "Vulnerability"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "lynis",
+          "name": "lynis",
+          "desc": "Host-basierter Audit für Härtung und Compliance.",
+          "cmd": "lynis audit system --report-file report.txt",
+          "tags": [
+            "Audit",
+            "Compliance"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "openscap",
+          "name": "OpenSCAP",
+          "desc": "Security-Content-Automation-Protocol — CIS/STIG-Compliance.",
+          "cmd": "oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_standard /usr/share/xml/scap/ssg/content/ssg-deb12-ds.xml",
+          "tags": [
+            "SCAP",
+            "Compliance"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "defectdojo",
+          "name": "DefectDojo",
+          "desc": "Vulnerability-Management-Platform — korreliert Scans über Teams.",
+          "cmd": "defectdojo-start",
+          "tags": [
+            "VulnMgmt",
+            "Reporting"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "dradis",
+          "name": "Dradis",
+          "desc": "Kollaboratives Reporting-Framework für Assessments.",
+          "cmd": "dradis-start",
+          "tags": [
+            "Reporting",
+            "Collab"
+          ],
+          "pop": "standard"
+        }
+      ]
+    },
+    {
+      "id": "identify",
+      "name": "Identify (NIST CSF)",
+      "icon": "🔍",
+      "tools": [
+        {
+          "id": "nmap",
+          "name": "nmap",
+          "desc": "Asset-Discovery und Service-Fingerprinting.",
+          "cmd": "nmap -sn 10.10.10.0/24",
+          "tags": [
+            "Recon",
+            "Asset",
+            "Daily"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "gvm",
+          "name": "gvm (Greenbone)",
+          "desc": "Schwachstellen-Scan über alle Assets.",
+          "cmd": "gvm-cli --gmp-username admin tls-cred 'get_reports'",
+          "tags": [
+            "Vuln-Scan",
+            "Gold"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "nikto",
+          "name": "nikto",
+          "desc": "Webserver-Schwachstellen-Identifikation.",
+          "cmd": "nikto -h https://target.com",
+          "tags": [
+            "Web",
+            "Vuln-Scan"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "legion",
+          "name": "legion",
+          "desc": "GUI-Vulnerability-Scanner mit Multi-Tool-Integration.",
+          "cmd": "legion",
+          "tags": [
+            "GUI",
+            "Scanner"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "autorecon",
+          "name": "autorecon",
+          "desc": "Multi-threaded-Recon — erkennt automatisch Services + Tests.",
+          "cmd": "autorecon 10.10.10.5",
+          "tags": [
+            "Recon",
+            "Automated"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "masscan",
+          "name": "masscan",
+          "desc": "Schneller Host/Port-Discovery für große Netze.",
+          "cmd": "masscan -p1-65535 10.0.0.0/8 --rate=10000",
+          "tags": [
+            "Discovery",
+            "Fast"
+          ],
+          "pop": "standard"
+        }
+      ]
+    },
+    {
+      "id": "protect",
+      "name": "Protect (NIST CSF)",
+      "icon": "🛡️",
+      "tools": [
+        {
+          "id": "ufw",
+          "name": "UFW",
+          "desc": "Uncomplicated Firewall — einfaches iptables-Frontend.",
+          "cmd": "ufw allow 22/tcp && ufw enable",
+          "tags": [
+            "Firewall",
+            "Linux"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "iptables",
+          "name": "iptables",
+          "desc": "Klassische Linux-Firewall. Granulares Paketfiltering.",
+          "cmd": "iptables -A INPUT -p tcp --dport 22 -j ACCEPT",
+          "tags": [
+            "Firewall",
+            "Linux"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "fail2ban",
+          "name": "fail2ban",
+          "desc": "Blockiert IPs nach fehlgeschlagenen Login-Versuchen.",
+          "cmd": "fail2ban-client status sshd",
+          "tags": [
+            "Bruteforce",
+            "Defense"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "apparmor",
+          "name": "AppArmor",
+          "desc": "Mandatory-Access-Control — Prozess-Sandboxing.",
+          "cmd": "aa-status",
+          "tags": [
+            "MAC",
+            "Linux"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "selinux",
+          "name": "SELinux",
+          "desc": "Mandatory-Access-Control — RHEL/Fedora-Standard.",
+          "cmd": "sestatus",
+          "tags": [
+            "MAC",
+            "RHEL"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "opnsense",
+          "name": "OPNsense",
+          "desc": "Open-Source-NGFW. Stateful + IDS/IPS + VPN.",
+          "cmd": "opnsense",
+          "tags": [
+            "NGFW",
+            "Network"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "openssh",
+          "name": "OpenSSH",
+          "desc": "Verschlüsselter Remote-Zugang mit starken Auth-Methoden.",
+          "cmd": "ssh -o PubkeyAuthentication=yes user@host",
+          "tags": [
+            "SSH",
+            "Encryption"
+          ],
+          "pop": "daily"
+        }
+      ]
+    },
+    {
+      "id": "detect",
+      "name": "Detect (NIST CSF)",
+      "icon": "🚨",
+      "tools": [
+        {
+          "id": "suricata",
+          "name": "Suricata",
+          "desc": "High-Performance-IDS/IPS/NSM. Multi-Threaded + Emerging-Threats-Rules.",
+          "cmd": "suricata -c /etc/suricata/suricata.yaml -i eth0",
+          "tags": [
+            "IDS",
+            "IPS",
+            "Gold"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "zeek",
+          "name": "Zeek (Bro)",
+          "desc": "Network-Security-Monitor. 70+ Log-Formate für tiefe Analyse.",
+          "cmd": "zeekctl deploy",
+          "tags": [
+            "NSM",
+            "Logs"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "arkime",
+          "name": "Arkime (Moloch)",
+          "desc": "Full-Packet-Capture + Index + Search. Cluster-fähig.",
+          "cmd": "arkime-config",
+          "tags": [
+            "PCAP",
+            "Search"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "wazuh",
+          "name": "Wazuh",
+          "desc": "Open-Source SIEM + XDR. Endpoint + Log + Compliance.",
+          "cmd": "wazuh-manager-start",
+          "tags": [
+            "SIEM",
+            "XDR"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "osquery",
+          "name": "osquery",
+          "desc": "Endpoint-Telemetrie via SQL. Fleet-Management mit Kolide/KFleet.",
+          "cmd": "osqueryi",
+          "tags": [
+            "Endpoint",
+            "SQL"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "falco",
+          "name": "Falco",
+          "desc": "Runtime-Security-Detection mit eBPF. Container/K8s-nativ.",
+          "cmd": "falco -k https://your-api-key",
+          "tags": [
+            "Runtime",
+            "eBPF",
+            "Containers"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "snort",
+          "name": "Snort",
+          "desc": "Klassisches IDS/IPS. Riesige Community-Rules.",
+          "cmd": "snort -A console -q -u snort -g snort -c /etc/snort/snort.conf -i eth0",
+          "tags": [
+            "IDS",
+            "IPS"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "elastic-security",
+          "name": "Elastic Security",
+          "desc": "SIEM + EDR auf Elasticsearch-Basis. KI-gestützte Detection.",
+          "cmd": "elastic-agent enroll",
+          "tags": [
+            "SIEM",
+            "EDR"
+          ],
+          "pop": "gold"
+        }
+      ]
+    },
+    {
+      "id": "respond",
+      "name": "Respond (NIST CSF)",
+      "icon": "🛠️",
+      "tools": [
+        {
+          "id": "thehive",
+          "name": "TheHive",
+          "desc": "Incident-Response-Platform. Cases + Tasks + Observables.",
+          "cmd": "thehive-start",
+          "tags": [
+            "IR",
+            "Case-Mgmt",
+            "Gold"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "cortex",
+          "name": "Cortex",
+          "desc": "Observable-Analyse-Engine (Anbindung an TheHive).",
+          "cmd": "cortex",
+          "tags": [
+            "IR",
+            "Analysis"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "velociraptor",
+          "name": "Velociraptor",
+          "desc": "Endpoint-Forensik + Threat-Hunting via VQL.",
+          "cmd": "velociraptor-client",
+          "tags": [
+            "DFIR",
+            "Endpoint"
+          ],
+          "pop": "gold"
+        },
+        {
+          "id": "cyberchef",
+          "name": "CyberChef",
+          "desc": "Cyber Swiss-Army-Knife. Daten-Dekodierung + -Transformation.",
+          "cmd": "cyberchef",
+          "tags": [
+            "Data",
+            "Decode"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "wazuh",
+          "name": "Wazuh",
+          "desc": "Active-Response-Modul: automatische Containment-Aktionen.",
+          "cmd": "wazuh-manager",
+          "tags": [
+            "SIEM",
+            "Response"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "grr",
+          "name": "GRR Rapid Response",
+          "desc": "Google-Endpoint-Forensik-Framework. Live-Remote-Triage.",
+          "cmd": "grr_server",
+          "tags": [
+            "DFIR",
+            "Google"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "misp",
+          "name": "MISP",
+          "desc": "Threat-Intelligence-Sharing-Platform. IOC-Verwaltung.",
+          "cmd": "misp-start",
+          "tags": [
+            "CTI",
+            "IOC"
+          ],
+          "pop": "standard"
+        }
+      ]
+    },
+    {
+      "id": "recover",
+      "name": "Recover (NIST CSF)",
+      "icon": "♻️",
+      "tools": [
+        {
+          "id": "dd",
+          "name": "dd",
+          "desc": "Bit-für-Bit Disk-Image und Restore.",
+          "cmd": "dd if=/dev/sda of=image.dd bs=4M status=progress",
+          "tags": [
+            "Imaging",
+            "Classic"
+          ],
+          "pop": "classic"
+        },
+        {
+          "id": "rsync",
+          "name": "rsync",
+          "desc": "Inkrementelles Backup mit Delta-Transfer.",
+          "cmd": "rsync -avz /data/ backup:/backup/",
+          "tags": [
+            "Backup",
+            "Sync"
+          ],
+          "pop": "daily"
+        },
+        {
+          "id": "testdisk",
+          "name": "testdisk",
+          "desc": "Partitions- und Bootsektor-Recovery.",
+          "cmd": "testdisk /dev/sda",
+          "tags": [
+            "Recovery",
+            "Partition"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "photorec",
+          "name": "photorec",
+          "desc": "File-Carving — rekonstruiert gelöschte Files aus Disk-Images.",
+          "cmd": "photorec /dev/sda",
+          "tags": [
+            "Recovery",
+            "Carving"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "clonezilla",
+          "name": "Clonezilla",
+          "desc": "Disk-Cloning und -Imaging für Bare-Metal-Recovery.",
+          "cmd": "clonezilla-start",
+          "tags": [
+            "Imaging",
+            "Bare-Metal"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "borgbackup",
+          "name": "BorgBackup",
+          "desc": "Dedupliziertes, verschlüsseltes Backup mit Versionierung.",
+          "cmd": "borg create /backup::archive-$(date -I) /data",
+          "tags": [
+            "Backup",
+            "Dedupe"
+          ],
+          "pop": "standard"
+        },
+        {
+          "id": "restic",
+          "name": "restic",
+          "desc": "Sichere, versionierte Backups mit Ende-zu-Ende-Verschlüsselung.",
+          "cmd": "restic -r /backup backup /data",
+          "tags": [
+            "Backup",
+            "Encrypted"
+          ],
+          "pop": "standard"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Local dev
+*.log
+*.tmp
+.DS_Store
+
+# Don't ignore audiobook (we want them committed!)
+# !audiobook/*.mp3
