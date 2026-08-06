@@ -220,6 +220,17 @@
 .detail-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:20px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 .detail-overlay.visible{display:flex}
 
+/* ═══ TOOL AUDIO PLAYER ═══ */
+.detail-audio{display:flex;align-items:center;gap:12px;background:var(--bg-elevated,#1a1a2e);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-top:8px}
+.detail-audio-btn{flex-shrink:0;width:40px;height:40px;border-radius:50%;border:none;background:var(--accent,#3b82f6);color:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .2s,box-shadow .2s}
+.detail-audio-btn:hover{transform:scale(1.1);box-shadow:0 0 12px var(--accent,#3b82f6)}
+.detail-audio-btn.playing{background:var(--accent2,#a855f7)}
+.detail-audio-info{flex:1;min-width:0}
+.detail-audio-label{font-size:.85rem;color:var(--text-muted);margin-bottom:3px}
+.detail-audio-bar{height:4px;background:var(--bg-surface,#0d0d1a);border-radius:2px;overflow:hidden;cursor:pointer}
+.detail-audio-progress{height:100%;width:0%;background:var(--accent,#3b82f6);transition:width .1s linear}
+.detail-audio-time{font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);white-space:nowrap}
+
 /* ═══ LLM PROMPT BUILDER ═══ */
 .prompt-overlay{position:fixed;inset:0;z-index:350;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
 .prompt-overlay.visible{display:flex}
@@ -3383,6 +3394,14 @@ function showToolDetail(toolId) {
       <div class="detail-section">
         <div class="detail-section-title">Beschreibung</div>
         <div class="detail-desc">${tool.desc}</div>
+        <div class="detail-audio" id="detail-audio-player">
+          <button class="detail-audio-btn" id="detail-audio-btn" aria-label="Audio abspielen">▶</button>
+          <div class="detail-audio-info">
+            <div class="detail-audio-label">🔊 Tool-Beschreibung anhören (Speech 2.8 HD)</div>
+            <div class="detail-audio-bar" id="detail-audio-bar"><div class="detail-audio-progress" id="detail-audio-progress"></div></div>
+          </div>
+          <div class="detail-audio-time" id="detail-audio-time">0:00</div>
+        </div>
       </div>
       ${tagsHtml ? `<div class="detail-section">
         <div class="detail-section-title">Tags</div>
@@ -3423,6 +3442,76 @@ function showToolDetail(toolId) {
       showToolDetail(card.dataset.related);
     });
   });
+
+  // ─── Audio Player Wiring (Speech 2.8 HD) ───
+  const audioBtn = document.getElementById('detail-audio-btn');
+  const audioProgress = document.getElementById('detail-audio-progress');
+  const audioBar = document.getElementById('detail-audio-bar');
+  const audioTime = document.getElementById('detail-audio-time');
+  let currentAudio = null;
+
+  if (audioBtn) {
+    audioBtn.addEventListener('click', () => {
+      // Wenn schon spielt → Pause
+      if (currentAudio && !currentAudio.paused) {
+        currentAudio.pause();
+        audioBtn.textContent = '▶';
+        audioBtn.classList.remove('playing');
+        return;
+      }
+      // Wenn pausiert existiert → weiter
+      if (currentAudio && currentAudio.paused && currentAudio.currentTime > 0) {
+        currentAudio.play();
+        audioBtn.textContent = '⏸';
+        audioBtn.classList.add('playing');
+        return;
+      }
+      // Neues Audio lazy laden
+      const audioUrl = 'tool-audios/' + tool.id + '.mp3';
+      currentAudio = new Audio(audioUrl);
+      currentAudio.addEventListener('loadedmetadata', () => {
+        const dur = currentAudio.duration;
+        const mm = Math.floor(dur / 60);
+        const ss = String(Math.floor(dur % 60)).padStart(2, '0');
+        audioTime.textContent = '0:00 / ' + mm + ':' + ss;
+      });
+      currentAudio.addEventListener('timeupdate', () => {
+        const pct = (currentAudio.currentTime / currentAudio.duration) * 100;
+        audioProgress.style.width = pct + '%';
+        const cur = currentAudio.currentTime;
+        const mm = Math.floor(cur / 60);
+        const ss = String(Math.floor(cur % 60)).padStart(2, '0');
+        const totalDur = currentAudio.duration || 0;
+        const tmm = Math.floor(totalDur / 60);
+        const tss = String(Math.floor(totalDur % 60)).padStart(2, '0');
+        audioTime.textContent = mm + ':' + ss + ' / ' + tmm + ':' + tss;
+      });
+      currentAudio.addEventListener('ended', () => {
+        audioBtn.textContent = '▶';
+        audioBtn.classList.remove('playing');
+        audioProgress.style.width = '0%';
+        audioTime.textContent = '0:00';
+      });
+      currentAudio.addEventListener('error', () => {
+        audioBtn.textContent = '✕';
+        audioBtn.style.background = '#ef4444';
+        audioTime.textContent = 'Audio fehlt';
+      });
+      currentAudio.play();
+      audioBtn.textContent = '⏸';
+      audioBtn.classList.add('playing');
+    });
+
+    // Seek beim Klick auf die Bar
+    if (audioBar) {
+      audioBar.addEventListener('click', (e) => {
+        if (!currentAudio || !currentAudio.duration) return;
+        const rect = audioBar.getBoundingClientRect();
+        const pct = (e.clientX - rect.left) / rect.width;
+        currentAudio.currentTime = pct * currentAudio.duration;
+      });
+    }
+  }
 
   // Wire command builder (only if present)
   if (flags) {
@@ -3503,6 +3592,12 @@ function updateCommandPreview(toolId, flags) {
 }
 
 function closeToolDetail() {
+  // Audio stoppen wenn Modal schließt
+  const btn = document.getElementById('detail-audio-btn');
+  if (btn && btn.textContent === '⏸') {
+    const audioEl = document.querySelector('audio');
+    if (audioEl) audioEl.pause();
+  }
   document.getElementById('detail-overlay').classList.remove('visible');
 }
 
