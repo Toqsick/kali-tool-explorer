@@ -34,6 +34,7 @@
     h1{font-family:var(--font-display);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
     h1 .accent{color:var(--accent-cyan)}
     .subtitle{color:var(--text-secondary);font-size:.95rem}
+    .header-controls{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
     .header-stats{font-family:var(--font-mono);font-size:.8rem;color:var(--text-muted);text-align:right}
     .filter-bar{position:sticky;top:0;z-index:50;max-width:1280px;margin:0 auto;padding:12px 24px;background:rgba(5,5,7,.92);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
     .filter-search{flex:1;min-width:200px;padding:10px 16px;background:var(--bg-surface);border:1px solid var(--border);border-radius:8px;color:var(--text-primary);font-size:.9rem;font-family:var(--font-body);outline:none;transition:border-color .2s}
@@ -321,7 +322,7 @@
 .cmdbuilder-hint{font-size:.68rem;color:var(--text-muted);font-style:italic}
 
 /* ═══ THEMES ═══ */
-.theme-toggle{position:absolute;top:48px;right:24px;display:flex;gap:6px;z-index:5}
+.theme-toggle{display:flex;gap:6px;background:var(--bg-surface);padding:5px;border-radius:100px;border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.3)}
 .theme-btn{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);cursor:pointer;transition:transform .15s,border-color .15s}
 .theme-btn:hover{transform:scale(1.15)}
 .theme-btn.active{border-color:var(--text-primary);transform:scale(1.1)}
@@ -389,10 +390,17 @@
   <div class="reading-progress" id="reading-progress"></div>
   <header class="app-header">
     <div class="header-inner">
-      <div class="theme-toggle" id="theme-toggle">
-        <button class="theme-btn active" data-theme="dark" aria-label="Dark Theme" title="Dark"></button>
-        <button class="theme-btn" data-theme="cyber" aria-label="Cyber Theme" title="Cyber"></button>
-        <button class="theme-btn" data-theme="light" aria-label="Light Theme" title="Light"></button>
+      <div class="header-controls">
+        <div class="theme-toggle" id="theme-toggle">
+          <button class="theme-btn active" data-theme="dark" aria-label="Dark Theme" title="Dark"></button>
+          <button class="theme-btn" data-theme="cyber" aria-label="Cyber Theme" title="Cyber"></button>
+          <button class="theme-btn" data-theme="light" aria-label="Light Theme" title="Light"></button>
+        </div>
+        <div class="mode-switch" id="mode-switch">
+          <button class="mode-btn active blue" data-mode="blue">🔵 Blue</button>
+          <button class="mode-btn purple" data-mode="purple">🟣 Purple</button>
+        </div>
+        <div class="header-stats" id="header-stats"></div>
       </div>
       <div>
         <div class="terminal-prefix">forensic.tool_db.ready</div>
