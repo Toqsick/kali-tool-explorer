@@ -1,0 +1,1358 @@
+{
+  "dataset_id": "kali-tool-explorer-v1",
+  "generated_at": "2026-10-20",
+  "axes": [
+    "recon",
+    "scanning",
+    "enumeration",
+    "web",
+    "network",
+    "wireless",
+    "credentials",
+    "exploitation",
+    "post-exploitation",
+    "active-directory",
+    "cloud",
+    "container",
+    "forensics",
+    "disk",
+    "memory",
+    "malware",
+    "threat-detection",
+    "siem",
+    "incident-response",
+    "hardening",
+    "firewall",
+    "vpn",
+    "backup",
+    "reporting",
+    "osint",
+    "social-engineering",
+    "database",
+    "reverse-engineering",
+    "fuzzing",
+    "cryptography",
+    "governance",
+    "asset-management"
+  ],
+  "category_axis": {
+    "info-gathering": "recon",
+    "vulnerability-analysis": "scanning",
+    "web-app-analysis": "web",
+    "database-assessment": "database",
+    "password-attacks": "credentials",
+    "wireless-attacks": "wireless",
+    "reverse-engineering": "reverse-engineering",
+    "exploitation": "exploitation",
+    "sniffing-spoofing": "network",
+    "post-exploitation": "post-exploitation",
+    "forensik": "forensics",
+    "reporting": "reporting",
+    "govern": "governance",
+    "identify": "asset-management",
+    "protect": "hardening",
+    "detect": "threat-detection",
+    "respond": "incident-response",
+    "recover": "backup"
+  },
+  "mapping": {
+    "400+-Formate": {
+      "axes": [
+        "forensics"
+      ],
+      "attributes": [
+        "artifact:many-formats"
+      ]
+    },
+    "AD": {
+      "axes": [
+        "active-directory"
+      ],
+      "attributes": []
+    },
+    "AFF": {
+      "axes": [
+        "forensics",
+        "disk"
+      ],
+      "attributes": [
+        "artifact:aff"
+      ]
+    },
+    "ARP": {
+      "axes": [
+        "network"
+      ],
+      "attributes": []
+    },
+    "AV-Evasion": {
+      "axes": [
+        "malware",
+        "exploitation"
+      ],
+      "attributes": [
+        "security:evasion"
+      ]
+    },
+    "Analysis": {
+      "axes": [],
+      "attributes": [
+        "feature:analysis"
+      ]
+    },
+    "Asset": {
+      "axes": [
+        "asset-management",
+        "recon"
+      ],
+      "attributes": []
+    },
+    "Audit": {
+      "axes": [
+        "governance",
+        "hardening"
+      ],
+      "attributes": []
+    },
+    "Audit-Log": {
+      "axes": [
+        "governance",
+        "siem"
+      ],
+      "attributes": []
+    },
+    "Automated": {
+      "axes": [],
+      "attributes": [
+        "automation:automated"
+      ]
+    },
+    "Automation": {
+      "axes": [],
+      "attributes": [
+        "feature:automation"
+      ]
+    },
+    "Backup": {
+      "axes": [
+        "backup"
+      ],
+      "attributes": []
+    },
+    "Bare-Metal": {
+      "axes": [],
+      "attributes": [
+        "platform:bare-metal"
+      ]
+    },
+    "Batch": {
+      "axes": [],
+      "attributes": [
+        "interface:batch"
+      ]
+    },
+    "Bruteforce": {
+      "axes": [
+        "credentials"
+      ],
+      "attributes": []
+    },
+    "Bulk-Export": {
+      "axes": [
+        "reporting"
+      ],
+      "attributes": [
+        "feature:bulk-export"
+      ]
+    },
+    "C2": {
+      "axes": [
+        "post-exploitation",
+        "exploitation"
+      ],
+      "attributes": [
+        "security:c2"
+      ]
+    },
+    "CGI": {
+      "axes": [
+        "web"
+      ],
+      "attributes": []
+    },
+    "CLI": {
+      "axes": [],
+      "attributes": [
+        "interface:cli"
+      ]
+    },
+    "CMS": {
+      "axes": [
+        "web"
+      ],
+      "attributes": [
+        "product:cms"
+      ]
+    },
+    "CTI": {
+      "axes": [
+        "threat-detection",
+        "osint"
+      ],
+      "attributes": []
+    },
+    "CVE": {
+      "axes": [
+        "scanning",
+        "exploitation"
+      ],
+      "attributes": []
+    },
+    "Carving": {
+      "axes": [
+        "forensics",
+        "disk"
+      ],
+      "attributes": []
+    },
+    "Case-Mgmt": {
+      "axes": [
+        "incident-response",
+        "reporting"
+      ],
+      "attributes": []
+    },
+    "Cases": {
+      "axes": [
+        "incident-response",
+        "reporting"
+      ],
+      "attributes": []
+    },
+    "Classic": {
+      "axes": [],
+      "attributes": [
+        "maturity:classic"
+      ]
+    },
+    "Cmd-Inj": {
+      "axes": [
+        "web",
+        "exploitation"
+      ],
+      "attributes": []
+    },
+    "Collab": {
+      "axes": [
+        "reporting"
+      ],
+      "attributes": [
+        "feature:collaboration"
+      ]
+    },
+    "Compliance": {
+      "axes": [
+        "governance",
+        "hardening"
+      ],
+      "attributes": []
+    },
+    "Containers": {
+      "axes": [
+        "container"
+      ],
+      "attributes": [
+        "platform:containers"
+      ]
+    },
+    "Court-ready": {
+      "axes": [
+        "forensics",
+        "reporting"
+      ],
+      "attributes": [
+        "legal:court-ready"
+      ]
+    },
+    "Cracking": {
+      "axes": [
+        "credentials"
+      ],
+      "attributes": []
+    },
+    "Creds": {
+      "axes": [
+        "credentials"
+      ],
+      "attributes": []
+    },
+    "DB": {
+      "axes": [
+        "database"
+      ],
+      "attributes": []
+    },
+    "DFIR": {
+      "axes": [
+        "forensics",
+        "incident-response"
+      ],
+      "attributes": []
+    },
+    "Daily": {
+      "axes": [],
+      "attributes": [
+        "maturity:daily"
+      ]
+    },
+    "Data": {
+      "axes": [],
+      "attributes": [
+        "feature:data"
+      ]
+    },
+    "Database": {
+      "axes": [
+        "database"
+      ],
+      "attributes": []
+    },
+    "Debugger": {
+      "axes": [
+        "reverse-engineering"
+      ],
+      "attributes": []
+    },
+    "Decode": {
+      "axes": [
+        "reverse-engineering",
+        "cryptography"
+      ],
+      "attributes": []
+    },
+    "Decompiler": {
+      "axes": [
+        "reverse-engineering"
+      ],
+      "attributes": []
+    },
+    "Dedupe": {
+      "axes": [
+        "forensics"
+      ],
+      "attributes": [
+        "feature:dedupe"
+      ]
+    },
+    "Deep-Analysis": {
+      "axes": [
+        "reverse-engineering",
+        "malware"
+      ],
+      "attributes": []
+    },
+    "Defekt-resistent": {
+      "axes": [
+        "forensics"
+      ],
+      "attributes": [
+        "property:defect-resistant"
+      ]
+    },
+    "Defense": {
+      "axes": [
+        "hardening",
+        "threat-detection"
+      ],
+      "attributes": []
+    },
+    "Demo": {
+      "axes": [],
+      "attributes": [
+        "feature:demo"
+      ]
+    },
+    "Detection": {
+      "axes": [
+        "threat-detection"
+      ],
+      "attributes": []
+    },
+    "Disasm": {
+      "axes": [
+        "reverse-engineering"
+      ],
+      "attributes": []
+    },
+    "Discovery": {
+      "axes": [
+        "recon"
+      ],
+      "attributes": []
+    },
+    "Dynamic": {
+      "axes": [
+        "reverse-engineering"
+      ],
+      "attributes": [
+        "analysis:dynamic"
+      ]
+    },
+    "E01": {
+      "axes": [
+        "forensics",
+        "disk"
+      ],
+      "attributes": [
+        "artifact:e01"
+      ]
+    },
+    "EDR": {
+      "axes": [
+        "threat-detection"
+      ],
+      "attributes": [
+        "endpoint:edr"
+      ]
+    },
+    "Email": {
+      "axes": [
+        "osint",
+        "social-engineering"
+      ],
+      "attributes": []
+    },
+    "Embedded": {
+      "axes": [],
+      "attributes": [
+        "platform:embedded"
+      ]
+    },
+    "Encrypted": {
+      "axes": [
+        "cryptography"
+      ],
+      "attributes": []
+    },
+    "Encryption": {
+      "axes": [
+        "cryptography"
+      ],
+      "attributes": []
+    },
+    "Endpoint": {
+      "axes": [
+        "threat-detection"
+      ],
+      "attributes": [
+        "endpoint:generic"
+      ]
+    },
+    "Exploit": {
+      "axes": [
+        "exploitation"
+      ],
+      "attributes": []
+    },
+    "Exploit-DB": {
+      "axes": [
+        "exploitation"
+      ],
+      "attributes": []
+    },
+    "Fast": {
+      "axes": [],
+      "attributes": [
+        "performance:fast"
+      ]
+    },
+    "File-Integrity": {
+      "axes": [
+        "forensics",
+        "hardening"
+      ],
+      "attributes": []
+    },
+    "Filesystem-agnostisch": {
+      "axes": [
+        "forensics",
+        "disk"
+      ],
+      "attributes": [
+        "property:filesystem-agnostic"
+      ]
+    },
+    "Firewall": {
+      "axes": [
+        "firewall",
+        "hardening"
+      ],
+      "attributes": []
+    },
+    "Firmware": {
+      "axes": [
+        "forensics"
+      ],
+      "attributes": [
+        "artifact:firmware"
+      ]
+    },
+    "Framework": {
+      "axes": [],
+      "attributes": [
+        "type:framework"
+      ]
+    },
+    "Fuzz": {
+      "axes": [
+        "fuzzing"
+      ],
+      "attributes": []
+    },
+    "Fuzzy": {
+      "axes": [
+        "fuzzing"
+      ],
+      "attributes": [
+        "feature:fuzzy"
+      ]
+    },
+    "GPU": {
+      "axes": [],
+      "attributes": [
+        "performance:gpu"
+      ]
+    },
+    "GUI": {
+      "axes": [],
+      "attributes": [
+        "interface:gui"
+      ]
+    },
+    "Generator": {
+      "axes": [
+        "fuzzing"
+      ],
+      "attributes": [
+        "feature:generator"
+      ]
+    },
+    "Gold": {
+      "axes": [],
+      "attributes": [
+        "maturity:gold"
+      ]
+    },
+    "Google": {
+      "axes": [
+        "osint"
+      ],
+      "attributes": [
+        "product:google"
+      ]
+    },
+    "Graph": {
+      "axes": [],
+      "attributes": [
+        "interface:graph"
+      ]
+    },
+    "HTTPS": {
+      "axes": [
+        "web",
+        "network"
+      ],
+      "attributes": []
+    },
+    "Hardening": {
+      "axes": [
+        "hardening"
+      ],
+      "attributes": []
+    },
+    "Hash": {
+      "axes": [
+        "credentials"
+      ],
+      "attributes": []
+    },
+    "Header/Footer": {
+      "axes": [
+        "forensics"
+      ],
+      "attributes": [
+        "artifact:carving"
+      ]
+    },
+    "Hierarchy": {
+      "axes": [],
+      "attributes": [
+        "interface:hierarchy"
+      ]
+    },
+    "High-Speed": {
+      "axes": [],
+      "attributes": [
+        "performance:high-speed"
+      ]
+    },
+    "IDS": {
+      "axes": [
+        "threat-detection"
+      ],
+      "attributes": []
+    },
+    "IOC": {
+      "axes": [
+        "threat-detection",
+        "malware"
+      ],
+      "attributes": []
+    },
+    "IPS": {
+      "axes": [
+        "threat-detection"
+      ],
+      "attributes": []
+    },
+    "IR": {
+      "axes": [
+        "incident-response"
+      ],
+      "attributes": []
+    },
+    "Imaging": {
+      "axes": [
+        "forensics",
+        "disk"
+      ],
+      "attributes": []
+    },
+    "Impacket": {
+      "axes": [
+        "active-directory",
+        "post-exploitation"
+      ],
+      "attributes": [
+        "product:impacket"
+      ]
+    },
+    "Industry-Standard": {
+      "axes": [],
+      "attributes": [
+        "maturity:industry-standard"
+      ]
+    },
+    "IoT": {
+      "axes": [
+        "network"
+      ],
+      "attributes": [
+        "platform:iot"
+      ]
+    },
+    "Journal": {
+      "axes": [
+        "forensics",
+        "disk"
+      ],
+      "attributes": [
+        "artifact:journal"
+      ]
+    },
+    "LAN": {
+      "axes": [
+        "network"
+      ],
+      "attributes": []
+    },
+    "LLMNR": {
+      "axes": [
+        "network",
+        "active-directory"
+      ],
+      "attributes": []
+    },
+    "Lateral": {
+      "axes": [
+        "post-exploitation",
+        "active-directory"
+      ],
+      "attributes": [
+        "security:lateral-movement"
+      ]
+    },
+    "Linux": {
+      "axes": [],
+      "attributes": [
+        "platform:linux"
+      ]
+    },
+    "Live-Triage": {
+      "axes": [
+        "incident-response",
+        "forensics"
+      ],
+      "attributes": []
+    },
+    "Logs": {
+      "axes": [
+        "siem",
+        "reporting"
+      ],
+      "attributes": []
+    },
+    "MAC": {
+      "axes": [
+        "hardening"
+      ],
+      "attributes": [
+        "access-control:mandatory"
+      ],
+      "note": "Mandatory Access Control (AppArmor/SELinux), nicht MAC-Adresse"
+    },
+    "MSSQL": {
+      "axes": [
+        "database"
+      ],
+      "attributes": [
+        "product:mssql"
+      ]
+    },
+    "MitM": {
+      "axes": [
+        "network"
+      ],
+      "attributes": []
+    },
+    "Modular": {
+      "axes": [],
+      "attributes": [
+        "architecture:modular"
+      ]
+    },
+    "Multi-threaded": {
+      "axes": [],
+      "attributes": [
+        "performance:multi-threaded"
+      ]
+    },
+    "NGFW": {
+      "axes": [
+        "firewall",
+        "threat-detection"
+      ],
+      "attributes": []
+    },
+    "NSE": {
+      "axes": [
+        "scanning",
+        "network"
+      ],
+      "attributes": []
+    },
+    "NSM": {
+      "axes": [
+        "threat-detection",
+        "network"
+      ],
+      "attributes": []
+    },
+    "NSRL": {
+      "axes": [
+        "forensics"
+      ],
+      "attributes": [
+        "product:nsrl"
+      ]
+    },
+    "NTFS": {
+      "axes": [
+        "forensics",
+        "disk"
+      ],
+      "attributes": [
+        "artifact:ntfs"
+      ]
+    },
+    "NTLM": {
+      "axes": [
+        "credentials",
+        "active-directory"
+      ],
+      "attributes": []
+    },
+    "Network": {
+      "axes": [
+        "network"
+      ],
+      "attributes": []
+    },
+    "Notes": {
+      "axes": [
+        "reporting"
+      ],
+      "attributes": [
+        "feature:notes"
+      ]
+    },
+    "OSINT": {
+      "axes": [
+        "osint",
+        "recon"
+      ],
+      "attributes": []
+    },
+    "Obfuscated": {
+      "axes": [
+        "malware",
+        "reverse-engineering"
+      ],
+      "attributes": []
+    },
+    "Online": {
+      "axes": [],
+      "attributes": [
+        "mode:online"
+      ]
+    },
+    "Oracle": {
+      "axes": [
+        "database"
+      ],
+      "attributes": [
+        "product:oracle"
+      ]
+    },
+    "PCAP": {
+      "axes": [
+        "network",
+        "forensics"
+      ],
+      "attributes": [
+        "artifact:pcap"
+      ]
+    },
+    "PDF": {
+      "axes": [
+        "forensics"
+      ],
+      "attributes": [
+        "artifact:pdf"
+      ]
+    },
+    "PII": {
+      "axes": [
+        "forensics"
+      ],
+      "attributes": [
+        "privacy:pii"
+      ]
+    },
+    "PTH": {
+      "axes": [
+        "credentials",
+        "active-directory"
+      ],
+      "attributes": [
+        "security:pass-the-hash"
+      ]
+    },
+    "Packet-Craft": {
+      "axes": [
+        "network"
+      ],
+      "attributes": []
+    },
+    "Partition": {
+      "axes": [
+        "forensics",
+        "disk"
+      ],
+      "attributes": [
+        "artifact:partition"
+      ]
+    },
+    "Pattern": {
+      "axes": [
+        "malware",
+        "reverse-engineering"
+      ],
+      "attributes": []
+    },
+    "Payload": {
+      "axes": [
+        "exploitation"
+      ],
+      "attributes": [
+        "security:payload"
+      ]
+    },
+    "Phishing": {
+      "axes": [
+        "social-engineering"
+      ],
+      "attributes": []
+    },
+    "Pivoting": {
+      "axes": [
+        "network",
+        "post-exploitation"
+      ],
+      "attributes": []
+    },
+    "Plugin": {
+      "axes": [],
+      "attributes": [
+        "type:plugin"
+      ]
+    },
+    "PowerShell": {
+      "axes": [
+        "active-directory"
+      ],
+      "attributes": [
+        "platform:windows"
+      ]
+    },
+    "Privesc": {
+      "axes": [
+        "post-exploitation"
+      ],
+      "attributes": [
+        "security:privilege-escalation"
+      ]
+    },
+    "Proxy": {
+      "axes": [
+        "network"
+      ],
+      "attributes": []
+    },
+    "Python3": {
+      "axes": [],
+      "attributes": [
+        "platform:python"
+      ]
+    },
+    "Quick-Scan": {
+      "axes": [
+        "scanning"
+      ],
+      "attributes": []
+    },
+    "RAM-Dump": {
+      "axes": [
+        "memory",
+        "forensics"
+      ],
+      "attributes": [
+        "artifact:ram-dump"
+      ]
+    },
+    "RE": {
+      "axes": [
+        "reverse-engineering"
+      ],
+      "attributes": []
+    },
+    "RHEL": {
+      "axes": [],
+      "attributes": [
+        "platform:rhel"
+      ]
+    },
+    "Recon": {
+      "axes": [
+        "recon"
+      ],
+      "attributes": []
+    },
+    "Recording": {
+      "axes": [
+        "reporting"
+      ],
+      "attributes": [
+        "feature:recording"
+      ]
+    },
+    "Recovery": {
+      "axes": [
+        "backup",
+        "forensics"
+      ],
+      "attributes": []
+    },
+    "Reporting": {
+      "axes": [
+        "reporting"
+      ],
+      "attributes": []
+    },
+    "Response": {
+      "axes": [
+        "incident-response"
+      ],
+      "attributes": []
+    },
+    "Rootkit": {
+      "axes": [
+        "malware"
+      ],
+      "attributes": []
+    },
+    "Rules": {
+      "axes": [],
+      "attributes": [
+        "feature:rules"
+      ]
+    },
+    "Runtime": {
+      "axes": [],
+      "attributes": [
+        "feature:runtime"
+      ]
+    },
+    "SCAP": {
+      "axes": [
+        "hardening",
+        "governance"
+      ],
+      "attributes": []
+    },
+    "SIEM": {
+      "axes": [
+        "siem",
+        "threat-detection"
+      ],
+      "attributes": []
+    },
+    "SMB": {
+      "axes": [
+        "network",
+        "active-directory"
+      ],
+      "attributes": []
+    },
+    "SQL": {
+      "axes": [
+        "database"
+      ],
+      "attributes": []
+    },
+    "SQLi": {
+      "axes": [
+        "web",
+        "database"
+      ],
+      "attributes": []
+    },
+    "SSH": {
+      "axes": [
+        "network"
+      ],
+      "attributes": []
+    },
+    "Scanner": {
+      "axes": [
+        "scanning"
+      ],
+      "attributes": []
+    },
+    "Scapy": {
+      "axes": [
+        "network"
+      ],
+      "attributes": [
+        "product:scapy"
+      ]
+    },
+    "Screenshot": {
+      "axes": [
+        "reporting"
+      ],
+      "attributes": [
+        "feature:screenshot"
+      ]
+    },
+    "Search": {
+      "axes": [
+        "recon"
+      ],
+      "attributes": [
+        "feature:search"
+      ]
+    },
+    "Skriptbar": {
+      "axes": [],
+      "attributes": [
+        "automation:scriptable"
+      ]
+    },
+    "Sleuth-Kit": {
+      "axes": [
+        "forensics"
+      ],
+      "attributes": [
+        "product:sleuthkit"
+      ]
+    },
+    "Sniffer": {
+      "axes": [
+        "network"
+      ],
+      "attributes": []
+    },
+    "Social-Eng": {
+      "axes": [
+        "social-engineering"
+      ],
+      "attributes": []
+    },
+    "Static": {
+      "axes": [
+        "reverse-engineering"
+      ],
+      "attributes": [
+        "analysis:static"
+      ]
+    },
+    "Stats": {
+      "axes": [
+        "reporting"
+      ],
+      "attributes": [
+        "feature:stats"
+      ]
+    },
+    "Strings": {
+      "axes": [
+        "forensics",
+        "reverse-engineering"
+      ],
+      "attributes": [
+        "artifact:strings"
+      ]
+    },
+    "Subdomain": {
+      "axes": [
+        "recon",
+        "osint"
+      ],
+      "attributes": []
+    },
+    "Sync": {
+      "axes": [
+        "backup"
+      ],
+      "attributes": [
+        "feature:sync"
+      ]
+    },
+    "Tags": {
+      "axes": [],
+      "attributes": [
+        "metadata:tags"
+      ]
+    },
+    "Tarnung-Erkennung": {
+      "axes": [
+        "threat-detection",
+        "malware"
+      ],
+      "attributes": [
+        "property:evasion-detection"
+      ]
+    },
+    "Templates": {
+      "axes": [],
+      "attributes": [
+        "feature:templates"
+      ]
+    },
+    "Terrabyte": {
+      "axes": [
+        "forensics"
+      ],
+      "attributes": [
+        "performance:terabyte"
+      ]
+    },
+    "Trace": {
+      "axes": [
+        "network"
+      ],
+      "attributes": []
+    },
+    "Tunnel": {
+      "axes": [
+        "vpn",
+        "network"
+      ],
+      "attributes": []
+    },
+    "Unallocated": {
+      "axes": [
+        "forensics",
+        "disk"
+      ],
+      "attributes": [
+        "artifact:unallocated"
+      ]
+    },
+    "Varianten": {
+      "axes": [],
+      "attributes": [
+        "feature:variants"
+      ]
+    },
+    "Visual": {
+      "axes": [],
+      "attributes": [
+        "interface:visual"
+      ]
+    },
+    "Vuln": {
+      "axes": [
+        "scanning"
+      ],
+      "attributes": []
+    },
+    "Vuln-Scan": {
+      "axes": [
+        "scanning"
+      ],
+      "attributes": []
+    },
+    "VulnMgmt": {
+      "axes": [
+        "scanning",
+        "governance"
+      ],
+      "attributes": []
+    },
+    "Vulnerability": {
+      "axes": [
+        "scanning"
+      ],
+      "attributes": []
+    },
+    "WPA": {
+      "axes": [
+        "wireless"
+      ],
+      "attributes": [
+        "artifact:wpa"
+      ]
+    },
+    "WPS": {
+      "axes": [
+        "wireless"
+      ],
+      "attributes": [
+        "artifact:wps"
+      ]
+    },
+    "Web": {
+      "axes": [
+        "web"
+      ],
+      "attributes": []
+    },
+    "WebDAV": {
+      "axes": [
+        "web"
+      ],
+      "attributes": []
+    },
+    "WiFi": {
+      "axes": [
+        "wireless"
+      ],
+      "attributes": []
+    },
+    "WinRM": {
+      "axes": [
+        "network",
+        "active-directory"
+      ],
+      "attributes": []
+    },
+    "Windows": {
+      "axes": [],
+      "attributes": [
+        "platform:windows"
+      ]
+    },
+    "WordPress": {
+      "axes": [
+        "web"
+      ],
+      "attributes": [
+        "product:wordpress"
+      ]
+    },
+    "Wordlist": {
+      "axes": [
+        "credentials"
+      ],
+      "attributes": []
+    },
+    "XDR": {
+      "axes": [
+        "threat-detection"
+      ],
+      "attributes": []
+    },
+    "dd": {
+      "axes": [
+        "forensics",
+        "disk"
+      ],
+      "attributes": [
+        "artifact:dd"
+      ]
+    },
+    "eBPF": {
+      "axes": [
+        "threat-detection"
+      ],
+      "attributes": [
+        "platform:linux-ebpf"
+      ]
+    },
+    "ext3": {
+      "axes": [
+        "forensics",
+        "disk"
+      ],
+      "attributes": [
+        "artifact:ext3"
+      ]
+    },
+    "ext4": {
+      "axes": [
+        "forensics",
+        "disk"
+      ],
+      "attributes": [
+        "artifact:ext4"
+      ]
+    },
+    "libewf": {
+      "axes": [
+        "forensics",
+        "disk"
+      ],
+      "attributes": [
+        "artifact:ewf"
+      ]
+    }
+  },
+  "unmapped": [],
+  "counts": {
+    "raw_tags": 185,
+    "mapped_tags": 185,
+    "unmapped_tags": 0
+  }
+}

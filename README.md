@@ -246,6 +246,15 @@ Wir glauben an **transparente Entwicklung**. Alle Reviews sind im Repo:
 
 ---
 
+## 📦 Datasets
+
+Kuratierte, reproduzierbare Datensätze liegen unter [`datasets/`](./datasets/). Der erste Datensatz [`kali-tool-explorer-v1`](./datasets/kali-tool-explorer-v1/) enthält 131 Tools, 182 Beispiel-Commands, 12 Playbooks, 4 Lernpfade und 131 Narrationen — mit Provenienz, Safety-Klassifikation, Qualitätsbericht und einer 26-Tool-Review-Stichprobe.
+
+- [Datasets-Übersicht](./datasets/README.md)
+- [Dataset v1](./datasets/kali-tool-explorer-v1/README.md)
+- [Qualitätsbericht](./datasets/kali-tool-explorer-v1/quality-report.md)
+- [Safety Policy](./datasets/kali-tool-explorer-v1/SAFETY.md)
+
 ## 📊 Stats
 
 | Metrik | Wert |

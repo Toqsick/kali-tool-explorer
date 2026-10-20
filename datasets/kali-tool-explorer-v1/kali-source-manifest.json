@@ -1,0 +1,103 @@
+{
+  "dataset_id": "kali-tool-explorer-v1",
+  "generated_at": "2026-10-20",
+  "source_repo": "https://github.com/Toqsick/kali-tool-explorer",
+  "kali_version": "2026.2",
+  "app_version": "3.1",
+  "data_version": "2.0",
+  "license": "MIT",
+  "safety": "dual-use",
+  "counts": {
+    "tools": 131,
+    "example_commands": 182,
+    "builder_records": 15,
+    "curriculum_records": 18,
+    "narrations": 131,
+    "docs_chunks": 21,
+    "audits": 7,
+    "review_sample": 26
+  },
+  "generator": "build_kali_dataset.py + extract_js.js",
+  "source_files": [
+    {
+      "path": "forensik-explorer.html",
+      "repo_path": "forensik-explorer.html",
+      "role": "inline tool database + UI",
+      "bytes": 183718,
+      "sha256": "f21d9cb2185f97c0bd2c29873ff7be92389ec095607ecb6a114dcfaee22e79ae",
+      "url": "https://github.com/Toqsick/kali-tool-explorer/blob/main/forensik-explorer.html"
+    },
+    {
+      "path": "scripts/tool-audio-scripts.json",
+      "repo_path": "scripts/tool-audio-scripts.json",
+      "role": "German narration scripts",
+      "bytes": 40267,
+      "sha256": "5c47aebecf5517b82e82f17613f66aa839c46344d026042bd5c484de902407ee",
+      "url": "https://github.com/Toqsick/kali-tool-explorer/blob/main/scripts/tool-audio-scripts.json"
+    },
+    {
+      "path": "docs/kali-blue-vs-purple.md",
+      "repo_path": "docs/kali-blue-vs-purple.md",
+      "role": "research document",
+      "bytes": 20424,
+      "sha256": "02bfdbc04d4ffdda2f8dc95eb01161120e811257aba43db85c11421c6ccb7609",
+      "url": "https://github.com/Toqsick/kali-tool-explorer/blob/main/docs/kali-blue-vs-purple.md"
+    },
+    {
+      "path": "docs/kali-forensik-overview.md",
+      "repo_path": "docs/kali-forensik-overview.md",
+      "role": "research document",
+      "bytes": 7159,
+      "sha256": "e5bd0d742b085fecaeaacb6bf14ce288bc48a9c38239fbe1db60a6ce076ef978",
+      "url": "https://github.com/Toqsick/kali-tool-explorer/blob/main/docs/kali-forensik-overview.md"
+    },
+    {
+      "path": "audits/bug-hunt-report.md",
+      "repo_path": "audits/bug-hunt-report.md",
+      "role": "audit report",
+      "bytes": 24741,
+      "sha256": "ac99954da8fb3e93ec52a7db72a69d2741abcf6ac2f8b57b7f4ec33a591f58a0",
+      "url": "https://github.com/Toqsick/kali-tool-explorer/blob/main/audits/bug-hunt-report.md"
+    },
+    {
+      "path": "audits/bug-hunt-v2-report.md",
+      "repo_path": "audits/bug-hunt-v2-report.md",
+      "role": "audit report",
+      "bytes": 16405,
+      "sha256": "e6789e2ceea4819cf0ed42bafba4cea362123d535e1253894ec7f3e547601121",
+      "url": "https://github.com/Toqsick/kali-tool-explorer/blob/main/audits/bug-hunt-v2-report.md"
+    },
+    {
+      "path": "audits/grand-polish-review-engineer.md",
+      "repo_path": "audits/grand-polish-review-engineer.md",
+      "role": "audit report",
+      "bytes": 27021,
+      "sha256": "09b2e34a325490b0f0b604ac3dbc4800e3b32f6f14595b598d1b614b11f5114b",
+      "url": "https://github.com/Toqsick/kali-tool-explorer/blob/main/audits/grand-polish-review-engineer.md"
+    },
+    {
+      "path": "audits/grand-polish-review-ux.md",
+      "repo_path": "audits/grand-polish-review-ux.md",
+      "role": "audit report",
+      "bytes": 27882,
+      "sha256": "60063f1369bb76ffc49ca1d96cf16f9de7559131d26aa0b935aba86ac8a77558",
+      "url": "https://github.com/Toqsick/kali-tool-explorer/blob/main/audits/grand-polish-review-ux.md"
+    },
+    {
+      "path": "audits/ui-polish-report.md",
+      "repo_path": "audits/ui-polish-report.md",
+      "role": "audit report",
+      "bytes": 18772,
+      "sha256": "4f84ed98e864c999b6ab8c284cc1b9aa23d62ea906e2b0e3b4cd825738c01b1b",
+      "url": "https://github.com/Toqsick/kali-tool-explorer/blob/main/audits/ui-polish-report.md"
+    },
+    {
+      "path": "audits/ui-polish-v2-report.md",
+      "repo_path": "audits/ui-polish-v2-report.md",
+      "role": "audit report",
+      "bytes": 31691,
+      "sha256": "bdf4189ace0832c9642b2306d5addbcdc376dde65f229d306ae1388d388812f7",
+      "url": "https://github.com/Toqsick/kali-tool-explorer/blob/main/audits/ui-polish-v2-report.md"
+    }
+  ]
+}
