@@ -100,7 +100,7 @@
 .compare-btn-go:hover{background:#06b6d4}
 .compare-btn-clear{padding:8px 16px;background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:6px;font-size:.85rem;cursor:pointer}
 .compare-btn-clear:hover{color:var(--text-primary);border-color:var(--border-strong)}
-.compare-modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:24px}
+.compare-modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:24px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 .compare-modal-overlay.visible{display:flex}
 .compare-modal{background:var(--bg-surface);border:1px solid var(--border-strong);border-radius:12px;max-width:1100px;width:100%;max-height:85vh;overflow-y:auto;padding:32px;position:relative}
 .compare-modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:pointer;padding:4px 8px;line-height:1}
@@ -136,8 +136,8 @@
 .paths-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px;flex-wrap:wrap}
 .paths-header h2{font-family:var(--font-display);font-size:1.1rem;color:var(--text-primary)}
 .paths-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
-.path-card{background:var(--bg-surface);border:1px solid var(--border);border-left:3px solid var(--accent-cyan);border-radius:12px;padding:18px;cursor:pointer;position:relative;overflow:hidden}
-.path-card:hover{border-color:var(--accent-cyan)}
+.path-card{background:var(--bg-surface);border:1px solid var(--border);border-left:3px solid var(--accent-cyan);border-radius:12px;padding:18px;cursor:pointer;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s,border-color .2s}
+.path-card:hover{border-color:var(--accent-cyan);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
 [data-mode="purple"] .path-card:hover{border-color:#a855f7}
 [data-mode="purple"] .path-card{border-left-color:#a855f7}
 .path-card.active{border-color:var(--accent-cyan);box-shadow:0 0 0 1px var(--accent-cyan)}
@@ -165,7 +165,7 @@
 .path-reset{margin-top:10px;font-family:var(--font-mono);font-size:.68rem;color:var(--text-muted);background:none;border:none;cursor:pointer}
 .path-reset:hover{color:var(--accent-red)}
 /* Wizard */
-.wizard-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;padding:24px}
+.wizard-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;padding:24px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 .wizard-overlay.visible{display:flex}
 .wizard-modal{background:var(--bg-surface);border:1px solid var(--border-strong);border-radius:16px;max-width:580px;width:100%;padding:36px;position:relative;max-height:85vh;overflow-y:auto}
 .wizard-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:pointer}
@@ -193,7 +193,6 @@
 .wizard-btn-secondary:hover{color:var(--text-primary);border-color:var(--border-strong)}
 .wizard-back{margin-top:12px;font-size:.8rem;color:var(--text-muted);background:none;border:none;cursor:pointer;font-family:var(--font-mono)}
 .wizard-back:hover{color:var(--text-primary)}
-    @media(max-width:640px){.tools-grid{grid-template-columns:1fr}.header-inner{flex-direction:column;align-items:flex-start}}
 
 /* ═══ KEYBOARD SHORTCUTS HINT ═══ */
 .kbd-hint{position:fixed;bottom:16px;right:16px;z-index:90;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);cursor:pointer;display:flex;align-items:center;gap:8px;transition:border-color .2s}
@@ -204,7 +203,7 @@
 .reading-progress{position:fixed;top:0;left:0;height:2px;background:var(--accent-cyan);z-index:300;transition:width .1s;width:0%}
 
 /* ═══ CHEAT SHEET MODAL ═══ */
-.cheat-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;padding:24px}
+.cheat-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;padding:24px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 .cheat-overlay.visible{display:flex}
 .cheat-modal{background:var(--bg-surface);border:1px solid var(--border-strong);border-radius:12px;max-width:480px;width:100%;padding:32px;position:relative}
 .cheat-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:pointer}
@@ -232,9 +231,9 @@
 .detail-audio-time{font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);white-space:nowrap}
 
 /* ═══ LLM PROMPT BUILDER ═══ */
-.prompt-overlay{position:fixed;inset:0;z-index:350;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.prompt-overlay{position:fixed;inset:0;z-index:350;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:20px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 .prompt-overlay.visible{display:flex}
-.prompt-modal{background:var(--bg-surface);border:1px solid var(--border-strong);border-radius:16px;max-width:720px;width:100%;max-height:88vh;overflow-y:auto;position:relative}
+.prompt-modal{background:var(--bg-surface);border:1px solid var(--border-strong);border-radius:16px;max-width:680px;width:100%;max-height:88vh;overflow-y:auto;position:relative}
 .prompt-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
 .prompt-title{font-family:var(--font-display);font-size:1.2rem;color:var(--text-primary)}
 .prompt-close{background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:pointer}
@@ -244,8 +243,8 @@
 .prompt-label{display:block;font-family:var(--font-mono);font-size:.7rem;color:var(--accent-cyan);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
 [data-mode="purple"] .prompt-label{color:#c084fc}
 .prompt-templates{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
-.prompt-template{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;text-align:left}
-.prompt-template:hover{border-color:var(--accent-cyan)}
+.prompt-template{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;text-align:left;transition:transform .2s,box-shadow .2s,border-color .2s}
+.prompt-template:hover{border-color:var(--accent-cyan);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
 [data-mode="purple"] .prompt-template:hover{border-color:#a855f7}
 .prompt-template.active{border-color:var(--accent-cyan);box-shadow:0 0 0 1px var(--accent-cyan)}
 [data-mode="purple"] .prompt-template.active{border-color:#a855f7;box-shadow:0 0 0 1px #a855f7}
@@ -255,8 +254,8 @@
 .prompt-tool-select{display:flex;flex-wrap:wrap;gap:6px;max-height:200px;overflow-y:auto;padding:8px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px}
 .prompt-tool-chip{font-family:var(--font-mono);font-size:.72rem;padding:4px 10px;background:var(--bg-void);border:1px solid var(--border);border-radius:100px;color:var(--text-secondary);cursor:pointer}
 .prompt-tool-chip:hover{border-color:var(--accent-cyan)}
-.prompt-tool-chip.selected{background:rgba(34,211,238,.12);border-color:var(--accent-cyan);color:var(--accent-cyan)}
-[data-mode="purple"] .prompt-tool-chip.selected{background:rgba(168,85,247,.12);border-color:#a855f7;color:#c084fc}
+.prompt-tool-chip.selected{background:rgba(34,211,238,.18);border-color:var(--accent-cyan);color:#e0fbff;font-weight:600}
+[data-mode="purple"] .prompt-tool-chip.selected{background:rgba(168,85,247,.18);border-color:#a855f7;color:#e9d5ff;font-weight:600}
 .prompt-target{width:100%;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text-primary);font-family:var(--font-body);font-size:.85rem}
 .prompt-target:focus{border-color:var(--accent-cyan);outline:none}
 .prompt-output{background:var(--bg-void);border:1px solid var(--border);border-radius:10px;padding:16px;font-family:var(--font-mono);font-size:.78rem;color:var(--text-secondary);line-height:1.6;white-space:pre-wrap;word-break:break-word;max-height:300px;overflow-y:auto;position:relative}
@@ -272,13 +271,13 @@
 .detail-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:pointer;z-index:1;padding:4px 8px;line-height:1}
 .detail-close:hover{color:var(--text-primary)}
 .detail-badge{display:inline-block;font-family:var(--font-mono);font-size:.65rem;padding:2px 8px;border-radius:100px;font-weight:600;margin-bottom:8px}
-.detail-badge.daily{background:rgba(52,211,153,.12);color:var(--accent-green)}
+.detail-badge.daily{background:rgba(34,211,238,.12);color:var(--accent-cyan)}
 .detail-badge.classic{background:rgba(251,191,36,.12);color:var(--accent-amber)}
 .detail-badge.gold{background:rgba(168,85,247,.12);color:#c084fc}
 .detail-badge.special{background:rgba(167,139,250,.12);color:#c084fc}
 .detail-badge.standard{background:rgba(100,116,139,.12);color:var(--text-muted)}
 .detail-name{font-family:var(--font-display);font-size:1.5rem;color:var(--text-primary);margin-bottom:4px}
-.detail-cat{font-size:.8rem;color:var(--text-muted);font-family:var(--font-mono)}
+.detail-cat{font-size:.8rem;color:var(--text-secondary);font-family:var(--font-mono)}
 .detail-body{padding:20px 24px}
 .detail-section{margin-bottom:20px}
 .detail-section:last-child{margin-bottom:0}
@@ -318,19 +317,41 @@
 .cmdbuilder-flag{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:border-color .15s,background .15s}
 .cmdbuilder-flag:hover{border-color:var(--accent-cyan)}
 [data-mode="purple"] .cmdbuilder-flag:hover{border-color:#a855f7}
-.cmdbuilder-flag.active{border-color:var(--accent-cyan);background:rgba(34,211,238,.05)}
-[data-mode="purple"] .cmdbuilder-flag.active{border-color:#a855f7;background:rgba(168,85,247,.05)}
+.cmdbuilder-flag.active{border-color:var(--accent-cyan);background:rgba(34,211,238,.05);box-shadow:0 0 0 1px var(--accent-cyan),0 0 12px rgba(34,211,238,.15)}
+[data-mode="purple"] .cmdbuilder-flag.active{border-color:#a855f7;background:rgba(168,85,247,.05);box-shadow:0 0 0 1px #a855f7,0 0 12px rgba(168,85,247,.15)}
 .cmdbuilder-checkbox{margin-top:2px;accent-color:var(--accent-cyan);flex-shrink:0;cursor:pointer}
 [data-mode="purple"] .cmdbuilder-checkbox{accent-color:#a855f7}
 .cmdbuilder-flag-info{flex:1;min-width:0}
 .cmdbuilder-flag-label{font-family:var(--font-mono);font-size:.72rem;font-weight:600;color:var(--text-primary)}
 .cmdbuilder-flag-desc{font-size:.65rem;color:var(--text-muted);margin-top:2px;line-height:1.3}
-.cmdbuilder-output{background:var(--bg-void);border:1px solid var(--accent-cyan);border-radius:8px;padding:12px 16px;font-family:var(--font-mono);font-size:.82rem;color:var(--accent-green);position:relative;margin-bottom:8px;word-break:break-all;min-height:1.2em;padding-right:90px}
+.cmdbuilder-output{background:var(--bg-void);border:1px solid var(--accent-cyan);border-radius:8px;padding:12px 16px;font-family:var(--font-mono);font-size:.82rem;color:var(--accent-green);position:relative;margin-bottom:8px;word-break:break-all;min-height:2.4em;padding-right:96px}
 [data-mode="purple"] .cmdbuilder-output{border-color:#a855f7}
 .cmdbuilder-copy{position:absolute;top:8px;right:8px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:.68rem;color:var(--text-muted);cursor:pointer;font-family:var(--font-mono)}
 .cmdbuilder-copy:hover{color:var(--accent-cyan);border-color:var(--accent-cyan)}
 [data-mode="purple"] .cmdbuilder-copy:hover{color:#c084fc;border-color:#a855f7}
-.cmdbuilder-hint{font-size:.68rem;color:var(--text-muted);font-style:italic}
+.cmdbuilder-hint{font-size:.68rem;color:var(--text-secondary);font-style:normal}
+
+/* ═══ V3.2 POLISH — Fades, Scroll-Top, Chip-Filter, Empty-States ═══ */
+@keyframes overlayFade{from{opacity:0}to{opacity:1}}
+@keyframes modalIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+.detail-overlay.visible,.prompt-overlay.visible,.compare-modal-overlay.visible,.wizard-overlay.visible,.cheat-overlay.visible{animation:overlayFade .18s ease}
+.detail-overlay.visible .detail-modal,.prompt-overlay.visible .prompt-modal,.compare-modal-overlay.visible .compare-modal,.wizard-overlay.visible .wizard-modal,.cheat-overlay.visible .cheat-modal{animation:modalIn .18s ease}
+.scrollTop{position:fixed;bottom:24px;left:24px;z-index:80;width:44px;height:44px;border-radius:50%;background:var(--bg-elevated);border:1px solid var(--border);color:var(--accent-cyan);font-size:1.1rem;cursor:pointer;opacity:0;pointer-events:none;transform:translateY(6px);transition:opacity .2s,transform .2s,border-color .2s}
+.scrollTop.visible{opacity:1;pointer-events:auto;transform:none}
+.scrollTop:hover{border-color:var(--accent-cyan)}
+[data-mode="purple"] .scrollTop{color:#c084fc}
+[data-mode="purple"] .scrollTop:hover{border-color:#a855f7}
+.prompt-chip-filter{width:100%;background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text-primary);font-family:var(--font-mono);font-size:.75rem;margin-bottom:8px;box-sizing:border-box}
+.prompt-chip-filter:focus{border-color:var(--accent-cyan);outline:none}
+[data-mode="purple"] .prompt-chip-filter:focus{border-color:#a855f7}
+.prompt-hint{font-size:.7rem;color:var(--accent-amber);margin-top:6px}
+.prompt-btn:disabled{opacity:.45;cursor:not-allowed}
+.prompt-btn:disabled:hover{filter:none}
+.cmdbuilder-actions{display:flex;justify-content:flex-end;align-items:center;margin-bottom:8px}
+.cmdbuilder-reset{background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:.68rem;font-family:var(--font-mono);cursor:pointer;margin-left:6px}
+.cmdbuilder-reset:hover{color:var(--accent-cyan);border-color:var(--accent-cyan)}
+[data-mode="purple"] .cmdbuilder-reset:hover{color:#c084fc;border-color:#a855f7}
+.path-reset.confirm{color:var(--accent-red);font-weight:700}
 
 /* ═══ THEMES ═══ */
 .theme-toggle{display:flex;gap:6px;background:var(--bg-surface);padding:5px;border-radius:100px;border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.3)}
@@ -392,6 +413,41 @@
   .tool-cmd{background:#f5f5f5;color:#333;border:1px solid #ddd}
   .tool-desc,.tool-tag{color:#333}
   .app-header{border-bottom:2px solid #000}
+}
+
+/* ═══ MOBILE BREAKPOINTS (v3.2 — QW-M1/QW-M2) ═══
+   Bewusst am Ende des Stylesheets: Media-Overrides müssen NACH den
+   Base-Regeln der v3.0-Features (detail/prompt/cmdbuilder) stehen,
+   sonst gewinnt bei gleicher Specificity die spätere Base-Regel. */
+@media(max-width:640px){
+  .tools-grid{grid-template-columns:1fr}
+  .header-inner{flex-direction:column;align-items:flex-start}
+  .paths-grid{grid-template-columns:1fr}
+  .playbooks-grid{grid-template-columns:1fr}
+  .detail-related{grid-template-columns:1fr 1fr}
+  .prompt-templates{grid-template-columns:1fr 1fr}
+  /* Modals: engere Polster auf kleinen Screens */
+  .detail-modal,.prompt-modal,.compare-modal,.wizard-modal,.cheat-modal{padding:20px 16px;border-radius:12px}
+  .detail-body{padding:16px}
+  .detail-header{padding:18px 16px 12px}
+  .prompt-body{padding:16px}
+  /* Cmd-Builder: eine Spalte, Copy-Button unter dem Output statt darüber */
+  .cmdbuilder-flags{grid-template-columns:1fr}
+  .cmdbuilder-output{padding-right:12px;min-height:3em}
+  .cmdbuilder-copy{position:static;margin-top:8px;width:100%;text-align:center}
+  .cmdbuilder-actions{display:block}
+  .cmdbuilder-reset{margin-left:0;margin-top:6px;width:100%}
+  /* Close-Buttons erreichbarer machen */
+  .detail-close,.prompt-close,.compare-modal-close,.wizard-close,.cheat-close{top:8px;right:8px;width:36px;height:36px}
+}
+@media(max-width:400px){
+  .prompt-templates{grid-template-columns:1fr}
+  .detail-related{grid-template-columns:1fr}
+}
+@media(min-width:641px) and (max-width:900px){
+  .tools-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+  .detail-modal{max-width:560px}
+  .prompt-modal{max-width:600px}
 }
   </style>
 </head>
@@ -473,7 +529,7 @@
     </div>
   </div>
   <!-- Compare Modal -->
-  <div class="compare-modal-overlay" id="compare-overlay">
+  <div class="compare-modal-overlay" id="compare-overlay" role="dialog" aria-modal="true" aria-label="Tool-Vergleich">
     <div class="compare-modal">
       <button class="compare-modal-close" id="compare-close" aria-label="Schließen">×</button>
       <h2>Tool-Vergleich</h2>
@@ -482,7 +538,7 @@
   </div>
 
   <!-- Wizard Modal -->
-  <div class="wizard-overlay" id="wizard-overlay">
+  <div class="wizard-overlay" id="wizard-overlay" role="dialog" aria-modal="true" aria-label="Guided Wizard">
     <div class="wizard-modal">
       <button class="wizard-close" id="wizard-close" aria-label="Schließen">×</button>
       <div id="wizard-content"></div>
@@ -492,7 +548,7 @@
   <!-- Keyboard Hint -->
   <div class="kbd-hint" id="kbd-hint" role="button" tabindex="0" aria-label="Tastatur-Shortcuts anzeigen" title="Tastatur-Shortcuts"><kbd>?</kbd> Shortcuts</div>
   <!-- Cheat Sheet Modal -->
-  <div class="cheat-overlay" id="cheat-overlay">
+  <div class="cheat-overlay" id="cheat-overlay" role="dialog" aria-modal="true" aria-label="Tastatur-Shortcuts">
     <div class="cheat-modal">
       <button class="cheat-close" id="cheat-close" aria-label="Schließen">×</button>
       <h2>⌨️ Tastatur-Shortcuts</h2>
@@ -509,14 +565,17 @@
   </div>
 
   <!-- Tool Detail Modal -->
-  <div class="detail-overlay" id="detail-overlay">
+  <div class="detail-overlay" id="detail-overlay" role="dialog" aria-modal="true" aria-label="Tool-Details">
     <div class="detail-modal" id="detail-modal"></div>
   </div>
 
   <!-- LLM Prompt Builder -->
-  <div class="prompt-overlay" id="prompt-overlay">
+  <div class="prompt-overlay" id="prompt-overlay" role="dialog" aria-modal="true" aria-label="LLM Prompt Builder">
     <div class="prompt-modal" id="prompt-modal-content"></div>
   </div>
+
+  <!-- Scroll-to-top (v3.2) -->
+  <button class="scrollTop" id="scroll-top" aria-label="Nach oben scrollen" title="Nach oben">↑</button>
 
   <footer class="app-footer">
     <span>Generated by Yuno · Kali Linux 2026.2 · <a href="#" onclick="window.print();return false" style="color:var(--accent-cyan);text-decoration:none">📋 Drucken / PDF</a></span>
@@ -2508,7 +2567,26 @@ function togglePathWeek(key, checked) {
   renderLearningPaths();
 }
 
-function resetPath(pathId) {
+// Zweistufige Bestätigung: erster Klick bewaffnet, zweiter löscht (QW-L4)
+let armedReset = null;
+function resetPath(pathId, btn) {
+  if (armedReset !== pathId) {
+    armedReset = pathId;
+    if (btn) {
+      btn.classList.add('confirm');
+      btn.dataset.orig = btn.textContent;
+      btn.textContent = 'Sicher? Nochmal klicken zum Löschen';
+      setTimeout(() => {
+        if (armedReset === pathId) {
+          armedReset = null;
+          btn.classList.remove('confirm');
+          btn.textContent = btn.dataset.orig || '↺ Fortschritt zurücksetzen';
+        }
+      }, 3000);
+    }
+    return;
+  }
+  armedReset = null;
   const progress = loadPathProgress();
   learningPaths.find(p => p.id === pathId)?.weeks.forEach((_, i) => {
     delete progress[`${pathId}-${i}`];
@@ -2523,7 +2601,7 @@ document.addEventListener('click', (e) => {
   const resetBtn = e.target.closest('.path-reset');
   if (resetBtn) {
     e.stopPropagation();
-    resetPath(resetBtn.dataset.reset);
+    resetPath(resetBtn.dataset.reset, resetBtn);
     return;
   }
   // Skip if clicking a checkbox or a tool chip (don't bubble to card toggle)
@@ -2575,6 +2653,15 @@ let activePromptTemplate = 'pentest';
 let selectedPromptTools = new Set();
 let promptTarget = '';
 
+// Einheitliches Aktions-Feedback: Text kurz tauschen, nach 1,5s zurück (QW-E1)
+function flashButton(btn, msg) {
+  if (!btn) return;
+  const orig = btn.dataset.orig || btn.textContent;
+  btn.dataset.orig = orig;
+  btn.textContent = msg;
+  setTimeout(() => { btn.textContent = orig; }, 1500);
+}
+
 function buildPrompt() {
   const tpl = promptTemplates[activePromptTemplate];
   if (!tpl) return '';
@@ -2582,6 +2669,8 @@ function buildPrompt() {
     const tool = getAllTools().find(t => t.id === id);
     return tool ? `- **${tool.name}**: ${tool.desc}\n  Command: \`${tool.cmd}\`\n  Tags: ${tool.tags.join(', ')}` : null;
   }).filter(Boolean).join('\n');
+  // Empty-State: Hinweis statt leerem Tools-Block
+  const toolsBlock = tools || '(Noch keine Tools ausgewählt — wähle oben mindestens 1 Tool.)';
   const targetText = promptTarget || '[Ziel/Szenario bitte spezifizieren]';
   return `${tpl.role}
 
@@ -2589,7 +2678,7 @@ function buildPrompt() {
 ${tpl.task.replace('{TARGET}', targetText)}
 
 ## Verfügbare Tools
-${tools}
+${toolsBlock}
 
 ## Gewünschtes Output-Format
 ${tpl.output}`;
@@ -2622,11 +2711,13 @@ function renderPromptModal() {
       </div>
       <div class="prompt-section">
         <label class="prompt-label">Tools auswählen (${selectedPromptTools.size} ausgewählt)</label>
+        <input type="text" class="prompt-chip-filter" id="prompt-chip-filter" placeholder="Tool-Liste filtern (z.B. nmap, wifi, hash…)" aria-label="Tool-Liste filtern">
+        <div class="prompt-hint" id="prompt-hint" ${selectedPromptTools.size ? 'style="display:none"' : ''}>⚠ Noch kein Tool gewählt — wähle mindestens 1 Tool für einen vollständigen Prompt.</div>
         <div class="prompt-tool-select" id="prompt-tools">
           ${allTools.map(t => `<span class="prompt-tool-chip ${selectedPromptTools.has(t.id) ? 'selected' : ''}" data-tool="${t.id}">${t.name}</span>`).join('')}
         </div>
         <div style="margin-top:8px;display:flex;gap:8px">
-          <button class="prompt-btn-secondary" id="prompt-select-favs" style="padding:6px 12px;font-size:.75rem">★ Favoriten laden</button>
+          <button class="prompt-btn-secondary" id="prompt-select-favs" style="padding:6px 12px;font-size:.75rem" ${favorites.size === 0 ? 'disabled title="Erst Favoriten auf Tool-Karten markieren (★)"' : ''}>📥 Favoriten laden</button>
           <button class="prompt-btn-secondary" id="prompt-clear-tools" style="padding:6px 12px;font-size:.75rem">Leeren</button>
         </div>
       </div>
@@ -2646,12 +2737,16 @@ function renderPromptModal() {
     if (!tpl) return;
     activePromptTemplate = tpl.dataset.template;
     document.querySelectorAll('.prompt-template').forEach(t => t.classList.toggle('active', t === tpl));
-    document.getElementById('prompt-output').textContent = buildPrompt();
+    const out1 = document.getElementById('prompt-output');
+    out1.textContent = buildPrompt();
+    out1.scrollTop = out1.scrollHeight; // QW-P4: Neuestes sichtbar halten
   });
   // Wire target input
   document.getElementById('prompt-target').addEventListener('input', (e) => {
     promptTarget = e.target.value;
-    document.getElementById('prompt-output').textContent = buildPrompt();
+    const out2 = document.getElementById('prompt-output');
+    out2.textContent = buildPrompt();
+    out2.scrollTop = out2.scrollHeight;
   });
   // Wire tool chips
   document.getElementById('prompt-tools').addEventListener('click', (e) => {
@@ -2663,12 +2758,30 @@ function renderPromptModal() {
     chip.classList.toggle('selected');
     const labels = document.querySelectorAll('.prompt-label');
     if (labels[2]) labels[2].textContent = `Tools auswählen (${selectedPromptTools.size} ausgewählt)`;
-    document.getElementById('prompt-output').textContent = buildPrompt();
+    const hint = document.getElementById('prompt-hint');
+    if (hint) hint.style.display = selectedPromptTools.size ? 'none' : 'block';
+    const out3 = document.getElementById('prompt-output');
+    out3.textContent = buildPrompt();
+    out3.scrollTop = out3.scrollHeight;
   });
+  // Chip-Filter: Tool-Wolke live durchsuchen (M-P2)
+  const chipFilter = document.getElementById('prompt-chip-filter');
+  if (chipFilter) {
+    chipFilter.addEventListener('input', () => {
+      const q = chipFilter.value.trim().toLowerCase();
+      document.querySelectorAll('#prompt-tools .prompt-tool-chip').forEach(c => {
+        const tool = getAllTools().find(t => t.id === c.dataset.tool);
+        const hay = (tool ? (tool.name + ' ' + tool.tags.join(' ')) : c.textContent).toLowerCase();
+        c.style.display = (!q || hay.includes(q)) ? '' : 'none';
+      });
+    });
+  }
   // Load favorites
   document.getElementById('prompt-select-favs').addEventListener('click', () => {
+    if (favorites.size === 0) return; // Empty-State: Button ist disabled, Guard doppeltem Sicherheit
     selectedPromptTools = new Set(favorites);
     renderPromptModal();
+    flashButton(document.getElementById('prompt-select-favs'), '✅ ' + favorites.size + ' geladen');
   });
   // Clear tools
   document.getElementById('prompt-clear-tools').addEventListener('click', () => {
@@ -2678,19 +2791,17 @@ function renderPromptModal() {
   // Copy prompt
   document.getElementById('prompt-copy').addEventListener('click', () => {
     navigator.clipboard.writeText(buildPrompt()).then(() => {
-      const btn = document.getElementById('prompt-copy');
-      const orig = btn.textContent;
-      btn.textContent = '✅ Kopiert!';
-      setTimeout(() => btn.textContent = orig, 1500);
+      flashButton(document.getElementById('prompt-copy'), '✅ Kopiert!');
     });
   });
   // Download as MD
   document.getElementById('prompt-download').addEventListener('click', () => {
-    const blob = new Blob([buildPrompt()], {type:'text/markdown'});
+    const blob = new Blob([buildPrompt()],{type:'text/markdown'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = 'kali-llm-prompt.md';
     a.click();
+    flashButton(document.getElementById('prompt-download'), '✅ Gespeichert!'); // QW-P5
   });
 }
 
@@ -3317,18 +3428,21 @@ function showToolDetail(toolId) {
         <input type="text" class="cmdbuilder-target" id="cmd-target" placeholder="${flags.target.placeholder}" value="${flags.target.default}">
         <div class="cmdbuilder-flags">
           ${flags.flags.map(f => `
-            <div class="cmdbuilder-flag ${f.default ? 'active' : ''}" data-flag="${f.id}">
+            <label class="cmdbuilder-flag ${f.default ? 'active' : ''}" data-flag="${f.id}">
               <input type="checkbox" class="cmdbuilder-checkbox" ${f.default ? 'checked' : ''}>
               <div class="cmdbuilder-flag-info">
                 <div class="cmdbuilder-flag-label">${f.label}</div>
                 <div class="cmdbuilder-flag-desc">${f.desc}</div>
               </div>
-            </div>
+            </label>
           `).join('')}
         </div>
         <div class="cmdbuilder-output" id="cmd-output"></div>
-        <button class="cmdbuilder-copy" id="cmd-copy">Kopieren</button>
-        <div class="cmdbuilder-hint">Flags ein-/ausschalten → Command wird live generiert</div>
+        <div class="cmdbuilder-actions">
+          <button class="cmdbuilder-copy" id="cmd-copy">Kopieren</button>
+          <button class="cmdbuilder-reset" id="cmd-reset" title="Flags auf Standard zurücksetzen">↺ Defaults</button>
+        </div>
+        <div class="cmdbuilder-hint">Flags ein-/ausschalten → Command wird live generiert. Ohne Ziel erscheint &lt;ZIEL&gt; als Platzhalter.</div>
       </div>
     `;
   }
@@ -3429,9 +3543,7 @@ function showToolDetail(toolId) {
       e.stopPropagation();
       const cmd = e.target.dataset.cmd;
       navigator.clipboard.writeText(cmd).then(() => {
-        const old = e.target.textContent;
-        e.target.textContent = '✓';
-        setTimeout(() => e.target.textContent = old, 1500);
+        flashButton(e.target, '✓ Kopiert');
       });
     });
   });
@@ -3520,23 +3632,34 @@ function showToolDetail(toolId) {
       const output = document.getElementById('cmd-output');
       const targetInput = document.getElementById('cmd-target');
       const flagDivs = builder.querySelectorAll('.cmdbuilder-flag');
-      const checkboxes = builder.querySelectorAll('.cmdbuilder-checkbox');
 
-      // Toggle flag on click of entire row (except checkbox itself, which already toggles)
+      // Flags sind jetzt echte <label>-Wrapper: Klick togggt nativ (QW-C2),
+      // change-Event synchronisiert Klasse + Preview — kein manueller Doppel-Toggle mehr.
       flagDivs.forEach((div) => {
-        div.addEventListener('click', (e) => {
-          if (e.target.tagName === 'INPUT') return; // checkbox handles itself
-          const cb = div.querySelector('.cmdbuilder-checkbox');
-          cb.checked = !cb.checked;
-          div.classList.toggle('active', cb.checked);
-          updateCommandPreview(tool.id, flags);
-        });
         const cb = div.querySelector('.cmdbuilder-checkbox');
         cb.addEventListener('change', () => {
           div.classList.toggle('active', cb.checked);
           updateCommandPreview(tool.id, flags);
         });
       });
+
+      // Reset: Flags + Ziel auf Defaults zurücksetzen (QW-C4)
+      const resetBtn = document.getElementById('cmd-reset');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          flagDivs.forEach((div, i) => {
+            const f = flags.flags[i];
+            const cb = div.querySelector('.cmdbuilder-checkbox');
+            cb.checked = !!(f && f.default);
+            div.classList.toggle('active', cb.checked);
+          });
+          if (targetInput && flags.target && flags.target.default !== undefined) {
+            targetInput.value = flags.target.default;
+          }
+          updateCommandPreview(tool.id, flags);
+          flashButton(resetBtn, '✓ Zurückgesetzt');
+        });
+      }
 
       // Update on target input change
       targetInput.addEventListener('input', () => {
@@ -3549,9 +3672,7 @@ function showToolDetail(toolId) {
         e.stopPropagation();
         const cmd = output.textContent;
         navigator.clipboard.writeText(cmd).then(() => {
-          const old = copyBtn.textContent;
-          copyBtn.textContent = '✓';
-          setTimeout(() => copyBtn.textContent = old, 1500);
+          flashButton(copyBtn, '✓ Kopiert');
         });
       });
 
@@ -3588,6 +3709,7 @@ function updateCommandPreview(toolId, flags) {
     }
   });
   if (target) parts.push(target);
+  else parts.push('<ZIEL>'); // Empty-State: Platzhalter, bis ein Ziel eingetragen ist
   output.textContent = parts.join('').trim();
 }
 
@@ -4165,6 +4287,18 @@ window.addEventListener('scroll', () => {
   bar.style.width = Math.min(100, Math.max(0, scrolled)) + '%';
 }, {passive:true});
 
+// Scroll-to-top (v3.2 — QW-S1): erscheint nach 500px Scroll
+const scrollTopBtn = document.getElementById('scroll-top');
+window.addEventListener('scroll', () => {
+  if (!scrollTopBtn) return;
+  scrollTopBtn.classList.toggle('visible', window.scrollY > 500);
+}, {passive:true});
+if (scrollTopBtn) {
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
 // Theme toggle
 const THEME_KEY = 'forensik-theme';
 function loadTheme() { return localStorage.getItem(THEME_KEY) || 'dark'; }
@@ -4179,6 +4313,43 @@ document.querySelectorAll('.theme-btn').forEach(btn => {
   btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
 });
 applyTheme(loadTheme());
+
+// ═══ A11y: Fokus-Falle + Fokus-Rückgabe für alle Overlays (v3.2) ═══
+const OVERLAY_SELECTOR = '.detail-overlay,.prompt-overlay,.compare-modal-overlay,.wizard-overlay,.cheat-overlay';
+let overlayFocusReturn = null;
+if (typeof MutationObserver !== 'undefined') {
+  const overlayObserver = new MutationObserver(() => {
+    const open = [...document.querySelectorAll(OVERLAY_SELECTOR)].filter(o => o.classList.contains('visible'));
+    if (open.length && !overlayFocusReturn) {
+      // Beim Öffnen: Fokus merken und auf den Close-Button des obersten Overlays setzen
+      overlayFocusReturn = document.activeElement;
+      const top = open[open.length - 1]; // oberstes Overlay = letztes im DOM
+      const firstBtn = top.querySelector('.detail-close,.prompt-close,.compare-modal-close,.wizard-close,.cheat-close');
+      if (firstBtn) firstBtn.focus({ preventScroll: true });
+    } else if (!open.length && overlayFocusReturn) {
+      // Beim Schließen: Fokus an den Ausgangspunkt zurückgeben
+      if (typeof overlayFocusReturn.focus === 'function') overlayFocusReturn.focus({ preventScroll: true });
+      overlayFocusReturn = null;
+    }
+  });
+  document.querySelectorAll(OVERLAY_SELECTOR).forEach(o => {
+    overlayObserver.observe(o, { attributes: true, attributeFilter: ['class'] });
+  });
+}
+// Tab-Falle: Fokus bleibt im obersten offenen Overlay
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Tab') return;
+  const open = [...document.querySelectorAll(OVERLAY_SELECTOR)].filter(o => o.classList.contains('visible'));
+  if (!open.length) return;
+  const top = open[open.length - 1];
+  const focusables = [...top.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')].filter(el => el.offsetParent !== null);
+  if (!focusables.length) return;
+  const first = focusables[0];
+  const last = focusables[focusables.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  else if (!top.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+});
 
 // Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
