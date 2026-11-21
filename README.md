@@ -2,7 +2,7 @@
 
 > **Deine interaktive Karte durch die Welt der Kali-Linux-Tools.** 144 Tools in Blue (Offensive) und Purple (Defensive). Single-File-HTML. Kein Build, kein Server, kein Tracking. Inklusive 12,5-Minuten-Audiobook im Beginner-Format.
 
-[![Version](https://img.shields.io/badge/version-3.2-22d3ee?style=for-the-badge)](https://github.com/Toqsick/kali-tool-explorer/releases)
+[![Version](https://img.shields.io/badge/version-3.2.1-22d3ee?style=for-the-badge)](https://github.com/Toqsick/kali-tool-explorer/releases)
 [![Tools](https://img.shields.io/badge/tools-144-a855f7?style=for-the-badge)](./forensik-explorer.html)
 [![License](https://img.shields.io/badge/license-MIT-22c55e?style=for-the-badge)](./LICENSE)
 [![Size](https://img.shields.io/badge/size-190KB-f59e0b?style=for-the-badge)](./forensik-explorer.html)

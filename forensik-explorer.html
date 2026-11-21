@@ -3216,7 +3216,7 @@ const toolFlags = {
   sqlmap: {
     target: {label:'URL', type:'text', default:'', placeholder:'http://target.com/page?id=1'},
     flags: [
-      {id:'u', prefix:'-u ', label:'URL (SET TARGET)', desc:'-u URL — Ziel-URL', default:true},
+      {id:'u', prefix:'-u {target} ', label:'URL (SET TARGET)', desc:'-u URL — Ziel-URL', default:true},
       {id:'batch', prefix:'--batch ', label:'Batch Mode', desc:'--batch — Keine interaktiven Fragen', default:true},
       {id:'dbs', prefix:'--dbs ', label:'Enumerate DBs', desc:'--dbs — Datenbanken auflisten', default:false},
       {id:'tables', prefix:'--tables ', label:'Enumerate Tables', desc:'--tables -D db — Tabellen auflisten', default:false},
@@ -3252,7 +3252,7 @@ const toolFlags = {
     target: {label:'URL', type:'text', default:'', placeholder:'http://target.com'},
     flags: [
       {id:'dir', prefix:'dir ', label:'Directory Mode', desc:'dir — Verzeichnis-Brute-Force', default:true},
-      {id:'u', prefix:'-u ', label:'URL Flag', desc:'-u URL', default:true},
+      {id:'u', prefix:'-u {target} ', label:'URL Flag', desc:'-u URL', default:true},
       {id:'w', prefix:'-w /usr/share/wordlists/dirb/common.txt ', label:'Common Wordlist', desc:'-w common.txt', default:true},
       {id:'x', prefix:'-x php,html,txt ', label:'Extensions', desc:'-x php,html,txt', default:false},
       {id:'t', prefix:'-t 50 ', label:'50 Threads', desc:'-t 50', default:true},
@@ -3262,7 +3262,7 @@ const toolFlags = {
   nikto: {
     target: {label:'Ziel', type:'text', default:'', placeholder:'http://target.com'},
     flags: [
-      {id:'h', prefix:'-h ', label:'Host', desc:'-h host', default:true},
+      {id:'h', prefix:'-h {target} ', label:'Host', desc:'-h host', default:true},
       {id:'Tuning', prefix:'-Tuning 9 ', label:'SQL Injection Tune', desc:'-Tuning 9', default:false},
       {id:'ssl', prefix:'-ssl ', label:'SSL', desc:'-ssl', default:false},
       {id:'port', prefix:'-p 443 ', label:'Port', desc:'-p 443', default:false},
@@ -3290,6 +3290,7 @@ const toolFlags = {
     ]
   },
   metasploit: {
+    cmdBase: 'msfconsole', // Fix 3: echter CLI-Name, nicht der DB-Name
     target: {label:'Modul (optional)', type:'text', default:'', placeholder:'use exploit/multi/handler'},
     flags: [
       {id:'q', prefix:'-q ', label:'Quiet', desc:'-q — Quiet Mode', default:true},
@@ -3299,7 +3300,7 @@ const toolFlags = {
   wpscan: {
     target: {label:'URL', type:'text', default:'', placeholder:'http://target.com'},
     flags: [
-      {id:'u', prefix:'--url ', label:'URL Flag', desc:'--url URL', default:true},
+      {id:'u', prefix:'--url {target} ', label:'URL Flag', desc:'--url URL', default:true},
       {id:'e', prefix:'--enumerate u,p,t ', label:'Enumerate All', desc:'--enumerate u,p,t', default:true},
       {id:'passwords', prefix:'--passwords /usr/share/wordlists/rockyou.txt ', label:'Brute Force', desc:'--passwords rockyou.txt', default:false},
       {id:'aggressive', prefix:'--detection-mode aggressive ', label:'Aggressive', desc:'--detection-mode aggressive', default:false},
@@ -3308,7 +3309,7 @@ const toolFlags = {
   nuclei: {
     target: {label:'URL', type:'text', default:'', placeholder:'http://target.com'},
     flags: [
-      {id:'u', prefix:'-u ', label:'URL Flag', desc:'-u URL', default:true},
+      {id:'u', prefix:'-u {target} ', label:'URL Flag', desc:'-u URL', default:true},
       {id:'t', prefix:'-t cves/ ', label:'CVE Templates', desc:'-t cves/', default:false},
       {id:'severity', prefix:'-severity critical,high ', label:'Critical+High', desc:'-severity critical,high', default:true},
       {id:'rate-limit', prefix:'-rate-limit 150 ', label:'Rate Limit', desc:'-rate-limit 150', default:false},
@@ -3317,7 +3318,7 @@ const toolFlags = {
   ffuf: {
     target: {label:'URL mit FUZZ', type:'text', default:'', placeholder:'http://target.com/FUZZ'},
     flags: [
-      {id:'u', prefix:'-u ', label:'URL Flag', desc:'-u URL/FUZZ', default:true},
+      {id:'u', prefix:'-u {target} ', label:'URL Flag', desc:'-u URL/FUZZ', default:true},
       {id:'w', prefix:'-w /usr/share/wordlists/dirb/common.txt ', label:'Common Wordlist', desc:'-w common.txt', default:true},
       {id:'mc', prefix:'-mc 200,204,301,302 ', label:'Status Filter', desc:'-mc 200,204,301,302', default:true},
       {id:'ac', prefix:'-ac ', label:'Auto Calibrate', desc:'-ac', default:false},
@@ -3336,7 +3337,7 @@ const toolFlags = {
   'evil-winrm': {
     target: {label:'Host', type:'text', default:'', placeholder:'192.168.1.10'},
     flags: [
-      {id:'i', prefix:'-i ', label:'IP', desc:'-i IP', default:true},
+      {id:'i', prefix:'-i {target} ', label:'IP', desc:'-i IP', default:true},
       {id:'u', prefix:'-u Administrator ', label:'User: Admin', desc:'-u Administrator', default:true},
       {id:'p', prefix:'-p Password123 ', label:'Password', desc:'-p PASS', default:true},
       {id:'s', prefix:'-s /usr/share/evil-winrm/ ', label:'Scripts Path', desc:'-s PATH', default:false},
@@ -3346,7 +3347,7 @@ const toolFlags = {
   crackmapexec: {
     target: {label:'Ziel', type:'text', default:'', placeholder:'10.0.0.0/24'},
     flags: [
-      {id:'smb', prefix:'smb ', label:'SMB Protocol', desc:'smb — SMB Protocol', default:true},
+      {id:'smb', prefix:'smb {target} ', label:'SMB Protocol', desc:'smb — SMB Protocol', default:true},
       {id:'u', prefix:'-u admin ', label:'User', desc:'-u admin', default:false},
       {id:'p', prefix:'-p Password123 ', label:'Password', desc:'-p PASS', default:false},
       {id:'H', prefix:'-H ', label:'Hash (Pass-the-Hash)', desc:'-H HASH', default:false},
@@ -3416,9 +3417,10 @@ function showToolDetail(toolId) {
     </div>`;
   }
 
-  // Build command builder section (look up by id, fall back to id+'-ng')
+  // Build command builder section (look up by id, fall back to id+'-ng' or id ohne '-ng')
   const flagKey = tool.id in toolFlags ? tool.id
-    : (tool.id + '-ng' in toolFlags ? tool.id + '-ng' : null);
+    : (tool.id + '-ng' in toolFlags ? tool.id + '-ng'
+    : (tool.id.replace(/-ng$/, '') in toolFlags ? tool.id.replace(/-ng$/, '') : null));
   const flags = flagKey ? toolFlags[flagKey] : null;
   let cmdBuilderHTML = '';
   if (flags) {
@@ -3688,29 +3690,38 @@ function updateCommandPreview(toolId, flags) {
   if (!output || !targetInput) return;
 
   const target = targetInput.value || '';
+  const targetText = target || '<ZIEL>'; // Empty-State: Platzhalter, bis ein Ziel eingetragen ist
   const flagDivs = document.querySelectorAll('#cmdbuilder .cmdbuilder-flag');
-  const parts = [toolId];
+  // Fix 3: cmdBase erlaubt Befehls-Aliasse (z.B. metasploit → msfconsole)
+  const parts = [flags.cmdBase || toolId];
+  let targetPlaced = false;
   flagDivs.forEach(div => {
     const cb = div.querySelector('.cmdbuilder-checkbox');
     if (cb && cb.checked) {
       const id = div.dataset.flag;
-      // Find the matching flag def to get its prefix (if any)
+      // Passende Flag-Definition suchen, um das Präfix zu holen
       const flagDef = flags.flags.find(f => f.id === id);
       let prefix;
       if (flagDef && flagDef.prefix) {
         prefix = flagDef.prefix;
       } else if (id.startsWith('-')) {
-        // id already encodes the full flag string — append space, no synthetic `--`
+        // id kodiert bereits das komplette Flag — Space anhängen, kein synthetisches `--`
         prefix = id + ' ';
       } else {
         prefix = '--' + id + ' ';
       }
-      parts.push(prefix);
+      if (prefix.includes('{target}')) {
+        // Fix 2: Flag gibt die Zielposition vor (z.B. `-u {target}`)
+        parts.push(prefix.replace('{target}', targetText));
+        targetPlaced = true;
+      } else {
+        parts.push(prefix);
+      }
     }
   });
-  if (target) parts.push(target);
-  else parts.push('<ZIEL>'); // Empty-State: Platzhalter, bis ein Ziel eingetragen ist
-  output.textContent = parts.join('').trim();
+  if (!targetPlaced) parts.push(targetText);
+  // Fix 1: Toolname ↔ erstes Flag trennen, Mehrfach-Leerzeichen normalisieren
+  output.textContent = parts.join(' ').replace(/\s+/g, ' ').trim();
 }
 
 function closeToolDetail() {

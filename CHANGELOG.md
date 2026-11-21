@@ -5,6 +5,36 @@ Alle nennenswerten Änderungen am Kali Tool Explorer werden hier dokumentiert.
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.1.0/),
 und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [3.2.1] — 2026-11-21
+
+### 🐛 Bugfixes — Command-Builder (die 4 bekannten Fehler aus der Live-Prüfung 2026-10-20)
+
+1. **Toolname ↔ erstes Flag nicht getrennt** — `parts.join('')` klebte Toolnamen
+   und erstes Flag zusammen (`nmap-sV -T4 …`). Fix: `join(' ')` + Whitespace-
+   Normalisierung. Betrifft alle 15 Builder-Tools.
+2. **Ziel landete am Ende statt hinter dem Flag** — neue `{target}`-Platzhalter-
+   Syntax in Flag-Präfixen: sqlmap `-u {target}`, gobuster `-u {target}`,
+   wpscan `--url {target}`, nuclei `-u {target}`, ffuf `-u {target}`,
+   evil-winrm `-i {target}`; zusätzlich fachlich identisch korrigiert:
+   nikto `-h {target}`, crackmapexec `smb {target}`.
+3. **metasploit → msfconsole** — neues `cmdBase`-Feld: Der Builder zeigt den
+   echten CLI-Namen (`msfconsole -q …`) statt des DB-Namens.
+4. **aircrack-ng bekam keinen Builder** — Lookup-Kette um `id.replace(/-ng$/, '')`
+   erweitert; `aircrack-ng` findet jetzt den `aircrack`-Flag-Satz.
+
+### 🧪 Verifikation
+
+Headless-Browser, 13 Fälle mit gesetztem Ziel — alle bestanden:
+`nmap -sV -T4 10.0.0.5` · `hashcat -m 0 -a 0 hashes.txt` ·
+`john --wordlist=… hashes.txt` · `sqlmap -u http://target.com/page?id=1 --batch` ·
+`gobuster dir -u http://target.com -w … -t 50` · `nikto -h http://target.com` ·
+`wpscan --url http://target.com --enumerate u,p,t` · `nuclei -u http://target.com -severity critical,high` ·
+`ffuf -u http://target.com/FUZZ -w … -mc 200,204,301,302` · `evil-winrm -i 10.0.0.5 -u Administrator -p Password123` ·
+`crackmapexec smb 10.0.0.0/24` · `msfconsole -q use exploit/multi/handler` ·
+`aircrack-ng -w … capture.cap`. node --check OK.
+
+---
+
 ## [3.2] — 2026-11-21
 
 ### 🎯 Implementation-Pass für das ui-polish-v2-Report
