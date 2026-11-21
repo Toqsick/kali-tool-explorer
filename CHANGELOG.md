@@ -5,6 +5,66 @@ Alle nennenswerten Änderungen am Kali Tool Explorer werden hier dokumentiert.
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.1.0/),
 und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
+## [3.2] — 2026-11-21
+
+### 🎯 Implementation-Pass für das ui-polish-v2-Report
+
+Systemic-Gaps-Paket: Mobile, A11y, Empty-States, Feedback-Konsistenz —
+basierend auf den 20 offenen Empfehlungen aus `audits/ui-polish-v2-report.md`.
+
+### ✨ Features
+
+#### Mobile komplett (QW-M1/QW-M2)
+- ✅ Cmd-Builder: 1 Spalte auf ≤640px, Copy-Button unter dem Output statt darüber
+- ✅ Modals: engere Polster, kleinere Close-Buttons, keine Text-Overlap mehr
+- ✅ Neuer 400px-Breakpoint (kleinste Phones) + 641–900px Tablet-Breakpoint
+- ✅ Media-Block ans Stylesheet-Ende verschoben (Cascade-Fix: Base-Regeln der v3.0-Features überschrieben vorher die Mobile-Overrides)
+
+#### Accessibility (A11y)
+- ✅ `role="dialog"` + `aria-modal="true"` + `aria-label` auf allen 5 Overlays
+- ✅ Fokus-Falle (Tab-Trap): Fokus bleibt im obersten offenen Overlay
+- ✅ Fokus-Management: Öffnen fokussiert Close-Button, Schließen gibt Fokus zurück (MutationObserver)
+- ✅ Cmd-Builder-Flags als echte `<label>`-Wrapper — Screen-Reader + native Toggle (QW-C2)
+
+#### Empty-States
+- ✅ Prompt-Builder: "Noch kein Tool gewählt"-Hint + Tools-Block-Hinweis statt leerem Prompt
+- ✅ "Favoriten laden" disabled bei 0 Favoriten (statt stummem Dead-Click), Umbau ★→📥 (QW-P2)
+- ✅ Cmd-Builder: `<ZIEL>`-Platzhalter im Output bis ein Ziel eingetragen ist
+
+#### UX-Standardisierung
+- ✅ `flashButton()`-Helper: einheitliches Copy/Download/Reset-Feedback (QW-E1, QW-P5)
+- ✅ "↺ Defaults"-Reset-Button im Cmd-Builder (QW-C4)
+- ✅ Chip-Filter im Prompt-Builder: 103-Tool-Wolke live durchsuchbar (M-P2)
+- ✅ Prompt-Output scrollt bei Updates nach unten (QW-P4)
+- ✅ Scroll-to-top-Button nach 500px (QW-S1)
+- ✅ Zweistufige Bestätigung für Lernpfad-Reset statt Ein-Klick-Datenverlust (QW-L4)
+
+#### Visual Polish
+- ✅ Modal-Fade + Rise-In-Animation beim Öffnen (respektiert `prefers-reduced-motion`)
+- ✅ Backdrop-Blur konsistent auf allen 5 Overlays (inkl. `-webkit-`)
+- ✅ Detail-Badge "Daily Driver" cyan (wie Tool-Card, war grün) (QW-D1)
+- ✅ Kontrast: `.detail-cat` + Cmd-Builder-Hint auf `--text-secondary` (QW-D2/QW-C3)
+- ✅ Hover-Lift für Path-Cards + Prompt-Templates (QW-X3)
+- ✅ Cmd-Builder-Active-State mit Glow wie Playbook-Cards (QW-X1)
+- ✅ Chip-Selected-Kontrast stärker (.18 Tint + font-weight) (QW-P1)
+- ✅ Prompt-Modal 720→680px — modal-Familie wie Detail-Modal (QW-P6)
+- ✅ Cmd-Output: `padding-right:96px; min-height:2.4em` — kein Copy-Overlap mehr (QW-C1)
+
+### 🐛 Bugfixes
+- ✅ Cascade-Bug: Mobile-Media-Queries für v3.0-Features wirkungslos (Base-Regeln standen NACH den Overrides) — Browser-verify verified: Flag-Grid 2→1 Spalte, Copy absolute→static
+- ✅ Dead Code entfernt: ungenutzter `checkboxes`-Selector im Cmd-Builder-Wiring
+
+### 🧪 Verifikation (Headless-Browser, alle grün)
+- node --check: Syntax OK (4.432 Zeilen, 190 KB)
+- Fokus-Falle: Tab vom letzten Button → Close-Button (Wrap) ✓
+- Fokus-Rückgabe beim Schließen ✓, Detail-Öffnen fokussiert Close ✓
+- Label-Klick toggelt Flag nativ, Preview live ✓, Reset stellt Defaults wieder her ✓
+- `<ZIEL>`-Ghost ✓, Chip-Filter "nmap" → 2 Treffer ✓, Hint toggle ✓
+- Mobile 390px: 1 Spalte, kein Overflow, alle Modal-Regeln greifen ✓
+- Scroll-Top-Logik: sichtbar ab 500px, versteckt bei 0 ✓
+
+---
+
 ## [3.1] — 2026-08-06
 
 ### 🎉 Initial Public Release

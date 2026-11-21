@@ -2,10 +2,10 @@
 
 > **Deine interaktive Karte durch die Welt der Kali-Linux-Tools.** 144 Tools in Blue (Offensive) und Purple (Defensive). Single-File-HTML. Kein Build, kein Server, kein Tracking. Inklusive 12,5-Minuten-Audiobook im Beginner-Format.
 
-[![Version](https://img.shields.io/badge/version-3.1-22d3ee?style=for-the-badge)](https://github.com/Toqsick/kali-tool-explorer/releases)
+[![Version](https://img.shields.io/badge/version-3.2-22d3ee?style=for-the-badge)](https://github.com/Toqsick/kali-tool-explorer/releases)
 [![Tools](https://img.shields.io/badge/tools-144-a855f7?style=for-the-badge)](./forensik-explorer.html)
 [![License](https://img.shields.io/badge/license-MIT-22c55e?style=for-the-badge)](./LICENSE)
-[![Size](https://img.shields.io/badge/size-178KB-f59e0b?style=for-the-badge)](./forensik-explorer.html)
+[![Size](https://img.shields.io/badge/size-190KB-f59e0b?style=for-the-badge)](./forensik-explorer.html)
 [![Audiobook](https://img.shields.io/badge/audiobook-12.5min_🎧-fbbf24?style=for-the-badge)](./audiobook/kali-explorer-gesamthörbuch.mp3)
 
 [🚀 Quickstart](#-quickstart) · [✨ Features](#-features) · [🎧 Audiobook](#-audiobook) · [📖 Doku](#-dokumentation) · [🤝 Contributing](#-contributing) · [❓ FAQ](#-faq)
@@ -162,11 +162,17 @@ Verzweigt, kommt zum perfekten Playbook mit "▶ Playbook starten".
 
 ### ♿ Accessibility & Print
 
+- **Dialog-Rollen + Fokus-Falle** auf allen 5 Overlays (v3.2): `role="dialog"`, `aria-modal`, Tab bleibt im Modal, Fokus springt beim Öffnen auf Close und beim Schließen zurück
+- Cmd-Builder-Flags als echte `<label>` — Screen-Reader-freundlich, ganze Zeile klickbar
 - ARIA-Labels überall
 - Tastaturbedienung komplett
 - Print-Stylesheet → als PDF speicherbar
 - `@media(hover:none),(pointer:coarse)` → Touch-Geräte-Buttons immer sichtbar
 - `prefers-reduced-motion` → Animationen aus
+
+### 📱 Mobile (v3.2)
+
+Vollständige Breakpoints: **640px** (Cmd-Builder 1 Spalte, Modals kompakt, Copy unter Output), **400px** (kleinste Phones), **641–900px** (Tablet-Feintuning). Kein horizontaler Overflow, getestet bei 390px Viewport.
 
 ---
 
@@ -250,12 +256,12 @@ Wir glauben an **transparente Entwicklung**. Alle Reviews sind im Repo:
 
 | Metrik | Wert |
 |---|---|
-| **Version** | 3.1 |
+| **Version** | 3.2 |
 | **Total Tools** | 144 |
 | **Blue Team Tools** | 103 |
 | **Purple Team Tools** | 41 |
-| **HTML Size** | 178 KB |
-| **Code Lines** | 4.158 |
+| **HTML Size** | 190 KB |
+| **Code Lines** | 4.432 |
 | **Playbooks** | 12 (6 Blue + 6 Purple) |
 | **Wizard Flows** | 2 (Blue + Purple) mit Branching |
 | **Lernpfade** | 4 (13 Wochen total) |
@@ -263,6 +269,8 @@ Wir glauben an **transparente Entwicklung**. Alle Reviews sind im Repo:
 | **Beispiel-Commands** | 99 kuratiert |
 | **Dependencies** | 0 (außer Google Fonts) |
 | **Critical Bugs** | 0 |
+| **A11y** | 5 Dialog-Rollen, Fokus-Falle, Label-Flags |
+| **Mobile Breakpoints** | 3 (400 / 640 / 641–900px) |
 | **Audiobook Length** | 12,5 Min HD |
 | **License** | MIT |
 
